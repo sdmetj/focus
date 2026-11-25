@@ -29,6 +29,7 @@
     --ink:#0A0A0A;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none !important}
   html{background:var(--bg)}
   body{
     margin:0;
@@ -200,7 +201,7 @@
   .edit-actions{display:flex;gap:8px;margin-top:12px}
   .edit-actions .btn-primary{flex:1 1 auto;min-height:46px;font-size:14px}
   .edit-actions .btn-ghost{min-height:46px}
-  .all-done{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:13px;font-size:12.5px;color:var(--muted);text-align:center;letter-spacing:.02em}
+  .all-done{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:13px;font-size:12.5px;color:var(--muted);text-align:center;letter-spacing:.02em}
   .all-done svg{width:11px;height:11px}
 
   .foot{margin-top:36px;font-size:11px;line-height:1.7;color:#4A4A4A;text-align:center}
@@ -531,6 +532,7 @@
         if (navigator.vibrate) { try { navigator.vibrate(12); } catch (err) {} }
       } else if (input) {
         input.focus();
+        toast('한 가지만 적어주세요');
       }
     } else if (e.target.id === 'goalEditForm') {
       var v = $('goalEditInput');
