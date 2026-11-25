@@ -27,6 +27,11 @@
     --faint:#4A4A4A;
     --accent:#FFFFFF;
     --ink:#0A0A0A;
+    /* equipped star skin */
+    --star:#FFFFFF;
+    --tag-star:#BFBFBF;
+    --star-glow:rgba(255,255,255,.25);
+    --tag-glow:rgba(255,255,255,0);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   [hidden]{display:none !important}
@@ -56,8 +61,57 @@
 
   /* header */
   .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px}
-  .brand{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700;letter-spacing:.34em;color:var(--text)}
-  .brand svg{width:15px;height:15px;display:block;filter:drop-shadow(0 0 6px rgba(255,255,255,.25))}
+  .brand{
+    position:relative;display:flex;align-items:center;gap:9px;
+    margin:-6px 0;padding:6px 4px 6px 0;border-radius:10px;
+    font-size:13px;font-weight:700;letter-spacing:.34em;color:var(--text);
+    -webkit-appearance:none;appearance:none;transition:opacity .16s ease;
+  }
+  .brand:active{opacity:.7}
+  .brand svg{width:15px;height:15px;display:block;filter:drop-shadow(0 0 6px var(--star-glow));transition:filter .3s ease}
+  .brand svg path{fill:var(--star);transition:fill .3s ease}
+  .tag svg{filter:drop-shadow(0 0 4px var(--tag-glow));transition:filter .3s ease}
+  .tag svg path{fill:var(--tag-star);transition:fill .3s ease}
+  .brand-dot{
+    position:absolute;left:12px;top:3px;width:6px;height:6px;border-radius:50%;
+    background:#FFFFFF;box-shadow:0 0 8px rgba(255,255,255,.8);
+    animation:badgePulse 2.4s ease-in-out infinite;pointer-events:none;
+  }
+  @keyframes badgePulse{0%,100%{opacity:.6;transform:scale(.82)}50%{opacity:1;transform:scale(1)}}
+
+  /* ---------- equipped star skins ---------- */
+  body[data-skin="silver"]{--star:#E7EDF4;--tag-star:#DCE4EC;--star-glow:rgba(206,224,240,.5);--tag-glow:rgba(206,224,240,.34)}
+  body[data-skin="ash"]{--star:#C6CBD1;--tag-star:#B4BAC1;--star-glow:rgba(202,208,216,.42);--tag-glow:rgba(202,208,216,.28)}
+  body[data-skin="sky"]{--star:#7DD3FC;--tag-star:#7DD3FC;--star-glow:rgba(125,211,252,.5);--tag-glow:rgba(125,211,252,.4)}
+  body[data-skin="mint"]{--star:#6EE7B7;--tag-star:#6EE7B7;--star-glow:rgba(110,231,183,.46);--tag-glow:rgba(110,231,183,.38)}
+  body[data-skin="lavender"]{--star:#C4B5FD;--tag-star:#C4B5FD;--star-glow:rgba(196,181,253,.48);--tag-glow:rgba(196,181,253,.4)}
+  body[data-skin="blue"]{--star:#AFCDF0;--tag-star:#A9C8EE;--star-glow:rgba(160,200,250,.5);--tag-glow:rgba(160,200,250,.36)}
+  body[data-skin="rose"]{--star:#F2B6CB;--tag-star:#F0AFC7;--star-glow:rgba(244,168,198,.48);--tag-glow:rgba(244,168,198,.36)}
+  body[data-skin="coral"]{--star:#FDA4AF;--tag-star:#FDA4AF;--star-glow:rgba(253,164,175,.5);--tag-glow:rgba(253,164,175,.4)}
+  body[data-skin="amber"]{--star:#FCD34D;--tag-star:#FCD34D;--star-glow:rgba(252,211,77,.5);--tag-glow:rgba(252,211,77,.4)}
+  body[data-skin="gold"]{--star:#FFD466;--tag-star:#FFD166;--star-glow:rgba(255,206,84,.6);--tag-glow:rgba(255,206,84,.48)}
+  body[data-skin="aurora"]{--star:#C4B5FD;--tag-star:#C4B5FD;--star-glow:rgba(178,160,255,.58);--tag-glow:rgba(178,160,255,.45)}
+  body[data-skin="aurora"] .brand svg path,
+  body[data-skin="aurora"] .tag svg path{fill:url(#starAurora)}
+  @keyframes starBreathe{0%,100%{opacity:.74;transform:scale(.94)}50%{opacity:1;transform:scale(1.06)}}
+  @keyframes starTwinkle{0%,100%{opacity:.5}42%{opacity:1}58%{opacity:.92}}
+  @keyframes starGlowPulse{0%,100%{filter:drop-shadow(0 0 5px var(--star-glow))}50%{filter:drop-shadow(0 0 14px var(--star-glow))}}
+  @keyframes auroraShift{0%{filter:drop-shadow(0 0 7px var(--star-glow)) hue-rotate(0deg)}100%{filter:drop-shadow(0 0 7px var(--star-glow)) hue-rotate(360deg)}}
+  @keyframes sparkDot{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:.9;transform:scale(1)}}
+  body[data-skin="silver"] .brand svg,body[data-skin="silver"] .tag svg{animation:starBreathe 4.4s ease-in-out infinite}
+  body[data-skin="ash"] .brand svg,body[data-skin="ash"] .tag svg{animation:starTwinkle 3.4s ease-in-out infinite}
+  body[data-skin="blue"] .brand svg,body[data-skin="blue"] .tag svg{animation:starGlowPulse 4.6s ease-in-out infinite}
+  body[data-skin="rose"] .brand svg,body[data-skin="rose"] .tag svg{animation:starBreathe 4.8s ease-in-out infinite}
+  body[data-skin="gold"] .brand svg,body[data-skin="gold"] .tag svg{animation:starGlowPulse 2.6s ease-in-out infinite}
+  body[data-skin="aurora"] .brand svg,body[data-skin="aurora"] .tag svg{animation:auroraShift 7s linear infinite}
+  .brand::after{
+    content:"";position:absolute;left:6px;top:0;width:5px;height:5px;border-radius:50%;
+    background:radial-gradient(circle,#FFFFFF 0%,rgba(255,255,255,0) 72%);
+    opacity:0;pointer-events:none;
+  }
+  body[data-skin="gold"] .brand::after{animation:sparkDot 2.4s ease-in-out infinite}
+  body[data-skin="aurora"] .brand::after{animation:sparkDot 2.4s ease-in-out infinite .8s}
+  body[data-skin="ash"] .brand::after{animation:sparkDot 3.2s ease-in-out infinite}
   .head-right{display:flex;align-items:center;gap:13px}
   .lang{display:flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;letter-spacing:.1em}
   .lang-btn{color:var(--faint);padding:5px 1px;transition:color .16s ease}
@@ -292,15 +346,109 @@
   .det-text{flex:1 1 auto;min-width:0}
   .det-time{flex:0 0 auto;font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums;line-height:1.7}
   .det-empty{font-size:12.5px;color:var(--faint);padding:16px 0 8px;text-align:center;line-height:1.6}
+
+  /* footer refresh */
+  .foot-row{margin-top:34px;display:flex;flex-direction:column;align-items:center;gap:9px}
+  .foot{margin:0;font-size:11px;line-height:1.7;color:#4A4A4A;text-align:center}
+  .refresh-btn{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:10.5px;font-weight:500;letter-spacing:.04em;color:#484848;
+    padding:5px 10px;border-radius:999px;border:1px solid transparent;
+    transition:color .16s ease,border-color .16s ease,opacity .16s ease;
+  }
+  .refresh-btn:active{color:#B4B4B4;border-color:#2A2A2A}
+  .refresh-btn:disabled{opacity:.55}
+
+  /* ---------- gacha (star skin) ---------- */
+  #gachaOverlay{z-index:54}
+  .gacha-sheet{max-height:92dvh;padding:16px 14px 14px}
+  .gacha-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 13px}
+  .gacha-title{font-size:14px;font-weight:600;letter-spacing:.06em;color:#EDEDED}
+  .gacha-close{width:30px;height:30px;border-radius:9px;border:1px solid transparent;color:var(--dim);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
+  .gacha-close:active{color:var(--text)}
+  .g-wallet{display:flex;align-items:center;gap:13px;background:#131313;border:1px solid #242424;border-radius:14px;padding:12px 14px}
+  .g-w-item{display:flex;align-items:baseline;gap:6px;min-width:0}
+  .g-w-num{font-size:17px;font-weight:700;color:#FFFFFF;font-variant-numeric:tabular-nums;line-height:1.1}
+  .g-w-label{font-size:10.5px;letter-spacing:.06em;color:var(--dim);white-space:nowrap}
+  .g-w-sep{width:1px;height:17px;background:#2C2C2C}
+  .g-w-owned{margin-left:auto;font-size:10.5px;color:var(--faint);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .g-stage{
+    position:relative;margin-top:12px;min-height:132px;padding:16px 14px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+    border:1px solid #232323;border-radius:16px;overflow:hidden;
+    background:linear-gradient(180deg,#151515 0%,#0F0F0F 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+  }
+  .g-stage.spinning{border-color:#333333}
+  .g-idle{font-size:11.5px;line-height:1.6;color:var(--faint);text-align:center;max-width:250px}
+  .g-res{display:flex;flex-direction:column;align-items:center;gap:5px;animation:gPop .42s cubic-bezier(.2,.9,.25,1) both}
+  @keyframes gPop{0%{opacity:0;transform:scale(.72)}62%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+  .g-res-star{line-height:0}
+  .g-res-star svg{width:42px;height:42px;display:block}
+  .g-res-name{font-size:17px;font-weight:700;color:#FCFCFC;letter-spacing:-.01em;margin-top:2px}
+  .g-res-meta{font-size:9.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+  .g-res-tag{font-size:11px;color:#DCDCDC;background:#1E1E1E;border:1px solid #303030;border-radius:999px;padding:4px 11px;margin-top:3px}
+  .g-res-tag.dup{color:#AEAEAE;background:#171717;border-color:#262626}
+  .g-spin{position:relative;width:66px;height:66px;display:flex;align-items:center;justify-content:center}
+  .g-spin svg{width:32px;height:32px;display:block;filter:drop-shadow(0 0 14px rgba(255,255,255,.5));animation:gSpin .95s cubic-bezier(.5,0,.5,1) infinite}
+  @keyframes gSpin{0%{transform:rotate(0deg) scale(.86)}50%{transform:rotate(180deg) scale(1.08)}100%{transform:rotate(360deg) scale(.86)}}
+  .g-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(255,255,255,.28);animation:gRing 1.5s ease-out infinite}
+  .g-ring.r2{animation-delay:.75s}
+  @keyframes gRing{0%{transform:scale(.35);opacity:.85}100%{transform:scale(1.3);opacity:0}}
+  .g-draw{width:100%;margin-top:10px;min-height:50px;font-size:15px;border-radius:14px}
+  .g-draw:disabled{background:#1B1B1B;color:#5C5C5C;transform:none}
+  .g-exchange{
+    display:block;width:100%;margin-top:7px;padding:11px 10px;
+    font-size:11.5px;font-weight:500;letter-spacing:.02em;
+    color:#D6D6D6;background:#161616;border:1px solid #2E2E2E;border-radius:12px;
+    transition:color .16s ease,border-color .16s ease,opacity .16s ease,transform .12s ease;
+  }
+  .g-exchange:active{transform:scale(.99);border-color:#454545}
+  .g-exchange:disabled{color:#585858;background:#121212;border-color:#212121}
+  .g-sec{display:flex;align-items:baseline;justify-content:space-between;margin:20px 2px 9px}
+  .g-sec h3{margin:0;font-size:10.5px;font-weight:700;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+  .g-sec span{font-size:10.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .g-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .g-card{
+    position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;
+    background:#151515;border:1px solid #232323;border-radius:14px;
+    padding:13px 5px 10px;transition:transform .12s ease,border-color .16s ease,background .16s ease;
+  }
+  .g-card:active{transform:scale(.97)}
+  .g-card.owned{border-color:#2E2E2E;background:#161616}
+  .g-card.equipped{border-color:#5C5C5C;background:#1D1D1D;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+  .g-card.locked{opacity:.62}
+  .g-card.locked:active{transform:none}
+  .g-card.equipped::after{content:"✓";position:absolute;top:5px;right:7px;font-size:9px;line-height:1;color:#FFFFFF}
+  .g-star{line-height:0}
+  .g-star svg{width:22px;height:22px;display:block}
+  .g-name{font-size:10.5px;line-height:1.3;color:#E2E2E2;text-align:center;letter-spacing:-.01em;word-break:keep-all}
+  .g-card.locked .g-name{color:#6F6F6F;letter-spacing:.12em}
+  .g-rarity{font-size:8px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#6A6A6A}
+  .g-card[data-r="rare"] .g-rarity{color:#8E8E8E}
+  .g-card[data-r="epic"] .g-rarity{color:#BDBDBD}
+  .g-card[data-r="legendary"] .g-rarity{color:#EDEDED}
+  .g-hint{margin:13px 0 2px;font-size:10.5px;line-height:1.6;color:#4E4E4E;text-align:center}
 </style>
 </head>
 <body>
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <linearGradient id="starAurora" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7DD3FC"/>
+      <stop offset="34%" stop-color="#A78BFA"/>
+      <stop offset="68%" stop-color="#F0ABFC"/>
+      <stop offset="100%" stop-color="#6EE7B7"/>
+    </linearGradient>
+  </defs>
+</svg>
 <main class="app">
   <header class="top">
-    <div class="brand">
+    <button class="brand" id="brandBtn" type="button" data-i18n-aria="gachaOpen" aria-label="별 스킨 뽑기">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#FFFFFF"/></svg>
       FOCUS
-    </div>
+      <span class="brand-dot" id="brandDot" aria-hidden="true" hidden></span>
+    </button>
     <div class="head-right">
       <div class="lang" role="group" aria-label="Language / 言語">
         <button class="lang-btn" type="button" data-lang="ko" aria-pressed="true">KR</button>
@@ -357,7 +505,10 @@
     </div>
   </section>
 
-  <p class="foot" data-i18n="foot">날짜가 바뀌면 루틴 체크만 새로 시작됩니다 · 이 기기에만 저장</p>
+  <div class="foot-row">
+    <p class="foot" data-i18n="foot">날짜가 바뀌면 루틴 체크만 새로 시작됩니다 · 이 기기에만 저장</p>
+    <button class="refresh-btn" id="refreshBtn" type="button" data-i18n-aria="refreshAria" aria-label="최신 버전으로 새로고침">↻ <span data-i18n="refresh">새로고침</span></button>
+  </div>
 </main>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -378,6 +529,30 @@
   </div>
 </div>
 
+<div class="cal-overlay" id="gachaOverlay" hidden>
+  <div class="cal-sheet gacha-sheet" role="dialog" aria-modal="true" aria-labelledby="gachaTitle">
+    <div class="gacha-head">
+      <div class="gacha-title" id="gachaTitle">✦ <span data-i18n="gTitle">별 스킨</span></div>
+      <button class="gacha-close" id="gachaClose" type="button" data-i18n-aria="gClose" aria-label="닫기">✕</button>
+    </div>
+    <div class="g-wallet">
+      <div class="g-w-item"><span class="g-w-num" id="gTickets">0</span><span class="g-w-label" data-i18n="gTickets">뽑기권</span></div>
+      <span class="g-w-sep" aria-hidden="true"></span>
+      <div class="g-w-item"><span class="g-w-num" id="gShards">0</span><span class="g-w-label" data-i18n="gShards">별조각</span></div>
+      <span class="g-w-owned" id="gOwned"></span>
+    </div>
+    <div class="g-stage" id="gStage"></div>
+    <button class="btn-primary g-draw" id="gDraw" type="button">✦ 뽑기 (1장)</button>
+    <button class="g-exchange" id="gExchange" type="button">별조각 3개 → 뽑기권 1장</button>
+    <div class="g-sec">
+      <h3 data-i18n="gCollection">도감</h3>
+      <span id="gCount"></span>
+    </div>
+    <div class="g-grid" id="gGrid"></div>
+    <p class="g-hint" data-i18n="gHint">보유한 스킨을 탭하면 바로 장착됩니다</p>
+  </div>
+</div>
+
 <script>
 (function () {
   'use strict';
@@ -385,8 +560,10 @@
   var STORAGE_KEY = 'focus.v1';
   var HISTORY_KEY = 'focus.history.v1';
   var LANG_KEY = 'focus.lang';
+  var GACHA_KEY = 'focus.gacha.v1';
 
-  var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#BFBFBF"/></svg>';
+  var STAR_PATH = 'M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z';
+  var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + STAR_PATH + '" fill="#BFBFBF"/></svg>';
 
   var DEFAULT_ROUTINES = [
     '기상 후 머리 감기 · 세안',
@@ -409,6 +586,31 @@
     '연등 15분 (일본어 한자 인출)',
     '일기 · 다이어리 · 성경 1장',
     '체단실 · 식단 관리 (주 4회)'
+  ];
+
+  /* ✦ 별 스킨 — 12종 (base 1 + common 5 + rare 4 + epic 1 + legendary 1) */
+  var RARITY = {
+    base:      { ko: '기본',      ja: 'ベーシック' },
+    common:    { ko: '커먼',      ja: 'コモン' },
+    rare:      { ko: '레어',      ja: 'レア' },
+    epic:      { ko: '에픽',      ja: 'エピック' },
+    legendary: { ko: '레전더리',  ja: 'レジェンダリー' }
+  };
+  // 등급별 뽑기 확률(%) — 등급 안에서 균등 분배
+  var TIER_CHANCE = { common: 45, rare: 35, epic: 15, legendary: 5 };
+  var SKINS = [
+    { id: 'mono',     rarity: 'base',      ko: '모노 화이트',   ja: 'モノホワイト',      color: '#FFFFFF', glow: 'rgba(255,255,255,.30)' },
+    { id: 'silver',   rarity: 'common',    ko: '실버 미스트',   ja: 'シルバーミスト',    color: '#E7EDF4', glow: 'rgba(206,224,240,.50)' },
+    { id: 'ash',      rarity: 'common',    ko: '애쉬 스파클',   ja: 'アッシュスパークル', color: '#C6CBD1', glow: 'rgba(202,208,216,.42)' },
+    { id: 'sky',      rarity: 'common',    ko: '스카이 블루',   ja: 'スカイブルー',      color: '#7DD3FC', glow: 'rgba(125,211,252,.50)' },
+    { id: 'mint',     rarity: 'common',    ko: '민트 그린',     ja: 'ミントグリーン',    color: '#6EE7B7', glow: 'rgba(110,231,183,.46)' },
+    { id: 'lavender', rarity: 'common',    ko: '라벤더',        ja: 'ラベンダー',        color: '#C4B5FD', glow: 'rgba(196,181,253,.48)' },
+    { id: 'blue',     rarity: 'rare',      ko: '페일 블루',     ja: 'ペールブルー',      color: '#AFCDF0', glow: 'rgba(160,200,250,.50)' },
+    { id: 'rose',     rarity: 'rare',      ko: '로즈 쿼츠',     ja: 'ローズクォーツ',    color: '#F2B6CB', glow: 'rgba(244,168,198,.48)' },
+    { id: 'coral',    rarity: 'rare',      ko: '코랄 핑크',     ja: 'コーラルピンク',    color: '#FDA4AF', glow: 'rgba(253,164,175,.50)' },
+    { id: 'amber',    rarity: 'rare',      ko: '레몬 앰버',     ja: 'レモンアンバー',    color: '#FCD34D', glow: 'rgba(252,211,77,.50)' },
+    { id: 'gold',     rarity: 'epic',      ko: '골드 스타',     ja: 'ゴールドスター',    color: '#FFD466', glow: 'rgba(255,206,84,.60)' },
+    { id: 'aurora',   rarity: 'legendary', ko: '오로라 프리즘', ja: 'オーロラプリズム',  color: '#C4B5FD', glow: 'rgba(178,160,255,.58)', fill: 'url(#starAurora)' }
   ];
 
   var STR = {
@@ -453,7 +655,28 @@
       toastQueued: '대기열에 담았어요',
       toastRaised: '지금의 FOCUS로 올렸어요',
       toastSaved: '루틴을 저장했어요',
-      toastNewDay: '새 날 — 루틴을 새로 시작해요'
+      toastNewDay: '새 날 — 루틴을 새로 시작해요',
+      gachaOpen: '별 스킨 뽑기',
+      gTitle: '별 스킨',
+      gTickets: '뽑기권',
+      gShards: '별조각',
+      gOwned: '보유',
+      gDraw: '✦ 뽑기 (1장)',
+      gDrawBusy: '뽑는 중…',
+      gExchange: '별조각 3개 → 뽑기권 1장',
+      gCollection: '도감',
+      gHint: '보유한 스킨을 탭하면 바로 장착됩니다',
+      gIdle: '뽑기권으로 별 스킨을 뽑아 보세요',
+      gNew: 'NEW · 장착했어요',
+      gDup: '중복 · 별조각 +1',
+      gNoTicket: '뽑기권이 없어요 · 루틴을 모두 체크하면 +1',
+      gExchanged: '별조각 3개로 뽑기권 1장을 바꿨어요',
+      gEquipDone: '장착했어요',
+      gEquipped: '이미 장착 중이에요',
+      gClose: '닫기',
+      toastTicket: '✦ 루틴 완료! 뽑기권 +1',
+      refresh: '새로고침',
+      refreshAria: '최신 버전으로 새로고침'
     },
     ja: {
       nowFocus: '今のFOCUS',
@@ -496,7 +719,28 @@
       toastQueued: '待機リストに追加しました',
       toastRaised: '今のFOCUSに上げました',
       toastSaved: 'ルーティンを保存しました',
-      toastNewDay: '新しい日 — ルーティンをリセットします'
+      toastNewDay: '新しい日 — ルーティンをリセットします',
+      gachaOpen: '星スキンガチャ',
+      gTitle: '星スキン',
+      gTickets: 'ガチャ券',
+      gShards: '星のかけら',
+      gOwned: '所持',
+      gDraw: '✦ ガチャ (1枚)',
+      gDrawBusy: 'ガチャ中…',
+      gExchange: '星のかけら3個 → ガチャ券1枚',
+      gCollection: '図鑑',
+      gHint: '持っているスキンをタップすると装着されます',
+      gIdle: 'ガチャ券で星スキンを引いてみましょう',
+      gNew: 'NEW · 装着しました',
+      gDup: '重複 · 星のかけら +1',
+      gNoTicket: 'ガチャ券がありません · ルーティン達成で+1',
+      gExchanged: '星のかけら3個でガチャ券1枚と交換しました',
+      gEquipDone: '装着しました',
+      gEquipped: 'すでに装着中です',
+      gClose: '閉じる',
+      toastTicket: '✦ ルーティン達成！ガチャ券 +1',
+      refresh: '更新',
+      refreshAria: '最新バージョンに更新'
     }
   };
   var WEEK = {
@@ -790,6 +1034,253 @@
     if (m < 60) return m + t('minPassed');
     var h = Math.floor(m / 60);
     return h + t('hourPassed') + (m % 60) + t('minPassed');
+  }
+
+  /* ---------- gacha (star skins) ---------- */
+
+  function skinById(id) {
+    for (var i = 0; i < SKINS.length; i++) if (SKINS[i].id === id) return SKINS[i];
+    return null;
+  }
+
+  function skinName(s) {
+    if (!s) return '';
+    return lang === 'ja' ? s.ja : s.ko;
+  }
+
+  function rarityName(r) {
+    var o = RARITY[r];
+    return o ? (lang === 'ja' ? o.ja : o.ko) : '';
+  }
+
+  function skinFill(s) {
+    return s.fill || s.color;
+  }
+
+  function starMark(fill) {
+    return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + STAR_PATH + '" fill="' + fill + '"/></svg>';
+  }
+
+  function gachaDefaults() {
+    // 첫 접속: 웰컴 뽑기권 1장, 기본 스킨인 모노 화이트를 장착한 상태
+    return { tickets: 1, shards: 0, owned: ['mono'], equipped: 'mono', lastTicketDate: null };
+  }
+
+  function loadGacha() {
+    var base = gachaDefaults();
+    var raw = null;
+    try { raw = localStorage.getItem(GACHA_KEY); } catch (e) { return base; }
+    if (!raw) return base;
+    var s = null;
+    try { s = JSON.parse(raw); } catch (e) { return base; }
+    if (!s || typeof s !== 'object') return base;
+    var g = gachaDefaults();
+    if (typeof s.tickets === 'number' && s.tickets >= 0) g.tickets = Math.floor(s.tickets);
+    if (typeof s.shards === 'number' && s.shards >= 0) g.shards = Math.floor(s.shards);
+    var set = { mono: 1 };
+    if (Array.isArray(s.owned)) {
+      s.owned.forEach(function (id) { if (skinById(id)) set[id] = 1; });
+    }
+    g.owned = Object.keys(set);
+    if (typeof s.equipped === 'string' && g.owned.indexOf(s.equipped) >= 0) g.equipped = s.equipped;
+    if (typeof s.lastTicketDate === 'string') g.lastTicketDate = s.lastTicketDate;
+    return g;
+  }
+
+  var gacha = loadGacha();
+  var gachaOpen = false;
+  var drawing = false;
+  var lastResult = null;
+
+  function saveGacha() {
+    try { localStorage.setItem(GACHA_KEY, JSON.stringify(gacha)); } catch (e) {}
+  }
+
+  function applySkin() {
+    document.body.setAttribute('data-skin', gacha.equipped || 'mono');
+  }
+
+  function updateBrandBadge() {
+    var dot = $('brandDot');
+    if (dot) dot.hidden = gacha.tickets < 1;
+  }
+
+  function gachaCardHTML(s) {
+    var owned = gacha.owned.indexOf(s.id) >= 0;
+    var eq = gacha.equipped === s.id;
+    var fill = owned ? skinFill(s) : '#232323';
+    var cls = 'g-card' + (owned ? ' owned' : ' locked') + (eq ? ' equipped' : '');
+    var label = owned ? skinName(s) : '???';
+    return '<button class="' + cls + '" type="button" data-gs="' + s.id + '" data-r="' + s.rarity + '"' + (owned ? '' : ' disabled') + ' aria-label="' + esc(label + ' · ' + rarityName(s.rarity)) + '">' +
+      '<span class="g-star"' + (owned ? ' style="filter:drop-shadow(0 0 7px ' + s.glow + ')"' : '') + '>' + starMark(fill) + '</span>' +
+      '<span class="g-name">' + esc(label) + '</span>' +
+      '<span class="g-rarity">' + esc(rarityName(s.rarity)) + '</span>' +
+    '</button>';
+  }
+
+  function renderGachaResult(res) {
+    var s = res.skin;
+    $('gStage').innerHTML =
+      '<div class="g-res">' +
+        '<div class="g-res-star" style="filter:drop-shadow(0 0 16px ' + s.glow + ')">' + starMark(skinFill(s)) + '</div>' +
+        '<div class="g-res-name">' + esc(skinName(s)) + '</div>' +
+        '<div class="g-res-meta">' + esc(rarityName(s.rarity)) + '</div>' +
+        '<div class="g-res-tag' + (res.isNew ? '' : ' dup') + '">' + esc(t(res.isNew ? 'gNew' : 'gDup')) + '</div>' +
+      '</div>';
+  }
+
+  function renderGacha() {
+    $('gTickets').textContent = String(gacha.tickets);
+    $('gShards').textContent = String(gacha.shards);
+    $('gOwned').textContent = t('gOwned') + ' ' + gacha.owned.length + '/' + SKINS.length;
+    $('gCount').textContent = gacha.owned.length + '/' + SKINS.length;
+
+    var db = $('gDraw');
+    db.textContent = drawing ? t('gDrawBusy') : t('gDraw');
+    db.disabled = drawing || gacha.tickets < 1;
+
+    var ex = $('gExchange');
+    ex.disabled = gacha.shards < 3;
+    ex.textContent = t('gExchange') + (gacha.shards < 3 ? ' · ' + gacha.shards + '/3' : '');
+
+    $('gGrid').innerHTML = SKINS.map(gachaCardHTML).join('');
+
+    var stage = $('gStage');
+    if (drawing) {
+      stage.classList.add('spinning');
+      stage.innerHTML = '<div class="g-spin">' + starMark('#FFFFFF') +
+        '<span class="g-ring"></span><span class="g-ring r2"></span></div>';
+      return;
+    }
+    stage.classList.remove('spinning');
+    if (lastResult) renderGachaResult(lastResult);
+    else stage.innerHTML = '<div class="g-idle">' + esc(t('gIdle')) + '</div>';
+  }
+
+  function openGacha() {
+    gachaOpen = true;
+    lastResult = null;
+    drawing = false;
+    var ov = $('gachaOverlay');
+    ov.hidden = false;
+    renderGacha();
+    if (window.requestAnimationFrame) {
+      requestAnimationFrame(function () { ov.classList.add('open'); });
+    } else {
+      ov.classList.add('open');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeGacha() {
+    if (!gachaOpen) return;
+    gachaOpen = false;
+    var ov = $('gachaOverlay');
+    ov.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(function () { if (!gachaOpen) ov.hidden = true; }, 240);
+  }
+
+  function pickSkin() {
+    var order = ['common', 'rare', 'epic', 'legendary'];
+    var r = Math.random() * 100;
+    var acc = 0;
+    var tier = 'legendary';
+    for (var i = 0; i < order.length; i++) {
+      acc += TIER_CHANCE[order[i]];
+      if (r < acc) { tier = order[i]; break; }
+    }
+    var inTier = SKINS.filter(function (s) { return s.rarity === tier; });
+    return inTier[Math.floor(Math.random() * inTier.length)] || SKINS[1];
+  }
+
+  function drawOnce() {
+    if (drawing) return;
+    if (gacha.tickets < 1) { toastKey('gNoTicket'); return; }
+    drawing = true;
+    lastResult = null;
+    gacha.tickets -= 1;
+    saveGacha();
+    renderGacha();
+    updateBrandBadge();
+    if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
+
+    setTimeout(function () {
+      var skin = pickSkin();
+      var isNew = gacha.owned.indexOf(skin.id) < 0;
+      if (isNew) {
+        gacha.owned.push(skin.id);
+        gacha.equipped = skin.id;   // 새 스킨은 바로 장착
+      } else {
+        gacha.shards += 1;
+      }
+      saveGacha();
+      applySkin();
+      updateBrandBadge();
+      drawing = false;
+      lastResult = { skin: skin, isNew: isNew };
+      renderGacha();
+      if (navigator.vibrate) { try { navigator.vibrate(isNew ? [12, 40, 18] : 14); } catch (e) {} }
+    }, 980);
+  }
+
+  function equipSkin(id) {
+    if (gacha.owned.indexOf(id) < 0) return;
+    if (gacha.equipped === id) { toastKey('gEquipped'); return; }
+    gacha.equipped = id;
+    saveGacha();
+    applySkin();
+    renderGacha();
+    var s = skinById(id);
+    toast(skinName(s) + ' · ' + t('gEquipDone'));
+  }
+
+  function exchangeShards() {
+    if (gacha.shards < 3) return;
+    gacha.shards -= 3;
+    gacha.tickets += 1;
+    saveGacha();
+    renderGacha();
+    updateBrandBadge();
+    toastKey('gExchanged');
+  }
+
+  // 루틴을 그날 모두 체크했을 때 뽑기권 1장 (하루 1회)
+  function maybeAwardTicket() {
+    var total = state.routines.length;
+    if (total < 1) return;
+    var done = state.routines.filter(function (r) { return r.done; }).length;
+    if (done !== total) return;
+    var tk = todayKey();
+    if (gacha.lastTicketDate === tk) return;
+    gacha.lastTicketDate = tk;
+    gacha.tickets += 1;
+    saveGacha();
+    updateBrandBadge();
+    if (gachaOpen) renderGacha();
+    toastKey('toastTicket');
+  }
+
+  /* ---------- refresh ---------- */
+
+  function refreshApp() {
+    var btn = $('refreshBtn');
+    if (btn) btn.disabled = true;
+    var done = false;
+    var go = function () { if (done) return; done = true; location.reload(); };
+    if (!('serviceWorker' in navigator)) { go(); return; }
+    var regs;
+    try {
+      regs = navigator.serviceWorker.getRegistrations
+        ? navigator.serviceWorker.getRegistrations()
+        : Promise.resolve([]);
+    } catch (e) { go(); return; }
+    Promise.resolve(regs).then(function (list) {
+      return Promise.all(list.map(function (r) {
+        return r.update().catch(function () {});
+      }));
+    }).then(go).catch(go);
+    setTimeout(go, 1800);   // 서비스 워커 응답이 늦어도 새로고침
   }
 
   /* ---------- focus slot ---------- */
@@ -1087,6 +1578,7 @@
     renderQueue();
     renderRoutines();
     if (cal.isOpen) renderCal();
+    if (gachaOpen) renderGacha();
   }
 
   function setLang(next) {
@@ -1111,6 +1603,19 @@
   });
 
   $('dateBtn').addEventListener('click', openCal);
+  $('brandBtn').addEventListener('click', openGacha);
+  $('gachaClose').addEventListener('click', closeGacha);
+  $('gachaOverlay').addEventListener('click', function (e) {
+    if (e.target === $('gachaOverlay')) closeGacha();
+  });
+  $('gDraw').addEventListener('click', drawOnce);
+  $('gExchange').addEventListener('click', exchangeShards);
+  $('gGrid').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-gs]');
+    if (!btn) return;
+    equipSkin(btn.getAttribute('data-gs'));
+  });
+  $('refreshBtn').addEventListener('click', refreshApp);
   $('calClose').addEventListener('click', closeCal);
   $('calPrev').addEventListener('click', function () { shiftMonth(-1); });
   $('calNext').addEventListener('click', function () { shiftMonth(1); });
@@ -1128,6 +1633,7 @@
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && cal.isOpen) closeCal();
+    if (e.key === 'Escape' && gachaOpen) closeGacha();
   });
 
   $('focusRegion').addEventListener('submit', function (e) {
@@ -1219,7 +1725,10 @@
     syncToday();
     save();
     renderRoutines();
-    if (r.done && navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
+    if (r.done) {
+      if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
+      maybeAwardTicket();
+    }
   });
 
   $('routineList').addEventListener('input', function (e) {
@@ -1290,6 +1799,8 @@
   }, 20000);
 
   applyStaticI18n();
+  applySkin();
+  updateBrandBadge();
   syncToday();
   renderAll();
 
