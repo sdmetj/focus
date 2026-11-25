@@ -418,6 +418,13 @@
   .gacha-sheet{max-height:92dvh;padding:16px 14px 14px;-webkit-overflow-scrolling:touch}
   .gacha-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 13px}
   .gacha-title{font-size:14px;font-weight:600;letter-spacing:.06em;color:#EDEDED}
+  .g-test{
+    display:inline-flex;align-items:center;gap:5px;margin:-5px 2px 11px;
+    padding:5px 10px;border-radius:999px;border:1px dashed #3C3C3C;background:#141414;
+    font-size:10px;font-weight:500;letter-spacing:.05em;color:#B6B6B6;
+  }
+  .g-test b{font-weight:800;color:#FFFFFF;letter-spacing:.06em}
+  .g-test:active{border-color:#5A5A5A;color:#EDEDED}
   .gacha-close{width:30px;height:30px;border-radius:9px;border:1px solid transparent;color:var(--dim);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
   .gacha-close:active{color:var(--text)}
   .g-wallet{display:flex;align-items:center;gap:13px;background:#131313;border:1px solid #242424;border-radius:14px;padding:12px 14px}
@@ -589,6 +596,7 @@
       <div class="gacha-title" id="gachaTitle">✦ <span data-i18n="gTitle">별 스킨</span></div>
       <button class="gacha-close" id="gachaClose" type="button" data-i18n-aria="gClose" aria-label="닫기">✕</button>
     </div>
+    <button class="g-test" id="gTest" type="button" hidden></button>
     <div class="g-wallet">
       <div class="g-w-item"><span class="g-w-num" id="gTickets">0</span><span class="g-w-label" data-i18n="gTickets">뽑기권</span></div>
       <span class="g-w-sep" aria-hidden="true"></span>
@@ -735,6 +743,14 @@
       gEquipped: '이미 장착 중이에요',
       gClose: '닫기',
       toastTicket: '✦ 루틴 완료! 뽑기권 +1',
+      gTestUnlock: '해금 모드',
+      gTestLock: '제거 모드',
+      gTestOff: '끄기',
+      toastTestUnlock: '✦ TEST: 도감에서 원하는 스킨을 눌러 해금',
+      toastTestLock: '✦ TEST: 도감에서 스킨을 눌러 제거',
+      toastTestOff: '✦ TEST 모드 종료',
+      gUnlocked: '해금',
+      gLocked: '잠금',
       refresh: '새로고침',
       refreshAria: '최신 버전으로 새로고침'
     },
@@ -799,6 +815,14 @@
       gEquipped: 'すでに装着中です',
       gClose: '閉じる',
       toastTicket: '✦ ルーティン達成！ガチャ券 +1',
+      gTestUnlock: '解放モード',
+      gTestLock: '削除モード',
+      gTestOff: 'オフ',
+      toastTestUnlock: '✦ TEST：図鑑で好きなスキンをタップして解放',
+      toastTestLock: '✦ TEST：図鑑でスキンをタップして削除',
+      toastTestOff: '✦ TESTモード終了',
+      gUnlocked: '解放',
+      gLocked: 'ロック',
       refresh: '更新',
       refreshAria: '最新バージョンに更新'
     }
@@ -1161,6 +1185,7 @@
   var gachaOpen = false;
   var drawing = false;
   var lastResult = null;
+  var gachaTest = null;   // 'unlock' | 'lock' | null — 루틴 추가 입력창의 비밀 코드로 켜진다
 
   function saveGacha() {
     try { localStorage.setItem(GACHA_KEY, JSON.stringify(gacha)); } catch (e) {}
@@ -1185,7 +1210,8 @@
     var fill = owned ? skinFill(s) : '#232323';
     var cls = 'g-card' + (owned ? ' owned' : ' locked') + (eq ? ' equipped' : '');
     var label = owned ? skinName(s) : '???';
-    return '<button class="' + cls + '" type="button" data-gs="' + s.id + '" data-r="' + s.rarity + '"' + (owned ? '' : ' disabled') + ' aria-label="' + esc(label + ' · ' + rarityName(s.rarity)) + '">' +
+    var tappable = owned || gachaTest === 'unlock';
+    return '<button class="' + cls + '" type="button" data-gs="' + s.id + '" data-r="' + s.rarity + '"' + (tappable ? '' : ' disabled') + ' aria-label="' + esc(label + ' · ' + rarityName(s.rarity)) + '">' +
       '<span class="g-star fx' + (owned ? fxClass(s.id) : '') + '"' + (owned ? ' style="filter:drop-shadow(0 0 7px ' + s.glow + ')"' : '') + '>' + starMark(fill) + '</span>' +
       '<span class="g-name">' + esc(label) + '</span>' +
       '<span class="g-rarity">' + esc(rarityName(s.rarity)) + '</span>' +
@@ -1218,6 +1244,16 @@
     ex.textContent = t('gExchange') + (gacha.shards < 3 ? ' · ' + gacha.shards + '/3' : '');
 
     $('gGrid').innerHTML = SKINS.map(gachaCardHTML).join('');
+
+    var tb = $('gTest');
+    if (gachaTest) {
+      tb.hidden = false;
+      tb.innerHTML = '<b>TEST ' + (gachaTest === 'unlock' ? '+' : '−') + '</b> ' +
+        esc(t(gachaTest === 'unlock' ? 'gTestUnlock' : 'gTestLock')) + ' · ' + esc(t('gTestOff'));
+    } else {
+      tb.hidden = true;
+      tb.textContent = '';
+    }
 
     var stage = $('gStage');
     if (drawing) {
@@ -1317,6 +1353,57 @@
     renderGacha();
     updateBrandBadge();
     toastKey('gExchanged');
+  }
+
+  /* 테스트 모드 — 루틴 추가 입력창에 ★ 또는 ★- 를 넣고 추가를 누르면 켜진다 (성윤 님 전용 치트) */
+
+  function setTestMode(mode) {
+    gachaTest = mode;
+    if (gachaOpen) renderGacha();
+    toastKey(mode === 'unlock' ? 'toastTestUnlock' : 'toastTestLock');
+  }
+
+  function clearTestMode() {
+    gachaTest = null;
+    if (gachaOpen) renderGacha();
+    toastKey('toastTestOff');
+  }
+
+  // 편집 중인 루틴 입력값에서 치트 코드를 찾으면 그 줄을 지우고 모드를 켜다
+  function takeCheatCode() {
+    if (!draft) return false;
+    for (var i = 0; i < draft.length; i++) {
+      var v = (draft[i].text || '').trim();
+      if (v === '★' || v === '★-') {
+        draft.splice(i, 1);
+        renderRoutines();
+        setTestMode(v === '★' ? 'unlock' : 'lock');
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function testTapSkin(id) {
+    var s = skinById(id);
+    if (!s) return;
+    if (gachaTest === 'unlock') {
+      if (gacha.owned.indexOf(id) >= 0) { equipSkin(id); return; }
+      gacha.owned.push(id);
+      saveGacha();
+      renderGacha();
+      toast(skinName(s) + ' · ' + t('gUnlocked'));
+      return;
+    }
+    if (gachaTest === 'lock') {
+      if (id === 'mono' || gacha.owned.indexOf(id) < 0) return;
+      gacha.owned = gacha.owned.filter(function (x) { return x !== id; });
+      if (gacha.equipped === id) gacha.equipped = 'mono';
+      saveGacha();
+      applySkin();
+      renderGacha();
+      toast(skinName(s) + ' · ' + t('gLocked'));
+    }
   }
 
   // 루틴을 그날 모두 체크했을 때 뽑기권 1장 (하루 1회)
@@ -1687,8 +1774,11 @@
   $('gGrid').addEventListener('click', function (e) {
     var btn = e.target.closest('[data-gs]');
     if (!btn) return;
-    equipSkin(btn.getAttribute('data-gs'));
+    var id = btn.getAttribute('data-gs');
+    if (gachaTest) { testTapSkin(id); return; }
+    equipSkin(id);
   });
+  $('gTest').addEventListener('click', clearTestMode);
   $('refreshBtn').addEventListener('click', refreshApp);
   $('calClose').addEventListener('click', closeCal);
   $('calPrev').addEventListener('click', function () { shiftMonth(-1); });
@@ -1830,6 +1920,7 @@
   });
 
   $('addRoutine').addEventListener('click', function () {
+    if (takeCheatCode()) return;
     draft.push({ id: uid(), text: '', done: false });
     renderRoutines();
     var inputs = $('routineList').querySelectorAll('.r-input');
@@ -1837,6 +1928,7 @@
   });
 
   $('saveRoutines').addEventListener('click', function () {
+    if (takeCheatCode()) return;
     var clean = draft.filter(function (r) { return r.text.trim(); }).map(normalizeRoutine);
     state.routines = clean;
     syncToday();
