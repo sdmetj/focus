@@ -738,16 +738,18 @@
     };
   }
 
-  function syncToday() {
-    var key = todayKey();
-    var entry = todayEntry();
-    var has = entry.focusDone.length || entry.routinesDone.length;
+  function saveDayEntry(key, entry) {
+    var has = entry && entry.focusDone && (entry.focusDone.length || entry.routinesDone.length);
     if (!has) {
       if (history[key]) { delete history[key]; saveHistory(); }
       return;
     }
     history[key] = entry;
     saveHistory();
+  }
+
+  function syncToday() {
+    saveDayEntry(todayKey(), todayEntry());
   }
 
   function entryFor(key) {
@@ -1266,7 +1268,7 @@
   // 날짜 전환 감지
   function checkRollover() {
     if (state.date !== todayKey()) {
-      syncToday();          // 전날 기록을 확정
+      saveDayEntry(state.date, todayEntry());   // 전날 기존 날짜 그대로 기록을 확정
       state.date = todayKey();
       state.routines.forEach(function (r) { r.done = false; });
       state.todayCount = 0;
