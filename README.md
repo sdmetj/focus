@@ -37,5 +37,8 @@
 ## 새로고침
 - 푸터의 `↻ 새로고침` — 서비스 워커 업데이트를 확인한 뒤 `location.reload()`로 최신 화면을 불러옵니다. 저장 데이터(`localStorage`)는 유지됩니다. (홈 화면 PWA 모드에는 당겨서 새로고침이 없습니다)
 
+## 업데이트 안내
+- `index.html`의 `APP_VERSION`(현재 `1.4.0`)과 `CHANGELOG`만 고치면, 접속 시 `focus.seenVersion`과 다를 때 한 번만 `✦ FOCUS 업데이트` 팝업이 뜨고 `확인`을 누르면 해당 버전이 저장됩니다.
+
 ## 배포
 GitHub Pages — `main` 브랜치 루트(`/`).

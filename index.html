@@ -490,6 +490,24 @@
   .g-card[data-r="epic"] .g-rarity{color:#BDBDBD}
   .g-card[data-r="legendary"] .g-rarity{color:#EDEDED}
   .g-hint{margin:13px 0 2px;font-size:10.5px;line-height:1.6;color:#4E4E4E;text-align:center}
+
+  /* ---------- update notice ---------- */
+  .upd-overlay{align-items:center;z-index:58;padding:0 18px calc(env(safe-area-inset-bottom) + 18px)}
+  .upd-card{
+    width:100%;max-width:400px;
+    background:linear-gradient(180deg,#161616 0%,#101010 100%);
+    border:1px solid #2C2C2C;border-radius:20px;padding:20px 18px 16px;
+    box-shadow:0 24px 64px rgba(0,0,0,.78), inset 0 1px 0 rgba(255,255,255,.05);
+    transform:translateY(10px) scale(.985);transition:transform .26s cubic-bezier(.2,.8,.2,1);
+  }
+  .cal-overlay.open .upd-card{transform:translateY(0) scale(1)}
+  .upd-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+  .upd-title{font-size:14.5px;font-weight:700;letter-spacing:.02em;color:#F2F2F2}
+  .upd-ver{font-size:10px;font-weight:600;letter-spacing:.08em;color:#8C8C8C;background:#1D1D1D;border:1px solid #2E2E2E;border-radius:999px;padding:3px 8px;font-variant-numeric:tabular-nums}
+  .upd-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+  .upd-list li{position:relative;padding-left:15px;font-size:12.5px;line-height:1.6;color:#D2D2D2;word-break:keep-all;overflow-wrap:anywhere}
+  .upd-list li::before{content:"✦";position:absolute;left:0;top:0;font-size:8.5px;line-height:2.1;color:#6E6E6E}
+  .upd-ok{width:100%;margin-top:16px;min-height:46px;font-size:14px;border-radius:13px}
 </style>
 </head>
 <body>
@@ -615,6 +633,17 @@
   </div>
 </div>
 
+<div class="cal-overlay upd-overlay" id="updateOverlay" hidden>
+  <div class="upd-card" role="dialog" aria-modal="true" aria-labelledby="updTitle">
+    <div class="upd-head">
+      <div class="upd-title" id="updTitle">✦ <span data-i18n="updTitle">FOCUS 업데이트</span></div>
+      <div class="upd-ver" id="updVer"></div>
+    </div>
+    <ul class="upd-list" id="updList"></ul>
+    <button class="btn-primary upd-ok" id="updOk" type="button" data-i18n="updOk">확인</button>
+  </div>
+</div>
+
 <script>
 (function () {
   'use strict';
@@ -623,6 +652,24 @@
   var HISTORY_KEY = 'focus.history.v1';
   var LANG_KEY = 'focus.lang';
   var GACHA_KEY = 'focus.gacha.v1';
+  var SEEN_VERSION_KEY = 'focus.seenVersion';
+
+  // 업데이트 안내 — 버전과 변경사항만 고치면 새 소식 팝업이 자동으로 뜬다
+  var APP_VERSION = '1.4.0';
+  var CHANGELOG = {
+    '1.4.0': {
+      ko: [
+        '✦ 별 스킨 도감 & 뽑기 (18종) — 매일 루틴 완료 시 뽑기권 +1장',
+        '오빗 링 · 크레센트 · 미드나잇 아우라 등 특수/테마 스킨 추가',
+        '하단 ↻ 새로고침 버튼 추가'
+      ],
+      ja: [
+        '✦ 星スキン図鑑＆ガチャ（18種） — 毎日のルーティン達成でガチャ券+1枚',
+        'オービットリング・クレセント・ミッドナイトオーラなど特殊/テーマスキンを追加',
+        '下部に ↻ 更新ボタンを追加'
+      ]
+    }
+  };
 
   var STAR_PATH = 'M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z';
   var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + STAR_PATH + '" fill="#BFBFBF"/></svg>';
@@ -751,6 +798,8 @@
       toastTestOff: '✦ TEST 모드 종료',
       gUnlocked: '해금',
       gLocked: '잠금',
+      updTitle: 'FOCUS 업데이트',
+      updOk: '확인',
       refresh: '새로고침',
       refreshAria: '최신 버전으로 새로고침'
     },
@@ -823,6 +872,8 @@
       toastTestOff: '✦ TESTモード終了',
       gUnlocked: '解放',
       gLocked: 'ロック',
+      updTitle: 'FOCUS アップデート',
+      updOk: '確認',
       refresh: '更新',
       refreshAria: '最新バージョンに更新'
     }
@@ -1444,6 +1495,50 @@
     setTimeout(go, 1800);   // 서비스 워커 응답이 늦어도 새로고침
   }
 
+  /* ---------- update notice ---------- */
+
+  var updateOpen = false;
+
+  function readSeenVersion() {
+    try { return localStorage.getItem(SEEN_VERSION_KEY) || ''; } catch (e) { return APP_VERSION; }
+  }
+
+  function markVersionSeen() {
+    try { localStorage.setItem(SEEN_VERSION_KEY, APP_VERSION); } catch (e) {}
+  }
+
+  function renderUpdate() {
+    $('updVer').textContent = 'v' + APP_VERSION;
+    var entry = CHANGELOG[APP_VERSION];
+    var list = (entry && (lang === 'ja' ? entry.ja : entry.ko)) || [];
+    $('updList').innerHTML = list.map(function (line) {
+      return '<li>' + esc(String(line).replace(/^✦\s*/, '')) + '</li>';
+    }).join('');
+  }
+
+  function openUpdate() {
+    updateOpen = true;
+    var ov = $('updateOverlay');
+    ov.hidden = false;
+    renderUpdate();
+    if (window.requestAnimationFrame) {
+      requestAnimationFrame(function () { ov.classList.add('open'); });
+    } else {
+      ov.classList.add('open');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeUpdate() {
+    if (!updateOpen) return;
+    updateOpen = false;
+    markVersionSeen();
+    var ov = $('updateOverlay');
+    ov.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(function () { if (!updateOpen) ov.hidden = true; }, 240);
+  }
+
   /* ---------- focus slot ---------- */
 
   function renderFocus() {
@@ -1740,6 +1835,7 @@
     renderRoutines();
     if (cal.isOpen) renderCal();
     if (gachaOpen) renderGacha();
+    if (updateOpen) renderUpdate();
   }
 
   function setLang(next) {
@@ -1780,6 +1876,10 @@
   });
   $('gTest').addEventListener('click', clearTestMode);
   $('refreshBtn').addEventListener('click', refreshApp);
+  $('updOk').addEventListener('click', closeUpdate);
+  $('updateOverlay').addEventListener('click', function (e) {
+    if (e.target === $('updateOverlay')) closeUpdate();
+  });
   $('calClose').addEventListener('click', closeCal);
   $('calPrev').addEventListener('click', function () { shiftMonth(-1); });
   $('calNext').addEventListener('click', function () { shiftMonth(1); });
@@ -1798,6 +1898,7 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && cal.isOpen) closeCal();
     if (e.key === 'Escape' && gachaOpen) closeGacha();
+    if (e.key === 'Escape' && updateOpen) closeUpdate();
   });
 
   $('focusRegion').addEventListener('submit', function (e) {
@@ -1969,6 +2070,9 @@
   updateBrandBadge();
   syncToday();
   renderAll();
+
+  // 이 버전의 소식을 아직 안 봤으면 한 번만 안내
+  if (readSeenVersion() !== APP_VERSION) openUpdate();
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
