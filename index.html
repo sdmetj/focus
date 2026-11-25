@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FOCUS</title>
+<meta name="description" content="지금 집중할 한 가지와 매일 루틴만 남긴 미니 앱">
+<meta name="theme-color" content="#0A0A0A">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FOCUS">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<style>
+  :root{
+    --bg:#0A0A0A;
+    --card:#141414;
+    --card-hi:#1A1A1A;
+    --line:#2A2A2A;
+    --line-soft:#232323;
+    --text:#F5F5F5;
+    --muted:#9E9E9E;
+    --dim:#6B6B6B;
+    --faint:#4A4A4A;
+    --accent:#FFFFFF;
+    --ink:#0A0A0A;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{background:var(--bg)}
+  body{
+    margin:0;
+    min-height:100dvh;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 28px);
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    top:-200px;left:50%;transform:translateX(-50%);
+    width:520px;height:420px;
+    background:radial-gradient(circle, rgba(255,255,255,.055), rgba(255,255,255,0) 68%);
+    pointer-events:none;
+    z-index:0;
+  }
+  .app{position:relative;z-index:1;max-width:460px;margin:0 auto}
+  button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit;user-select:none}
+  input{font-family:inherit}
+  :focus-visible{outline:2px solid rgba(255,255,255,.55);outline-offset:2px}
+
+  /* header */
+  .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px}
+  .brand{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700;letter-spacing:.34em;color:var(--text)}
+  .brand svg{width:15px;height:15px;display:block;filter:drop-shadow(0 0 6px rgba(255,255,255,.25))}
+  .date{font-size:12px;letter-spacing:.08em;color:var(--dim);font-variant-numeric:tabular-nums}
+
+  /* section head */
+  .eyebrow-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:13px}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+  .today-count{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+
+  /* empty compose */
+  .compose{display:flex;gap:8px;align-items:stretch}
+  .compose input{
+    flex:1 1 auto;min-width:0;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 15px;font-size:16px;color:var(--text);
+  }
+  .compose input::placeholder{color:var(--faint)}
+  .compose input:focus{outline:none;border-color:#4A4A4A;background:#161616}
+
+  /* buttons */
+  .btn-primary{
+    background:var(--accent);color:var(--ink);font-weight:700;font-size:15px;
+    padding:0 18px;min-height:52px;border-radius:14px;white-space:nowrap;
+    letter-spacing:-.01em;
+    transition:transform .12s ease, background .12s ease, opacity .12s ease;
+  }
+  .btn-primary:active{transform:scale(.97);background:#E2E2E2}
+  .btn-ghost{
+    border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:500;
+    padding:13px 14px;border-radius:12px;background:rgba(255,255,255,.012);
+    transition:transform .12s ease,color .12s ease,border-color .12s ease;
+  }
+  .btn-ghost:active{transform:scale(.97);color:var(--text);border-color:#3A3A3A}
+
+  /* focus card */
+  .focus-card{
+    position:relative;overflow:hidden;
+    background:linear-gradient(162deg,#1C1C1C 0%,#121212 100%);
+    border:1px solid #2E2E2E;border-radius:20px;
+    padding:20px 20px 18px;
+    box-shadow:0 20px 48px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.06);
+    transition:transform .22s ease, opacity .22s ease;
+  }
+  .focus-card::after{
+    content:"";position:absolute;top:-90px;right:-80px;width:200px;height:200px;
+    background:radial-gradient(circle, rgba(255,255,255,.07), rgba(255,255,255,0) 70%);
+    pointer-events:none;
+  }
+  .focus-card.leaving{transform:translateY(-8px) scale(.97);opacity:0}
+  .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .tag{
+    display:flex;align-items:center;gap:6px;
+    font-size:10px;font-weight:700;letter-spacing:.22em;color:var(--muted);
+    border:1px solid #333333;background:#1E1E1E;
+    border-radius:999px;padding:4px 10px;
+  }
+  .tag svg{width:9px;height:9px;display:block}
+  .elapsed{font-size:11.5px;color:var(--dim);font-variant-numeric:tabular-nums;letter-spacing:.03em}
+  .goal-text{
+    margin:0 0 20px;font-size:23px;line-height:1.45;font-weight:600;letter-spacing:-.015em;
+    color:#FAFAFA;word-break:keep-all;overflow-wrap:anywhere;
+  }
+  .actions{display:flex;gap:8px;align-items:center}
+  .actions .btn-primary{flex:1 1 auto;min-height:50px}
+
+  /* goal edit */
+  .goal-edit-input{
+    width:100%;background:#0D0D0D;border:1px solid #454545;border-radius:12px;
+    padding:14px;font-size:17px;font-weight:500;color:var(--text);margin-bottom:14px;
+  }
+  .goal-edit-input:focus{outline:none;border-color:#6B6B6B}
+
+  /* queue */
+  .queue{margin-top:14px;border-radius:16px;background:#111111;border:1px solid #1F1F1F}
+  .queue summary{
+    display:flex;align-items:center;gap:8px;list-style:none;
+    padding:13px 15px;font-size:13px;color:var(--muted);cursor:pointer;
+  }
+  .queue summary::-webkit-details-marker{display:none}
+  .q-count{
+    font-size:11px;font-weight:600;color:var(--dim);background:#1A1A1A;
+    border-radius:999px;padding:2px 8px;font-variant-numeric:tabular-nums;
+  }
+  .chev{margin-left:auto;color:var(--faint);transition:transform .2s ease;font-size:15px;line-height:1}
+  .queue[open] .chev{transform:rotate(90deg)}
+  .q-body{padding:0 12px 12px}
+  .q-list{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:6px}
+  .q-list:empty{display:none}
+  .q-item{display:flex;align-items:center;gap:8px;background:#161616;border-radius:11px;padding:9px 8px 9px 12px}
+  .q-text{flex:1 1 auto;min-width:0;font-size:14px;color:#CFCFCF;line-height:1.35;overflow-wrap:anywhere}
+  .q-btn{
+    flex:0 0 auto;width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    font-size:13px;color:var(--dim);background:#1D1D1D;border:1px solid #2A2A2A;
+  }
+  .q-btn.up{color:#F0F0F0;border-color:#3A3A3A}
+  .q-btn:active{transform:scale(.94)}
+  .q-add{display:flex;gap:7px}
+  .q-add input{
+    flex:1 1 auto;min-width:0;background:#161616;border:1px solid #262626;border-radius:11px;
+    padding:11px 12px;font-size:15px;color:var(--text);
+  }
+  .q-add input::placeholder{color:var(--faint)}
+  .q-add input:focus{outline:none;border-color:#454545}
+  .q-add button{
+    flex:0 0 auto;width:44px;border-radius:11px;background:#1F1F1F;border:1px solid #2E2E2E;
+    color:#EDEDED;font-size:18px;font-weight:400;display:flex;align-items:center;justify-content:center;
+  }
+  .q-add button:active{transform:scale(.95);background:#282828}
+
+  /* routines */
+  .routines{margin-top:40px}
+  .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+  .sec-head h2{margin:0;font-size:15px;font-weight:600;letter-spacing:.01em}
+  .sec-head .right{display:flex;align-items:center;gap:10px}
+  .prog{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .prog.full{color:#FFFFFF}
+  .icon-btn{font-size:12px;font-weight:500;color:var(--dim);padding:6px 4px}
+  .icon-btn:active{color:var(--text)}
+  .bar{height:2px;border-radius:999px;background:#1E1E1E;overflow:hidden;margin-bottom:14px}
+  .bar-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#8A8A8A,#FFFFFF);transition:width .35s cubic-bezier(.4,0,.2,1)}
+  .r-list{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid #202020;border-radius:16px;overflow:hidden}
+  .r-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:15px 16px;border-bottom:1px solid #1C1C1C;font-size:14.5px;line-height:1.4;color:var(--text);background:none;transition:background .15s ease}
+  .r-item:last-child{border-bottom:0}
+  .r-item:active{background:#181818}
+  .check{
+    flex:0 0 auto;width:22px;height:22px;border-radius:50%;border:1.5px solid #3D3D3D;
+    display:flex;align-items:center;justify-content:center;transition:all .18s ease;
+  }
+  .check svg{width:12px;height:12px;opacity:0;transform:scale(.6);transition:all .18s ease}
+  .r-item.done .check{background:#FFFFFF;border-color:#FFFFFF}
+  .r-item.done .check svg{opacity:1;transform:scale(1)}
+  .r-text{flex:1 1 auto;min-width:0;word-break:keep-all;overflow-wrap:anywhere}
+  .r-item.done .r-text{color:#6F6F6F;text-decoration:line-through;text-decoration-color:#4A4A4A;text-decoration-thickness:1px}
+  .r-edit{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid #1C1C1C}
+  .r-edit:last-child{border-bottom:0}
+  .r-edit input{
+    flex:1 1 auto;min-width:0;background:#0D0D0D;border:1px solid #2E2E2E;border-radius:10px;
+    padding:11px 12px;font-size:15px;color:var(--text);
+  }
+  .r-edit input:focus{outline:none;border-color:#565656}
+  .r-del{flex:0 0 auto;width:34px;height:34px;border-radius:10px;border:1px solid #2E2E2E;color:#8A8A8A;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .r-del:active{color:#FFFFFF;border-color:#555555}
+  .edit-actions{display:flex;gap:8px;margin-top:12px}
+  .edit-actions .btn-primary{flex:1 1 auto;min-height:46px;font-size:14px}
+  .edit-actions .btn-ghost{min-height:46px}
+  .all-done{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:13px;font-size:12.5px;color:var(--muted);text-align:center;letter-spacing:.02em}
+  .all-done svg{width:11px;height:11px}
+
+  .foot{margin-top:36px;font-size:11px;line-height:1.7;color:#4A4A4A;text-align:center}
+
+  /* toast */
+  .toast{
+    position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 30px);
+    transform:translate(-50%,10px);opacity:0;pointer-events:none;
+    background:#1E1E1E;border:1px solid #333333;color:var(--text);
+    font-size:13.5px;font-weight:500;padding:12px 18px;border-radius:999px;
+    box-shadow:0 16px 36px rgba(0,0,0,.6);transition:opacity .22s ease,transform .22s ease;
+    max-width:calc(100vw - 48px);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#FFFFFF"/></svg>
+      FOCUS
+    </div>
+    <div class="date" id="dateLabel"></div>
+  </header>
+
+  <section>
+    <div class="eyebrow-row">
+      <span class="eyebrow">지금의 FOCUS</span>
+      <span class="today-count" id="todayCount"></span>
+    </div>
+    <div id="focusRegion"></div>
+
+    <details class="queue" id="queueDrawer">
+      <summary>
+        <span>다음 대기열</span>
+        <span class="q-count" id="queueCount">0</span>
+        <span class="chev">›</span>
+      </summary>
+      <div class="q-body">
+        <ul class="q-list" id="queueList"></ul>
+        <form class="q-add" id="queueForm">
+          <input id="queueInput" placeholder="나중에 할 일 적어두기" maxlength="120" autocomplete="off" enterkeyhint="done">
+          <button type="submit" aria-label="대기열에 추가">＋</button>
+        </form>
+      </div>
+    </details>
+  </section>
+
+  <section class="routines">
+    <div class="sec-head">
+      <h2>매일 루틴</h2>
+      <div class="right">
+        <span class="prog" id="progLabel">0/4</span>
+        <button class="icon-btn" id="editBtn" type="button">편집</button>
+      </div>
+    </div>
+    <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+    <ul class="r-list" id="routineList"></ul>
+    <div class="edit-actions" id="editActions" hidden>
+      <button class="btn-ghost" id="addRoutine" type="button">＋ 루틴 추가</button>
+      <button class="btn-primary" id="saveRoutines" type="button">저장</button>
+      <button class="btn-ghost" id="cancelRoutines" type="button">취소</button>
+    </div>
+    <p class="all-done" id="allDone" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#C9C9C9"/></svg>
+      오늘 루틴 완료
+    </p>
+  </section>
+
+  <p class="foot">날짜가 바뀌면 루틴 체크만 새로 시작됩니다 · 이 기기에만 저장</p>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'focus.v1';
+  var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#BFBFBF"/></svg>';
+  var DEFAULT_ROUTINES = [
+    '낮 일과 10분 (병기본 1항목 복기)',
+    '연등 15분 (일본어 한자 인출)',
+    '일기 · 다이어리 · 성경 1장',
+    '체단실 · 식단 관리 (주 4회)'
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function uid() {
+    return Math.random().toString(36).slice(2, 9);
+  }
+
+  function todayKey() {
+    var d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function defaults() {
+    return {
+      date: todayKey(),
+      goal: null,
+      goalStartedAt: null,
+      routines: DEFAULT_ROUTINES.map(function (t) {
+        return { id: uid(), text: t, done: false };
+      }),
+      queue: [],
+      todayCount: 0
+    };
+  }
+
+  var state = load();
+  var editMode = false;
+  var draft = null;
+  var completing = false;
+  var toastTimer = null;
+
+  function load() {
+    var base = defaults();
+    var raw = null;
+    try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { raw = null; }
+    if (!raw) return base;
+    var saved;
+    try { saved = JSON.parse(raw); } catch (e) { return base; }
+    if (!saved || typeof saved !== 'object') return base;
+
+    var s = base;
+    if (typeof saved.goal === 'string' && saved.goal.trim()) {
+      s.goal = { text: saved.goal.trim() };
+    } else if (saved.goal && typeof saved.goal.text === 'string' && saved.goal.text.trim()) {
+      s.goal = { text: saved.goal.text.trim() };
+    }
+    if (typeof saved.goalStartedAt === 'number') s.goalStartedAt = saved.goalStartedAt;
+    if (Array.isArray(saved.routines) && saved.routines.length) {
+      var list = saved.routines.filter(function (r) {
+        return r && typeof r.text === 'string' && r.text.trim();
+      }).map(function (r) {
+        return { id: typeof r.id === 'string' ? r.id : uid(), text: r.text.trim(), done: !!r.done };
+      });
+      if (list.length) s.routines = list;
+    }
+    if (Array.isArray(saved.queue)) {
+      s.queue = saved.queue.filter(function (t) { return typeof t === 'string' && t.trim(); })
+        .map(function (t) { return t.trim(); });
+    }
+    if (typeof saved.todayCount === 'number' && saved.todayCount >= 0) s.todayCount = saved.todayCount;
+    if (typeof saved.date === 'string') s.date = saved.date;
+
+    // 날짜가 바뀌었으면 체크 상태만 초기화 (루틴 텍스트는 유지)
+    if (s.date !== todayKey()) {
+      s.date = todayKey();
+      s.routines.forEach(function (r) { r.done = false; });
+      s.todayCount = 0;
+    }
+    if (s.goal && typeof s.goalStartedAt !== 'number') s.goalStartedAt = Date.now();
+    return s;
+  }
+
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function toast(msg) {
+    var el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 1900);
+  }
+
+  function elapsedText() {
+    if (!state.goal || !state.goalStartedAt) return '';
+    var m = Math.floor((Date.now() - state.goalStartedAt) / 60000);
+    if (m < 1) return '방금 시작';
+    if (m < 60) return m + '분째';
+    var h = Math.floor(m / 60);
+    return h + '시간 ' + (m % 60) + '분째';
+  }
+
+  /* ---------- focus slot ---------- */
+
+  function renderFocus() {
+    var region = $('focusRegion');
+    var tc = $('todayCount');
+    tc.textContent = state.todayCount > 0 ? '오늘 완료 ' + state.todayCount : '';
+
+    if (state.goal) {
+      region.innerHTML =
+        '<div class="focus-card" id="focusCard">' +
+          '<div class="card-top">' +
+            '<span class="tag">' + STAR + 'FOCUS</span>' +
+            '<span class="elapsed" id="elapsed">' + esc(elapsedText()) + '</span>' +
+          '</div>' +
+          '<p class="goal-text">' + esc(state.goal.text) + '</p>' +
+          '<div class="actions">' +
+            '<button class="btn-primary" type="button" data-act="complete">완료 ✓</button>' +
+            '<button class="btn-ghost" type="button" data-act="edit">수정</button>' +
+            '<button class="btn-ghost" type="button" data-act="clear">비우기</button>' +
+          '</div>' +
+        '</div>';
+    } else {
+      region.innerHTML =
+        '<form class="compose" id="composeForm" autocomplete="off">' +
+          '<input id="goalInput" placeholder="지금 집중할 한 가지" maxlength="120" enterkeyhint="go" aria-label="지금 집중할 한 가지">' +
+          '<button class="btn-primary" type="submit">집중 시작</button>' +
+        '</form>';
+    }
+  }
+
+  function renderGoalEdit() {
+    var region = $('focusRegion');
+    region.innerHTML =
+      '<form class="focus-card" id="goalEditForm">' +
+        '<div class="card-top"><span class="tag">' + STAR + '수정</span></div>' +
+        '<input class="goal-edit-input" id="goalEditInput" maxlength="120" value="' + esc(state.goal ? state.goal.text : '') + '" aria-label="목표 수정">' +
+        '<div class="actions">' +
+          '<button class="btn-primary" type="submit">저장</button>' +
+          '<button class="btn-ghost" type="button" data-act="cancelEdit">취소</button>' +
+        '</div>' +
+      '</form>';
+    var input = $('goalEditInput');
+    if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
+  }
+
+  function setGoal(text) {
+    text = (text || '').trim();
+    if (!text) return false;
+    if (state.goal && state.goal.text === text) { toast('이미 지금의 FOCUS예요'); return true; }
+    if (state.goal) state.queue.unshift(state.goal.text);
+    state.goal = { text: text };
+    state.goalStartedAt = Date.now();
+    save();
+    renderAll();
+    return true;
+  }
+
+  function completeGoal() {
+    if (!state.goal || completing) return;
+    completing = true;
+    var card = $('focusCard');
+    if (card) card.classList.add('leaving');
+    setTimeout(function () {
+      state.goal = null;
+      state.goalStartedAt = null;
+      state.todayCount = (state.todayCount || 0) + 1;
+      save();
+      completing = false;
+      renderAll();
+      toast('완료 · 슬롯을 비웠어요');
+      if (navigator.vibrate) { try { navigator.vibrate(18); } catch (e) {} }
+    }, 230);
+  }
+
+  /* ---------- queue ---------- */
+
+  function renderQueue() {
+    var list = $('queueList');
+    $('queueCount').textContent = String(state.queue.length);
+    list.innerHTML = state.queue.map(function (t, i) {
+      return '<li class="q-item">' +
+        '<span class="q-text">' + esc(t) + '</span>' +
+        '<button class="q-btn up" type="button" data-q="up" data-i="' + i + '" aria-label="지금의 FOCUS로 올리기">↑</button>' +
+        '<button class="q-btn" type="button" data-q="del" data-i="' + i + '" aria-label="대기열에서 삭제">✕</button>' +
+      '</li>';
+    }).join('');
+  }
+
+  /* ---------- routines ---------- */
+
+  function renderRoutines() {
+    var list = $('routineList');
+    var total = state.routines.length;
+    var done = state.routines.filter(function (r) { return r.done; }).length;
+    var prog = $('progLabel');
+    prog.textContent = done + '/' + total;
+    prog.classList.toggle('full', total > 0 && done === total);
+    $('barFill').style.width = total ? (done / total * 100) + '%' : '0%';
+    $('allDone').hidden = !(total > 0 && done === total);
+
+    $('editActions').hidden = !editMode;
+    $('editBtn').hidden = editMode;
+
+    if (editMode) {
+      list.innerHTML = draft.map(function (r, i) {
+        return '<li class="r-edit">' +
+          '<input class="r-input" data-i="' + i + '" maxlength="80" value="' + esc(r.text) + '" aria-label="루틴 이름">' +
+          '<button class="r-del" type="button" data-del="' + i + '" aria-label="루틴 삭제">✕</button>' +
+        '</li>';
+      }).join('');
+    } else {
+      list.innerHTML = state.routines.map(function (r) {
+        return '<li>' +
+          '<button class="r-item' + (r.done ? ' done' : '') + '" type="button" role="checkbox" aria-checked="' + (r.done ? 'true' : 'false') + '" data-toggle="' + r.id + '">' +
+            '<span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5.2 5L20 6.5" stroke="#0A0A0A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+            '<span class="r-text">' + esc(r.text) + '</span>' +
+          '</button>' +
+        '</li>';
+      }).join('');
+    }
+  }
+
+  function renderAll() {
+    var d = new Date();
+    var days = ['일', '월', '화', '수', '목', '금', '토'];
+    $('dateLabel').textContent = (d.getMonth() + 1) + '.' + d.getDate() + ' ' + days[d.getDay()];
+    renderFocus();
+    renderQueue();
+    renderRoutines();
+  }
+
+  /* ---------- events ---------- */
+
+  $('focusRegion').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (e.target.id === 'composeForm') {
+      var input = $('goalInput');
+      if (setGoal(input ? input.value : '')) {
+        toast('집중 시작');
+        if (navigator.vibrate) { try { navigator.vibrate(12); } catch (err) {} }
+      } else if (input) {
+        input.focus();
+      }
+    } else if (e.target.id === 'goalEditForm') {
+      var v = $('goalEditInput');
+      var text = v ? v.value.trim() : '';
+      if (!text) { renderFocus(); return; }
+      state.goal = { text: text };
+      save();
+      renderAll();
+      toast('수정했어요');
+    }
+  });
+
+  $('focusRegion').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    var act = btn.getAttribute('data-act');
+    if (act === 'complete') completeGoal();
+    else if (act === 'edit') renderGoalEdit();
+    else if (act === 'cancelEdit') renderFocus();
+    else if (act === 'clear') {
+      state.goal = null;
+      state.goalStartedAt = null;
+      save();
+      renderAll();
+      toast('슬롯을 비웠어요');
+    }
+  });
+
+  $('queueForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var input = $('queueInput');
+    var v = input ? input.value.trim() : '';
+    if (!v) return;
+    state.queue.push(v);
+    save();
+    renderQueue();
+    input.value = '';
+    $('queueDrawer').open = true;
+    toast('대기열에 담았어요');
+  });
+
+  $('queueList').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-q]');
+    if (!btn) return;
+    var i = parseInt(btn.getAttribute('data-i'), 10);
+    var kind = btn.getAttribute('data-q');
+    if (isNaN(i) || !state.queue[i]) return;
+    if (kind === 'up') {
+      var text = state.queue.splice(i, 1)[0];
+      setGoal(text);
+      toast('지금의 FOCUS로 올렸어요');
+    } else if (kind === 'del') {
+      state.queue.splice(i, 1);
+      save();
+      renderQueue();
+    }
+  });
+
+  $('routineList').addEventListener('click', function (e) {
+    if (editMode) {
+      var del = e.target.closest('[data-del]');
+      if (del) {
+        var di = parseInt(del.getAttribute('data-del'), 10);
+        if (!isNaN(di)) {
+          draft.splice(di, 1);
+          renderRoutines();
+        }
+      }
+      return;
+    }
+    var btn = e.target.closest('[data-toggle]');
+    if (!btn) return;
+    var id = btn.getAttribute('data-toggle');
+    var r = state.routines.find(function (x) { return x.id === id; });
+    if (!r) return;
+    r.done = !r.done;
+    save();
+    renderRoutines();
+    if (r.done) {
+      var done = state.routines.filter(function (x) { return x.done; }).length;
+      if (done === state.routines.length) toast('오늘 루틴 ' + done + '/' + done + ' — 바닥선 채웠다');
+      else if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
+    }
+  });
+
+  $('routineList').addEventListener('input', function (e) {
+    if (!editMode) return;
+    var input = e.target.closest('.r-input');
+    if (!input) return;
+    var i = parseInt(input.getAttribute('data-i'), 10);
+    if (!isNaN(i) && draft[i]) draft[i].text = input.value;
+  });
+
+  $('editBtn').addEventListener('click', function () {
+    editMode = true;
+    draft = state.routines.map(function (r) { return { id: r.id, text: r.text, done: r.done }; });
+    renderRoutines();
+  });
+
+  $('cancelRoutines').addEventListener('click', function () {
+    editMode = false;
+    draft = null;
+    renderRoutines();
+  });
+
+  $('addRoutine').addEventListener('click', function () {
+    draft.push({ id: uid(), text: '', done: false });
+    renderRoutines();
+    var inputs = $('routineList').querySelectorAll('.r-input');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+  });
+
+  $('saveRoutines').addEventListener('click', function () {
+    var clean = draft.filter(function (r) { return r.text.trim(); }).map(function (r) {
+      return { id: r.id, text: r.text.trim(), done: !!r.done };
+    });
+    state.routines = clean;
+    save();
+    editMode = false;
+    draft = null;
+    renderRoutines();
+    toast('루틴을 저장했어요');
+  });
+
+  // 날짜 전환 감지
+  function checkRollover() {
+    if (state.date !== todayKey()) {
+      state.date = todayKey();
+      state.routines.forEach(function (r) { r.done = false; });
+      state.todayCount = 0;
+      save();
+      renderAll();
+      toast('새 날 — 루틴을 새로 시작해요');
+    }
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) checkRollover();
+  });
+  setInterval(checkRollover, 30000);
+
+  // 경과 시간 갱신
+  setInterval(function () {
+    var el = $('elapsed');
+    if (el) el.textContent = elapsedText();
+  }, 20000);
+
+  renderAll();
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
+})();
+</script>
+</body>
+</html>
