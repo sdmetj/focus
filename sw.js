@@ -1,4 +1,4 @@
-const CACHE = 'focus-v1';
+const CACHE = 'focus-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -30,10 +30,10 @@ self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
 
-  // 화면(HTML)은 항상 네트워크 우선 → 배포 직후에도 최신 화면
+  // 화면(HTML)은 항상 네트워크 우선(캐시 무시) → 배포 직후에도 최신 화면
   if (req.mode === 'navigate') {
     e.respondWith(
-      fetch(req)
+      fetch(req, { cache: 'no-store' })
         .then((res) => {
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put(req, copy));
