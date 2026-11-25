@@ -91,6 +91,12 @@
   body[data-skin="amber"]{--star:#FCD34D;--tag-star:#FCD34D;--star-glow:rgba(252,211,77,.5);--tag-glow:rgba(252,211,77,.4)}
   body[data-skin="gold"]{--star:#FFD466;--tag-star:#FFD166;--star-glow:rgba(255,206,84,.6);--tag-glow:rgba(255,206,84,.48)}
   body[data-skin="aurora"]{--star:#C4B5FD;--tag-star:#C4B5FD;--star-glow:rgba(178,160,255,.58);--tag-glow:rgba(178,160,255,.45)}
+  body[data-skin="neon"]{--star:#67E8F9;--tag-star:#67E8F9;--star-glow:rgba(103,232,249,.6);--tag-glow:rgba(103,232,249,.5)}
+  body[data-skin="orbit"]{--star:#E4EAF2;--tag-star:#DDE4EE;--star-glow:rgba(214,226,240,.5);--tag-glow:rgba(214,226,240,.38)}
+  body[data-skin="stardust"]{--star:#E8EEFF;--tag-star:#E2E9FF;--star-glow:rgba(200,214,255,.55);--tag-glow:rgba(200,214,255,.42)}
+  body[data-skin="snow"]{--star:#EAF6FF;--tag-star:#E4F2FF;--star-glow:rgba(190,230,255,.55);--tag-glow:rgba(190,230,255,.42)}
+  body[data-skin="crescent"]{--star:#F0DAA8;--tag-star:#EFD7A2;--star-glow:rgba(240,214,160,.55);--tag-glow:rgba(240,214,160,.42)}
+  body[data-skin="midnight"]{--star:#9DBCFF;--tag-star:#9DBCFF;--star-glow:rgba(120,150,255,.6);--tag-glow:rgba(120,150,255,.48)}
   body[data-skin="aurora"] .brand svg path,
   body[data-skin="aurora"] .tag svg path{fill:url(#starAurora)}
   @keyframes starBreathe{0%,100%{opacity:.74;transform:scale(.94)}50%{opacity:1;transform:scale(1.06)}}
@@ -104,14 +110,62 @@
   body[data-skin="rose"] .brand svg,body[data-skin="rose"] .tag svg{animation:starBreathe 4.8s ease-in-out infinite}
   body[data-skin="gold"] .brand svg,body[data-skin="gold"] .tag svg{animation:starGlowPulse 2.6s ease-in-out infinite}
   body[data-skin="aurora"] .brand svg,body[data-skin="aurora"] .tag svg{animation:auroraShift 7s linear infinite}
-  .brand::after{
-    content:"";position:absolute;left:6px;top:0;width:5px;height:5px;border-radius:50%;
-    background:radial-gradient(circle,#FFFFFF 0%,rgba(255,255,255,0) 72%);
-    opacity:0;pointer-events:none;
+  body[data-skin="neon"] .brand svg,body[data-skin="neon"] .tag svg{animation:starGlowPulse 2.2s ease-in-out infinite}
+  body[data-skin="stardust"] .brand svg,body[data-skin="stardust"] .tag svg{animation:starBreathe 5.6s ease-in-out infinite}
+  body[data-skin="snow"] .brand svg,body[data-skin="snow"] .tag svg{animation:starTwinkle 5s ease-in-out infinite}
+  body[data-skin="crescent"] .brand svg,body[data-skin="crescent"] .tag svg{animation:starBreathe 5.2s ease-in-out infinite}
+  body[data-skin="midnight"] .brand svg,body[data-skin="midnight"] .tag svg{animation:starGlowPulse 5.5s ease-in-out infinite}
+
+  /* 별 주변 이펙트 — 헤더·도감 카드·결과창 공통 */
+  .fx{position:relative;display:flex;align-items:center;justify-content:center;line-height:0}
+  .fx::before,.fx::after{content:"";position:absolute;pointer-events:none}
+  .fx-orbit::before{
+    inset:-24%;border-radius:50%;border:1px solid rgba(224,232,244,.55);
+    transform:rotate(18deg) scaleY(.52);animation:orbitSpin 7s linear infinite;
   }
-  body[data-skin="gold"] .brand::after{animation:sparkDot 2.4s ease-in-out infinite}
-  body[data-skin="aurora"] .brand::after{animation:sparkDot 2.4s ease-in-out infinite .8s}
-  body[data-skin="ash"] .brand::after{animation:sparkDot 3.2s ease-in-out infinite}
+  @keyframes orbitSpin{from{transform:rotate(18deg) scaleY(.52)}to{transform:rotate(378deg) scaleY(.52)}}
+  .fx-stardust::after{
+    inset:-38%;opacity:.6;
+    background:
+      radial-gradient(circle 1.1px at 12% 24%,#FFFFFF 0 60%,transparent 61%),
+      radial-gradient(circle .9px at 88% 30%,#FFFFFF 0 60%,transparent 61%),
+      radial-gradient(circle .8px at 58% 96%,#FFFFFF 0 60%,transparent 61%);
+    animation:dustTwinkle 3s ease-in-out infinite;
+  }
+  @keyframes dustTwinkle{0%,100%{opacity:.22}50%{opacity:1}}
+  .fx-snow::after{
+    inset:-26%;opacity:.5;
+    background:
+      radial-gradient(circle 1px at 50% 0,#EAF6FF 0 60%,transparent 61%),
+      radial-gradient(circle 1px at 50% 100%,#EAF6FF 0 60%,transparent 61%),
+      radial-gradient(circle 1px at 0 50%,#EAF6FF 0 60%,transparent 61%),
+      radial-gradient(circle 1px at 100% 50%,#EAF6FF 0 60%,transparent 61%);
+    animation:snowGlint 3.8s ease-in-out infinite;
+  }
+  @keyframes snowGlint{0%,100%{opacity:.28;transform:scale(.9)}50%{opacity:.95;transform:scale(1.06)}}
+  .fx-crescent::before{
+    width:54%;height:54%;top:-30%;left:-26%;
+    background:radial-gradient(circle at 70% 30%,transparent 0 48%,#F0DAA8 51%);
+    animation:crescentFloat 5s ease-in-out infinite;
+  }
+  @keyframes crescentFloat{0%,100%{transform:translateY(0) rotate(-8deg);opacity:.65}50%{transform:translateY(-1px) rotate(-16deg);opacity:1}}
+  .fx-spark::after{
+    left:-8%;top:-18%;width:16%;height:16%;border-radius:50%;
+    background:radial-gradient(circle,#FFFFFF 0%,rgba(255,255,255,0) 72%);
+    animation:sparkDot 2.6s ease-in-out infinite;
+  }
+  body[data-skin="aurora"] .fx-spark::after{animation-delay:.8s}
+
+  /* midnight — 장착 시 앱 상단·FOCUS 카드에 밤하늘 무드 */
+  html[data-skin="midnight"]{background:#070A12}
+  body[data-skin="midnight"]{background:#080C16;transition:background .45s ease}
+  body[data-skin="midnight"]::before{background:radial-gradient(circle, rgba(84,118,220,.18), rgba(30,50,120,0) 68%)}
+  body[data-skin="midnight"] .focus-card{
+    border-color:#2C3E68;
+    background:linear-gradient(162deg,#131C30 0%,#0A1020 100%);
+    box-shadow:0 20px 48px rgba(0,0,0,.7), inset 0 1px 0 rgba(150,180,255,.10);
+  }
+  body[data-skin="midnight"] .focus-card::after{background:radial-gradient(circle, rgba(120,160,255,.13), rgba(255,255,255,0) 70%)}
   .head-right{display:flex;align-items:center;gap:13px}
   .lang{display:flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;letter-spacing:.1em}
   .lang-btn{color:var(--faint);padding:5px 1px;transition:color .16s ease}
@@ -361,7 +415,7 @@
 
   /* ---------- gacha (star skin) ---------- */
   #gachaOverlay{z-index:54}
-  .gacha-sheet{max-height:92dvh;padding:16px 14px 14px}
+  .gacha-sheet{max-height:92dvh;padding:16px 14px 14px;-webkit-overflow-scrolling:touch}
   .gacha-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 13px}
   .gacha-title{font-size:14px;font-weight:600;letter-spacing:.06em;color:#EDEDED}
   .gacha-close{width:30px;height:30px;border-radius:9px;border:1px solid transparent;color:var(--dim);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
@@ -445,7 +499,7 @@
 <main class="app">
   <header class="top">
     <button class="brand" id="brandBtn" type="button" data-i18n-aria="gachaOpen" aria-label="별 스킨 뽑기">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#FFFFFF"/></svg>
+      <span class="brand-mark fx" id="brandMark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#FFFFFF"/></svg></span>
       FOCUS
       <span class="brand-dot" id="brandDot" aria-hidden="true" hidden></span>
     </button>
@@ -609,8 +663,14 @@
     { id: 'rose',     rarity: 'rare',      ko: '로즈 쿼츠',     ja: 'ローズクォーツ',    color: '#F2B6CB', glow: 'rgba(244,168,198,.48)' },
     { id: 'coral',    rarity: 'rare',      ko: '코랄 핑크',     ja: 'コーラルピンク',    color: '#FDA4AF', glow: 'rgba(253,164,175,.50)' },
     { id: 'amber',    rarity: 'rare',      ko: '레몬 앰버',     ja: 'レモンアンバー',    color: '#FCD34D', glow: 'rgba(252,211,77,.50)' },
+    { id: 'neon',     rarity: 'rare',      ko: '네온 펄스',     ja: 'ネオンパルス',      color: '#67E8F9', glow: 'rgba(103,232,249,.60)' },
     { id: 'gold',     rarity: 'epic',      ko: '골드 스타',     ja: 'ゴールドスター',    color: '#FFD466', glow: 'rgba(255,206,84,.60)' },
-    { id: 'aurora',   rarity: 'legendary', ko: '오로라 프리즘', ja: 'オーロラプリズム',  color: '#C4B5FD', glow: 'rgba(178,160,255,.58)', fill: 'url(#starAurora)' }
+    { id: 'orbit',    rarity: 'epic',      ko: '오빗 링',       ja: 'オービットリング',  color: '#E4EAF2', glow: 'rgba(214,226,240,.50)' },
+    { id: 'stardust', rarity: 'epic',      ko: '스타더스트',    ja: 'スターダスト',      color: '#E8EEFF', glow: 'rgba(200,214,255,.55)' },
+    { id: 'snow',     rarity: 'epic',      ko: '스노우 크리스탈', ja: 'スノークリスタル', color: '#EAF6FF', glow: 'rgba(190,230,255,.55)' },
+    { id: 'aurora',   rarity: 'legendary', ko: '오로라 프리즘', ja: 'オーロラプリズム',  color: '#C4B5FD', glow: 'rgba(178,160,255,.58)', fill: 'url(#starAurora)' },
+    { id: 'crescent', rarity: 'legendary', ko: '크레센트 문',   ja: 'クレセントムーン',  color: '#F0DAA8', glow: 'rgba(240,214,160,.55)' },
+    { id: 'midnight', rarity: 'legendary', ko: '미드나잇 아우라', ja: 'ミッドナイトオーラ', color: '#9DBCFF', glow: 'rgba(120,150,255,.60)' }
   ];
 
   var STR = {
@@ -1057,6 +1117,16 @@
     return s.fill || s.color;
   }
 
+  // 스킨별 별 주변 이펙트 클래스 (헤더·도감 카드·결과창 공통)
+  var SKIN_FX = {
+    ash: 'fx-spark', gold: 'fx-spark', aurora: 'fx-spark',
+    orbit: 'fx-orbit', stardust: 'fx-stardust', snow: 'fx-snow', crescent: 'fx-crescent'
+  };
+
+  function fxClass(id) {
+    return SKIN_FX[id] ? ' ' + SKIN_FX[id] : '';
+  }
+
   function starMark(fill) {
     return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + STAR_PATH + '" fill="' + fill + '"/></svg>';
   }
@@ -1097,7 +1167,11 @@
   }
 
   function applySkin() {
-    document.body.setAttribute('data-skin', gacha.equipped || 'mono');
+    var id = gacha.equipped || 'mono';
+    document.documentElement.setAttribute('data-skin', id);
+    document.body.setAttribute('data-skin', id);
+    var mark = $('brandMark');
+    if (mark) mark.className = 'brand-mark fx' + fxClass(id);
   }
 
   function updateBrandBadge() {
@@ -1112,7 +1186,7 @@
     var cls = 'g-card' + (owned ? ' owned' : ' locked') + (eq ? ' equipped' : '');
     var label = owned ? skinName(s) : '???';
     return '<button class="' + cls + '" type="button" data-gs="' + s.id + '" data-r="' + s.rarity + '"' + (owned ? '' : ' disabled') + ' aria-label="' + esc(label + ' · ' + rarityName(s.rarity)) + '">' +
-      '<span class="g-star"' + (owned ? ' style="filter:drop-shadow(0 0 7px ' + s.glow + ')"' : '') + '>' + starMark(fill) + '</span>' +
+      '<span class="g-star fx' + (owned ? fxClass(s.id) : '') + '"' + (owned ? ' style="filter:drop-shadow(0 0 7px ' + s.glow + ')"' : '') + '>' + starMark(fill) + '</span>' +
       '<span class="g-name">' + esc(label) + '</span>' +
       '<span class="g-rarity">' + esc(rarityName(s.rarity)) + '</span>' +
     '</button>';
@@ -1122,7 +1196,7 @@
     var s = res.skin;
     $('gStage').innerHTML =
       '<div class="g-res">' +
-        '<div class="g-res-star" style="filter:drop-shadow(0 0 16px ' + s.glow + ')">' + starMark(skinFill(s)) + '</div>' +
+        '<div class="g-res-star fx' + fxClass(s.id) + '" style="filter:drop-shadow(0 0 16px ' + s.glow + ')">' + starMark(skinFill(s)) + '</div>' +
         '<div class="g-res-name">' + esc(skinName(s)) + '</div>' +
         '<div class="g-res-meta">' + esc(rarityName(s.rarity)) + '</div>' +
         '<div class="g-res-tag' + (res.isNew ? '' : ' dup') + '">' + esc(t(res.isNew ? 'gNew' : 'gDup')) + '</div>' +
