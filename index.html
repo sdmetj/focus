@@ -201,8 +201,6 @@
   .edit-actions{display:flex;gap:8px;margin-top:12px}
   .edit-actions .btn-primary{flex:1 1 auto;min-height:46px;font-size:14px}
   .edit-actions .btn-ghost{min-height:46px}
-  .all-done{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:13px;font-size:12.5px;color:var(--muted);text-align:center;letter-spacing:.02em}
-  .all-done svg{width:11px;height:11px}
 
   .foot{margin-top:36px;font-size:11px;line-height:1.7;color:#4A4A4A;text-align:center}
 
@@ -255,7 +253,7 @@
     <div class="sec-head">
       <h2>매일 루틴</h2>
       <div class="right">
-        <span class="prog" id="progLabel">0/4</span>
+        <span class="prog" id="progLabel">0/5</span>
         <button class="icon-btn" id="editBtn" type="button">편집</button>
       </div>
     </div>
@@ -266,10 +264,6 @@
       <button class="btn-primary" id="saveRoutines" type="button">저장</button>
       <button class="btn-ghost" id="cancelRoutines" type="button">취소</button>
     </div>
-    <p class="all-done" id="allDone" hidden>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#C9C9C9"/></svg>
-      오늘 루틴 완료
-    </p>
   </section>
 
   <p class="foot">날짜가 바뀌면 루틴 체크만 새로 시작됩니다 · 이 기기에만 저장</p>
@@ -284,11 +278,27 @@
   var STORAGE_KEY = 'focus.v1';
   var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#BFBFBF"/></svg>';
   var DEFAULT_ROUTINES = [
+    '기상 후 머리 감기 · 세안',
+    '점심 후 양치 · 세안',
+    '영양제 챙겨 먹기',
+    '일기 · 다이어리 · 성경 1장',
+    '독서 (틈틈이)'
+  ];
+  // v1 기본 목록 — 저장된 루틴이 이것과 똑같으면 새 기본 목록으로 옮긴다
+  var LEGACY_ROUTINES = [
     '낮 일과 10분 (병기본 1항목 복기)',
     '연등 15분 (일본어 한자 인출)',
     '일기 · 다이어리 · 성경 1장',
     '체단실 · 식단 관리 (주 4회)'
   ];
+
+  function sameRoutineSet(list, target) {
+    if (list.length !== target.length) return false;
+    var a = list.map(function (r) { return r.text; }).sort();
+    var b = target.slice().sort();
+    for (var i = 0; i < a.length; i++) { if (a[i] !== b[i]) return false; }
+    return true;
+  }
 
   var $ = function (id) { return document.getElementById(id); };
 
@@ -351,6 +361,12 @@
         return { id: typeof r.id === 'string' ? r.id : uid(), text: r.text.trim(), done: !!r.done };
       });
       if (list.length) s.routines = list;
+    }
+    // 이전 기본 4개를 그대로 쓰던 기기만 새 기본 5개로 교체 (직접 고친 목록은 그대로 둔다)
+    if (sameRoutineSet(s.routines, LEGACY_ROUTINES)) {
+      s.routines = DEFAULT_ROUTINES.map(function (t) {
+        return { id: uid(), text: t, done: false };
+      });
     }
     if (Array.isArray(saved.queue)) {
       s.queue = saved.queue.filter(function (t) { return typeof t === 'string' && t.trim(); })
@@ -488,7 +504,6 @@
     prog.textContent = done + '/' + total;
     prog.classList.toggle('full', total > 0 && done === total);
     $('barFill').style.width = total ? (done / total * 100) + '%' : '0%';
-    $('allDone').hidden = !(total > 0 && done === total);
 
     $('editActions').hidden = !editMode;
     $('editBtn').hidden = editMode;
@@ -611,11 +626,7 @@
     r.done = !r.done;
     save();
     renderRoutines();
-    if (r.done) {
-      var done = state.routines.filter(function (x) { return x.done; }).length;
-      if (done === state.routines.length) toast('오늘 루틴 ' + done + '/' + done + ' — 바닥선 채웠다');
-      else if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
-    }
+    if (r.done && navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
   });
 
   $('routineList').addEventListener('input', function (e) {
