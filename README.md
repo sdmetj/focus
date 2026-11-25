@@ -6,13 +6,18 @@
 - `index.html` — 앱 전체(HTML/CSS/JS 단일 파일, 외부 CDN 없음)
 - `manifest.webmanifest`, `icons/` — PWA 메타·아이콘(✦ 심볼)
 - `sw.js` — 오프라인 캐시(HTML은 네트워크 우선)
-- 데이터는 브라우저 `localStorage`(`focus.v1`)에만 저장
+- 데이터는 브라우저 `localStorage`에만 저장
+  - `focus.v1` — 오늘의 상태(목표·대기열·루틴·오늘 완료)
+  - `focus.history.v1` — 날짜별 기록 `{ "YYYY-MM-DD": { focusDone, routinesDone, routineTotal } }`
+  - `focus.lang` — 선택 언어(`ko` / `ja`)
 
 ## 기능
 - 상단: 동시에 **1개**만 표시되는 '지금의 FOCUS' 슬롯 + 완료/수정/비우기, 접힌 '다음 대기열' 서랍
 - 하단: '매일 루틴' 5종 기본 탑재(기상 후 세안·점심 후 양치·영양제·일기/성경·독서), 탭 체크, `n/5` 진행률, 추가·수정·삭제
 - 이전 기본 4종을 그대로 쓰던 `localStorage`는 새 기본 5종으로 자동 이전(직접 고친 목록은 유지)
-- 날짜가 바뀌면 체크 상태만 자동 초기화
+- 날짜가 바뀌면 체크 상태만 자동 초기화되고, 전날 기록은 `focus.history.v1`에 남음
+- 헤더의 `KR | JP` 토글 — UI 문구와 기본 루틴 5종이 일본어로 전환(직접 고친 루틴은 그대로). 선택은 `focus.lang`에 저장
+- 헤더의 날짜 버튼 → 월간 캘린더 모달(`‹`/`›` 월 이동, 오늘 강조, 기록 있는 날 흰 점) → 날짜를 탭하면 그날 완료한 FOCUS와 루틴 달성(`3/5`) 표시
 
 ## 배포
 GitHub Pages — `main` 브랜치 루트(`/`).

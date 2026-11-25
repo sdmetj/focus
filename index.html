@@ -58,7 +58,19 @@
   .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px}
   .brand{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700;letter-spacing:.34em;color:var(--text)}
   .brand svg{width:15px;height:15px;display:block;filter:drop-shadow(0 0 6px rgba(255,255,255,.25))}
-  .date{font-size:12px;letter-spacing:.08em;color:var(--dim);font-variant-numeric:tabular-nums}
+  .head-right{display:flex;align-items:center;gap:13px}
+  .lang{display:flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;letter-spacing:.1em}
+  .lang-btn{color:var(--faint);padding:5px 1px;transition:color .16s ease}
+  .lang-btn[aria-pressed="true"]{color:var(--text)}
+  .lang-btn:active{color:var(--text)}
+  .lang-sep{color:#2C2C2C;font-size:9px}
+  .date-btn{
+    display:flex;align-items:center;gap:5px;
+    color:var(--dim);font-size:12px;letter-spacing:.07em;font-variant-numeric:tabular-nums;
+    padding:5px 0 5px 1px;transition:color .16s ease;
+  }
+  .date-btn svg{width:12px;height:12px;display:block;opacity:.8}
+  .date-btn:active{color:var(--text)}
 
   /* section head */
   .eyebrow-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:13px}
@@ -212,8 +224,74 @@
     font-size:13.5px;font-weight:500;padding:12px 18px;border-radius:999px;
     box-shadow:0 16px 36px rgba(0,0,0,.6);transition:opacity .22s ease,transform .22s ease;
     max-width:calc(100vw - 48px);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    z-index:60;
   }
   .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* calendar modal */
+  .cal-overlay{
+    position:fixed;inset:0;z-index:50;
+    background:rgba(0,0,0,.66);
+    -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+    display:flex;align-items:flex-end;justify-content:center;
+    padding:0 10px calc(env(safe-area-inset-bottom) + 10px);
+    opacity:0;pointer-events:none;transition:opacity .22s ease;
+  }
+  .cal-overlay.open{opacity:1;pointer-events:auto}
+  .cal-sheet{
+    width:100%;max-width:460px;max-height:88dvh;overflow-y:auto;overscroll-behavior:contain;
+    background:linear-gradient(180deg,#161616 0%,#101010 100%);
+    border:1px solid #2A2A2A;border-radius:22px;
+    padding:18px 16px 16px;
+    box-shadow:0 -24px 64px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.05);
+    transform:translateY(16px);transition:transform .26s cubic-bezier(.2,.8,.2,1);
+  }
+  .cal-overlay.open .cal-sheet{transform:translateY(0)}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .cal-month{font-size:14px;font-weight:600;letter-spacing:.02em;color:#EAEAEA;font-variant-numeric:tabular-nums}
+  .cal-nav{display:flex;align-items:center;gap:6px}
+  .cal-nav button{
+    width:30px;height:30px;border-radius:9px;border:1px solid #262626;
+    color:var(--muted);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;
+  }
+  .cal-nav button:active{color:var(--text);border-color:#3C3C3C}
+  .cal-nav .cal-close{border-color:transparent;color:var(--dim);font-size:14px}
+  .cal-nav .cal-close:active{border-color:transparent;color:var(--text)}
+  .cal-week,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .cal-week span{text-align:center;font-size:10.5px;letter-spacing:.06em;color:var(--faint);padding-bottom:7px}
+  .cal-day{
+    position:relative;height:42px;border-radius:11px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    font-size:13px;color:#C6C6C6;font-variant-numeric:tabular-nums;
+    transition:background .14s ease,color .14s ease;
+  }
+  .cal-day.blank{visibility:hidden;pointer-events:none}
+  .cal-day:active{background:#1E1E1E}
+  .cal-day.today{color:#FFFFFF;font-weight:700;box-shadow:inset 0 0 0 1px #3E3E3E}
+  .cal-day.sel{background:#242424;color:#FFFFFF}
+  .cal-day.sel.today{box-shadow:inset 0 0 0 1px #5A5A5A}
+  .cal-day .dot{width:3px;height:3px;border-radius:50%;background:#DADADA;opacity:0}
+  .cal-day.has .dot{opacity:1}
+  .cal-detail{margin-top:14px;border-top:1px solid #222222;padding-top:15px}
+  .cal-detail:empty{display:none}
+  .cal-date{font-size:12.5px;font-weight:600;color:#DCDCDC;margin-bottom:14px;letter-spacing:.02em}
+  .det-label{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin:0 0 8px}
+  .det-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .det-row .det-label{margin:0}
+  .det-count{font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+  .det-count.full{color:#FFFFFF}
+  .det-list{list-style:none;margin:0 0 15px;padding:0;display:flex;flex-direction:column;gap:6px}
+  .det-list:last-child{margin-bottom:2px}
+  .det-item{
+    display:flex;align-items:flex-start;gap:9px;
+    background:#171717;border:1px solid #212121;border-radius:11px;
+    padding:10px 12px;font-size:13.5px;line-height:1.45;color:#DBDBDB;
+    word-break:keep-all;overflow-wrap:anywhere;
+  }
+  .det-item .tick{flex:0 0 auto;color:#8C8C8C;font-size:11px;line-height:1.7}
+  .det-text{flex:1 1 auto;min-width:0}
+  .det-time{flex:0 0 auto;font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums;line-height:1.7}
+  .det-empty{font-size:12.5px;color:var(--faint);padding:16px 0 8px;text-align:center;line-height:1.6}
 </style>
 </head>
 <body>
@@ -223,27 +301,40 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#FFFFFF"/></svg>
       FOCUS
     </div>
-    <div class="date" id="dateLabel"></div>
+    <div class="head-right">
+      <div class="lang" role="group" aria-label="Language / 言語">
+        <button class="lang-btn" type="button" data-lang="ko" aria-pressed="true">KR</button>
+        <span class="lang-sep" aria-hidden="true">|</span>
+        <button class="lang-btn" type="button" data-lang="ja" aria-pressed="false">JP</button>
+      </div>
+      <button class="date-btn" id="dateBtn" type="button" data-i18n-aria="calOpen">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="3.4" y="5" width="17.2" height="15.4" rx="3.2" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M3.4 9.6h17.2M8 3.4v3.2M16 3.4v3.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <span id="dateLabel"></span>
+      </button>
+    </div>
   </header>
 
   <section>
     <div class="eyebrow-row">
-      <span class="eyebrow">지금의 FOCUS</span>
+      <span class="eyebrow" data-i18n="nowFocus">지금의 FOCUS</span>
       <span class="today-count" id="todayCount"></span>
     </div>
     <div id="focusRegion"></div>
 
     <details class="queue" id="queueDrawer">
       <summary>
-        <span>다음 대기열</span>
+        <span data-i18n="queue">다음 대기열</span>
         <span class="q-count" id="queueCount">0</span>
         <span class="chev">›</span>
       </summary>
       <div class="q-body">
         <ul class="q-list" id="queueList"></ul>
         <form class="q-add" id="queueForm">
-          <input id="queueInput" placeholder="나중에 할 일 적어두기" maxlength="120" autocomplete="off" enterkeyhint="done">
-          <button type="submit" aria-label="대기열에 추가">＋</button>
+          <input id="queueInput" placeholder="나중에 할 일 적어두기" data-i18n-ph="queuePh" maxlength="120" autocomplete="off" enterkeyhint="done">
+          <button type="submit" data-i18n-aria="queueAdd" aria-label="대기열에 추가">＋</button>
         </form>
       </div>
     </details>
@@ -251,38 +342,66 @@
 
   <section class="routines">
     <div class="sec-head">
-      <h2>매일 루틴</h2>
+      <h2 data-i18n="routines">매일 루틴</h2>
       <div class="right">
         <span class="prog" id="progLabel">0/5</span>
-        <button class="icon-btn" id="editBtn" type="button">편집</button>
+        <button class="icon-btn" id="editBtn" type="button" data-i18n="editRoutines">편집</button>
       </div>
     </div>
     <div class="bar"><div class="bar-fill" id="barFill"></div></div>
     <ul class="r-list" id="routineList"></ul>
     <div class="edit-actions" id="editActions" hidden>
-      <button class="btn-ghost" id="addRoutine" type="button">＋ 루틴 추가</button>
-      <button class="btn-primary" id="saveRoutines" type="button">저장</button>
-      <button class="btn-ghost" id="cancelRoutines" type="button">취소</button>
+      <button class="btn-ghost" id="addRoutine" type="button" data-i18n="addRoutine">＋ 루틴 추가</button>
+      <button class="btn-primary" id="saveRoutines" type="button" data-i18n="save">저장</button>
+      <button class="btn-ghost" id="cancelRoutines" type="button" data-i18n="cancel">취소</button>
     </div>
   </section>
 
-  <p class="foot">날짜가 바뀌면 루틴 체크만 새로 시작됩니다 · 이 기기에만 저장</p>
+  <p class="foot" data-i18n="foot">날짜가 바뀌면 루틴 체크만 새로 시작됩니다 · 이 기기에만 저장</p>
 </main>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="cal-overlay" id="calOverlay" hidden>
+  <div class="cal-sheet" role="dialog" aria-modal="true" aria-labelledby="calMonth">
+    <div class="cal-head">
+      <div class="cal-month" id="calMonth"></div>
+      <div class="cal-nav">
+        <button type="button" id="calPrev" data-i18n-aria="calPrev" aria-label="이전 달">‹</button>
+        <button type="button" id="calNext" data-i18n-aria="calNext" aria-label="다음 달">›</button>
+        <button type="button" class="cal-close" id="calClose" data-i18n-aria="calClose" aria-label="닫기">✕</button>
+      </div>
+    </div>
+    <div class="cal-week" id="calWeek"></div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-detail" id="calDetail"></div>
+  </div>
+</div>
 
 <script>
 (function () {
   'use strict';
 
   var STORAGE_KEY = 'focus.v1';
+  var HISTORY_KEY = 'focus.history.v1';
+  var LANG_KEY = 'focus.lang';
+
   var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#BFBFBF"/></svg>';
+
   var DEFAULT_ROUTINES = [
     '기상 후 머리 감기 · 세안',
     '점심 후 양치 · 세안',
     '영양제 챙겨 먹기',
     '일기 · 다이어리 · 성경 1장',
     '독서 (틈틈이)'
+  ];
+  // 기본 5종의 일본어 표시 (같은 순서)
+  var DEFAULT_ROUTINES_JA = [
+    '起床後の洗顔・ヘアセット',
+    '昼食後の歯磨き・洗顔',
+    'サプリメントを飲む',
+    '日記・手帳・聖書1章',
+    '読書（スキマ時間）'
   ];
   // v1 기본 목록 — 저장된 루틴이 이것과 똑같으면 새 기본 목록으로 옮긴다
   var LEGACY_ROUTINES = [
@@ -291,6 +410,99 @@
     '일기 · 다이어리 · 성경 1장',
     '체단실 · 식단 관리 (주 4회)'
   ];
+
+  var STR = {
+    ko: {
+      nowFocus: '지금의 FOCUS',
+      start: '집중 시작',
+      complete: '완료 ✓',
+      edit: '수정',
+      clear: '비우기',
+      save: '저장',
+      cancel: '취소',
+      queue: '다음 대기열',
+      queuePh: '나중에 할 일 적어두기',
+      queueAdd: '대기열에 추가',
+      raise: '지금의 FOCUS로 올리기',
+      queueDel: '대기열에서 삭제',
+      routines: '매일 루틴',
+      editRoutines: '편집',
+      addRoutine: '＋ 루틴 추가',
+      routineName: '루틴 이름',
+      routineDel: '루틴 삭제',
+      goalPh: '지금 집중할 한 가지',
+      goalEdit: '목표 수정',
+      todayDone: '오늘 완료',
+      foot: '날짜가 바뀌면 루틴 체크만 새로 시작됩니다 · 이 기기에만 저장',
+      justStarted: '방금 시작',
+      minPassed: '분째',
+      hourPassed: '시간 ',
+      calOpen: '기록 캘린더 열기',
+      calFocus: '완료한 FOCUS',
+      calRoutines: '루틴',
+      calEmpty: '기록이 없는 날이에요',
+      calClose: '닫기',
+      calPrev: '이전 달',
+      calNext: '다음 달',
+      toastStart: '집중 시작',
+      toastDone: '완료 · 슬롯을 비웠어요',
+      toastCleared: '슬롯을 비웠어요',
+      toastEdited: '수정했어요',
+      toastSame: '이미 지금의 FOCUS예요',
+      toastNeedOne: '한 가지만 적어주세요',
+      toastQueued: '대기열에 담았어요',
+      toastRaised: '지금의 FOCUS로 올렸어요',
+      toastSaved: '루틴을 저장했어요',
+      toastNewDay: '새 날 — 루틴을 새로 시작해요'
+    },
+    ja: {
+      nowFocus: '今のFOCUS',
+      start: '集中スタート',
+      complete: '完了 ✓',
+      edit: '編集',
+      clear: 'クリア',
+      save: '保存',
+      cancel: 'キャンセル',
+      queue: '次の待機リスト',
+      queuePh: 'あとでやることをメモ',
+      queueAdd: '待機リストに追加',
+      raise: '今のFOCUSに上げる',
+      queueDel: '待機リストから削除',
+      routines: '毎日のルーティン',
+      editRoutines: '編集',
+      addRoutine: '＋ ルーティン追加',
+      routineName: 'ルーティン名',
+      routineDel: 'ルーティンを削除',
+      goalPh: '今集中する1つ',
+      goalEdit: '目標を編集',
+      todayDone: '今日の完了',
+      foot: '日付が変わるとルーティンのチェックだけリセット · この端末だけに保存',
+      justStarted: 'たった今スタート',
+      minPassed: '分経過',
+      hourPassed: '時間',
+      calOpen: '記録カレンダーを開く',
+      calFocus: '完了したFOCUS',
+      calRoutines: 'ルーティン',
+      calEmpty: 'この日の記録はありません',
+      calClose: '閉じる',
+      calPrev: '前の月',
+      calNext: '次の月',
+      toastStart: '集中スタート',
+      toastDone: '完了 · スロットを空けました',
+      toastCleared: 'スロットを空けました',
+      toastEdited: '編集しました',
+      toastSame: 'すでに今のFOCUSです',
+      toastNeedOne: '1つだけ書いてください',
+      toastQueued: '待機リストに追加しました',
+      toastRaised: '今のFOCUSに上げました',
+      toastSaved: 'ルーティンを保存しました',
+      toastNewDay: '新しい日 — ルーティンをリセットします'
+    }
+  };
+  var WEEK = {
+    ko: ['일', '월', '화', '수', '목', '금', '토'],
+    ja: ['日', '月', '火', '水', '木', '金', '土']
+  };
 
   function sameRoutineSet(list, target) {
     if (list.length !== target.length) return false;
@@ -306,11 +518,16 @@
     return Math.random().toString(36).slice(2, 9);
   }
 
+  function pad2(n) {
+    return String(n).padStart(2, '0');
+  }
+
+  function dayKey(d) {
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+
   function todayKey() {
-    var d = new Date();
-    return d.getFullYear() + '-' +
-      String(d.getMonth() + 1).padStart(2, '0') + '-' +
-      String(d.getDate()).padStart(2, '0');
+    return dayKey(new Date());
   }
 
   function esc(s) {
@@ -319,16 +536,104 @@
     });
   }
 
+  /* ---------- language ---------- */
+
+  var lang = 'ko';
+  try {
+    var savedLang = localStorage.getItem(LANG_KEY);
+    if (savedLang === 'ja' || savedLang === 'ko') lang = savedLang;
+  } catch (e) {}
+
+  function t(key) {
+    return (STR[lang] && STR[lang][key]) || STR.ko[key] || key;
+  }
+
+  function saveLang() {
+    try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+  }
+
+  function routineLabel(r) {
+    if (lang === 'ja') {
+      if (typeof r.dk === 'number' && DEFAULT_ROUTINES_JA[r.dk]) return DEFAULT_ROUTINES_JA[r.dk];
+      var i = DEFAULT_ROUTINES.indexOf(r.text);
+      if (i >= 0) return DEFAULT_ROUTINES_JA[i];
+    }
+    return r.text;
+  }
+
+  // 편집 입력창: 손대지 않은 기본 루틴만 일본어로 보여주고, 고친 값은 그대로 보여준다
+  function draftLabel(r) {
+    if (lang === 'ja' && typeof r.dk === 'number' && r.text === DEFAULT_ROUTINES[r.dk]) {
+      return DEFAULT_ROUTINES_JA[r.dk];
+    }
+    return r.text;
+  }
+
+  function routineNameJa(name) {
+    var i = DEFAULT_ROUTINES.indexOf(name);
+    return (lang === 'ja' && i >= 0) ? DEFAULT_ROUTINES_JA[i] : name;
+  }
+
+  function pad2s(n) { return n < 10 ? '0' + n : String(n); }
+
+  function timeHM(ts) {
+    if (!ts) return '';
+    var d = new Date(ts);
+    return pad2s(d.getHours()) + ':' + pad2s(d.getMinutes());
+  }
+
+  /* ---------- history storage ---------- */
+
+  function loadHistory() {
+    var raw = null;
+    try { raw = localStorage.getItem(HISTORY_KEY); } catch (e) { raw = null; }
+    if (!raw) return {};
+    var o = null;
+    try { o = JSON.parse(raw); } catch (e) { return {}; }
+    if (!o || typeof o !== 'object' || Array.isArray(o)) return {};
+    var out = {};
+    Object.keys(o).forEach(function (k) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) return;
+      var e = o[k];
+      if (!e || typeof e !== 'object') return;
+      var focusDone = Array.isArray(e.focusDone) ? e.focusDone.filter(function (f) {
+        return f && typeof f.text === 'string' && f.text.trim();
+      }).map(function (f) {
+        return {
+          text: f.text.trim(),
+          completedAt: typeof f.completedAt === 'number' ? f.completedAt : null
+        };
+      }) : [];
+      var routinesDone = Array.isArray(e.routinesDone) ? e.routinesDone.filter(function (n) {
+        return typeof n === 'string' && n.trim();
+      }).map(function (n) { return n.trim(); }) : [];
+      var routineTotal = typeof e.routineTotal === 'number' && e.routineTotal >= 0 ? e.routineTotal : routinesDone.length;
+      if (focusDone.length || routinesDone.length) {
+        out[k] = { focusDone: focusDone, routinesDone: routinesDone, routineTotal: routineTotal };
+      }
+    });
+    return out;
+  }
+
+  var history = loadHistory();
+
+  function saveHistory() {
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); } catch (e) {}
+  }
+
+  /* ---------- state ---------- */
+
   function defaults() {
     return {
       date: todayKey(),
       goal: null,
       goalStartedAt: null,
-      routines: DEFAULT_ROUTINES.map(function (t) {
-        return { id: uid(), text: t, done: false };
+      routines: DEFAULT_ROUTINES.map(function (txt, i) {
+        return { id: uid(), text: txt, dk: i, done: false };
       }),
       queue: [],
-      todayCount: 0
+      todayCount: 0,
+      focusDone: []
     };
   }
 
@@ -358,28 +663,60 @@
       var list = saved.routines.filter(function (r) {
         return r && typeof r.text === 'string' && r.text.trim();
       }).map(function (r) {
-        return { id: typeof r.id === 'string' ? r.id : uid(), text: r.text.trim(), done: !!r.done };
+        var text = r.text.trim();
+        var idx = DEFAULT_ROUTINES.indexOf(text);
+        var item = { id: typeof r.id === 'string' ? r.id : uid(), text: text, done: !!r.done };
+        if (typeof r.dk === 'number' && DEFAULT_ROUTINES[r.dk]) item.dk = r.dk;
+        else if (idx >= 0) item.dk = idx;
+        return item;
       });
       if (list.length) s.routines = list;
     }
     // 이전 기본 4개를 그대로 쓰던 기기만 새 기본 5개로 교체 (직접 고친 목록은 그대로 둔다)
     if (sameRoutineSet(s.routines, LEGACY_ROUTINES)) {
-      s.routines = DEFAULT_ROUTINES.map(function (t) {
-        return { id: uid(), text: t, done: false };
+      s.routines = DEFAULT_ROUTINES.map(function (txt, i) {
+        return { id: uid(), text: txt, dk: i, done: false };
       });
     }
     if (Array.isArray(saved.queue)) {
-      s.queue = saved.queue.filter(function (t) { return typeof t === 'string' && t.trim(); })
-        .map(function (t) { return t.trim(); });
+      s.queue = saved.queue.filter(function (txt) { return typeof txt === 'string' && txt.trim(); })
+        .map(function (txt) { return txt.trim(); });
+    }
+    if (Array.isArray(saved.focusDone)) {
+      s.focusDone = saved.focusDone.filter(function (f) {
+        return f && typeof f.text === 'string' && f.text.trim();
+      }).map(function (f) {
+        return {
+          text: f.text.trim(),
+          completedAt: typeof f.completedAt === 'number' ? f.completedAt : null
+        };
+      });
     }
     if (typeof saved.todayCount === 'number' && saved.todayCount >= 0) s.todayCount = saved.todayCount;
+    if (s.focusDone.length) s.todayCount = s.focusDone.length;
     if (typeof saved.date === 'string') s.date = saved.date;
 
-    // 날짜가 바뀌었으면 체크 상태만 초기화 (루틴 텍스트는 유지)
+    // 날짜가 바뀌었으면 체크 상태만 초기화 (루틴 텍스트는 유지), 전날 기록은 history로 넘긴다
     if (s.date !== todayKey()) {
+      var prevKey = s.date;
+      var prevRoutines = s.routines.filter(function (r) { return r.done; }).map(function (r) { return r.text; });
+      var prevFocus = s.focusDone;
+      if (prevFocus.length || prevRoutines.length) {
+        var prevEntry = history[prevKey];
+        var hadContent = prevEntry && ((prevEntry.focusDone && prevEntry.focusDone.length) || (prevEntry.routinesDone && prevEntry.routinesDone.length));
+        if (!hadContent) {
+          history[prevKey] = {
+            focusDone: prevFocus.slice(),
+            routinesDone: prevRoutines,
+            routineTotal: s.routines.length
+          };
+          saveHistory();
+        }
+      }
       s.date = todayKey();
       s.routines.forEach(function (r) { r.done = false; });
       s.todayCount = 0;
+      s.focusDone = [];
     }
     if (s.goal && typeof s.goalStartedAt !== 'number') s.goalStartedAt = Date.now();
     return s;
@@ -389,6 +726,45 @@
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
   }
 
+  /* ---------- today's record ---------- */
+
+  function todayEntry() {
+    return {
+      focusDone: state.focusDone.map(function (f) {
+        return { text: f.text, completedAt: f.completedAt };
+      }),
+      routinesDone: state.routines.filter(function (r) { return r.done; }).map(function (r) { return r.text; }),
+      routineTotal: state.routines.length
+    };
+  }
+
+  function syncToday() {
+    var key = todayKey();
+    var entry = todayEntry();
+    var has = entry.focusDone.length || entry.routinesDone.length;
+    if (!has) {
+      if (history[key]) { delete history[key]; saveHistory(); }
+      return;
+    }
+    history[key] = entry;
+    saveHistory();
+  }
+
+  function entryFor(key) {
+    if (key === todayKey()) {
+      var live = todayEntry();
+      if (live.focusDone.length || live.routinesDone.length) return live;
+      return history[key] || null;
+    }
+    return history[key] || null;
+  }
+
+  function hasRecord(e) {
+    return !!(e && ((e.focusDone && e.focusDone.length) || (e.routinesDone && e.routinesDone.length)));
+  }
+
+  /* ---------- toast ---------- */
+
   function toast(msg) {
     var el = $('toast');
     el.textContent = msg;
@@ -397,13 +773,21 @@
     toastTimer = setTimeout(function () { el.classList.remove('show'); }, 1900);
   }
 
+  function toastKey(key) { toast(t(key)); }
+
   function elapsedText() {
     if (!state.goal || !state.goalStartedAt) return '';
     var m = Math.floor((Date.now() - state.goalStartedAt) / 60000);
-    if (m < 1) return '방금 시작';
-    if (m < 60) return m + '분째';
+    if (lang === 'ja') {
+      if (m < 1) return t('justStarted');
+      if (m < 60) return m + t('minPassed');
+      var jh = Math.floor(m / 60);
+      return jh + t('hourPassed') + (m % 60) + t('minPassed');
+    }
+    if (m < 1) return t('justStarted');
+    if (m < 60) return m + t('minPassed');
     var h = Math.floor(m / 60);
-    return h + '시간 ' + (m % 60) + '분째';
+    return h + t('hourPassed') + (m % 60) + t('minPassed');
   }
 
   /* ---------- focus slot ---------- */
@@ -411,7 +795,7 @@
   function renderFocus() {
     var region = $('focusRegion');
     var tc = $('todayCount');
-    tc.textContent = state.todayCount > 0 ? '오늘 완료 ' + state.todayCount : '';
+    tc.textContent = state.todayCount > 0 ? t('todayDone') + ' ' + state.todayCount : '';
 
     if (state.goal) {
       region.innerHTML =
@@ -422,16 +806,16 @@
           '</div>' +
           '<p class="goal-text">' + esc(state.goal.text) + '</p>' +
           '<div class="actions">' +
-            '<button class="btn-primary" type="button" data-act="complete">완료 ✓</button>' +
-            '<button class="btn-ghost" type="button" data-act="edit">수정</button>' +
-            '<button class="btn-ghost" type="button" data-act="clear">비우기</button>' +
+            '<button class="btn-primary" type="button" data-act="complete">' + esc(t('complete')) + '</button>' +
+            '<button class="btn-ghost" type="button" data-act="edit">' + esc(t('edit')) + '</button>' +
+            '<button class="btn-ghost" type="button" data-act="clear">' + esc(t('clear')) + '</button>' +
           '</div>' +
         '</div>';
     } else {
       region.innerHTML =
         '<form class="compose" id="composeForm" autocomplete="off">' +
-          '<input id="goalInput" placeholder="지금 집중할 한 가지" maxlength="120" enterkeyhint="go" aria-label="지금 집중할 한 가지">' +
-          '<button class="btn-primary" type="submit">집중 시작</button>' +
+          '<input id="goalInput" placeholder="' + esc(t('goalPh')) + '" maxlength="120" enterkeyhint="go" aria-label="' + esc(t('goalPh')) + '">' +
+          '<button class="btn-primary" type="submit">' + esc(t('start')) + '</button>' +
         '</form>';
     }
   }
@@ -440,11 +824,11 @@
     var region = $('focusRegion');
     region.innerHTML =
       '<form class="focus-card" id="goalEditForm">' +
-        '<div class="card-top"><span class="tag">' + STAR + '수정</span></div>' +
-        '<input class="goal-edit-input" id="goalEditInput" maxlength="120" value="' + esc(state.goal ? state.goal.text : '') + '" aria-label="목표 수정">' +
+        '<div class="card-top"><span class="tag">' + STAR + esc(t('edit')) + '</span></div>' +
+        '<input class="goal-edit-input" id="goalEditInput" maxlength="120" value="' + esc(state.goal ? state.goal.text : '') + '" aria-label="' + esc(t('goalEdit')) + '">' +
         '<div class="actions">' +
-          '<button class="btn-primary" type="submit">저장</button>' +
-          '<button class="btn-ghost" type="button" data-act="cancelEdit">취소</button>' +
+          '<button class="btn-primary" type="submit">' + esc(t('save')) + '</button>' +
+          '<button class="btn-ghost" type="button" data-act="cancelEdit">' + esc(t('cancel')) + '</button>' +
         '</div>' +
       '</form>';
     var input = $('goalEditInput');
@@ -454,7 +838,7 @@
   function setGoal(text) {
     text = (text || '').trim();
     if (!text) return false;
-    if (state.goal && state.goal.text === text) { toast('이미 지금의 FOCUS예요'); return true; }
+    if (state.goal && state.goal.text === text) { toastKey('toastSame'); return true; }
     if (state.goal) state.queue.unshift(state.goal.text);
     state.goal = { text: text };
     state.goalStartedAt = Date.now();
@@ -469,13 +853,16 @@
     var card = $('focusCard');
     if (card) card.classList.add('leaving');
     setTimeout(function () {
+      var doneText = state.goal.text;
+      state.focusDone.push({ text: doneText, completedAt: Date.now() });
       state.goal = null;
       state.goalStartedAt = null;
-      state.todayCount = (state.todayCount || 0) + 1;
+      state.todayCount = state.focusDone.length;
+      syncToday();
       save();
       completing = false;
       renderAll();
-      toast('완료 · 슬롯을 비웠어요');
+      toastKey('toastDone');
       if (navigator.vibrate) { try { navigator.vibrate(18); } catch (e) {} }
     }, 230);
   }
@@ -485,11 +872,11 @@
   function renderQueue() {
     var list = $('queueList');
     $('queueCount').textContent = String(state.queue.length);
-    list.innerHTML = state.queue.map(function (t, i) {
+    list.innerHTML = state.queue.map(function (txt, i) {
       return '<li class="q-item">' +
-        '<span class="q-text">' + esc(t) + '</span>' +
-        '<button class="q-btn up" type="button" data-q="up" data-i="' + i + '" aria-label="지금의 FOCUS로 올리기">↑</button>' +
-        '<button class="q-btn" type="button" data-q="del" data-i="' + i + '" aria-label="대기열에서 삭제">✕</button>' +
+        '<span class="q-text">' + esc(txt) + '</span>' +
+        '<button class="q-btn up" type="button" data-q="up" data-i="' + i + '" aria-label="' + esc(t('raise')) + '">↑</button>' +
+        '<button class="q-btn" type="button" data-q="del" data-i="' + i + '" aria-label="' + esc(t('queueDel')) + '">✕</button>' +
       '</li>';
     }).join('');
   }
@@ -511,8 +898,8 @@
     if (editMode) {
       list.innerHTML = draft.map(function (r, i) {
         return '<li class="r-edit">' +
-          '<input class="r-input" data-i="' + i + '" maxlength="80" value="' + esc(r.text) + '" aria-label="루틴 이름">' +
-          '<button class="r-del" type="button" data-del="' + i + '" aria-label="루틴 삭제">✕</button>' +
+          '<input class="r-input" data-i="' + i + '" maxlength="80" value="' + esc(draftLabel(r)) + '" aria-label="' + esc(t('routineName')) + '">' +
+          '<button class="r-del" type="button" data-del="' + i + '" aria-label="' + esc(t('routineDel')) + '">✕</button>' +
         '</li>';
       }).join('');
     } else {
@@ -520,34 +907,237 @@
         return '<li>' +
           '<button class="r-item' + (r.done ? ' done' : '') + '" type="button" role="checkbox" aria-checked="' + (r.done ? 'true' : 'false') + '" data-toggle="' + r.id + '">' +
             '<span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5.2 5L20 6.5" stroke="#0A0A0A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
-            '<span class="r-text">' + esc(r.text) + '</span>' +
+            '<span class="r-text">' + esc(routineLabel(r)) + '</span>' +
           '</button>' +
         '</li>';
       }).join('');
     }
   }
 
-  function renderAll() {
+  function normalizeRoutine(r) {
+    var text = (r.text || '').trim();
+    var dk = (typeof r.dk === 'number') ? r.dk : -1;
+    if (dk < 0) dk = DEFAULT_ROUTINES.indexOf(text);
+    if (dk >= 0 && (text === DEFAULT_ROUTINES[dk] || text === DEFAULT_ROUTINES_JA[dk])) {
+      return { id: r.id, text: DEFAULT_ROUTINES[dk], dk: dk, done: !!r.done };
+    }
+    return { id: r.id, text: text, done: !!r.done };
+  }
+
+  /* ---------- header date ---------- */
+
+  function dateLabelText() {
     var d = new Date();
-    var days = ['일', '월', '화', '수', '목', '금', '토'];
-    $('dateLabel').textContent = (d.getMonth() + 1) + '.' + d.getDate() + ' ' + days[d.getDay()];
+    return (d.getMonth() + 1) + '.' + d.getDate() + ' ' + WEEK[lang][d.getDay()];
+  }
+
+  /* ---------- calendar ---------- */
+
+  var cal = { y: 0, m: 0, sel: null, isOpen: false };
+
+  function renderCalWeek() {
+    $('calWeek').innerHTML = WEEK[lang].map(function (w) { return '<span>' + w + '</span>'; }).join('');
+  }
+
+  function renderCal() {
+    var y = cal.y, m = cal.m;
+    var startDow = new Date(y, m, 1).getDay();
+    var daysInMonth = new Date(y, m + 1, 0).getDate();
+    var tk = todayKey();
+    var html = '';
+    for (var i = 0; i < startDow; i++) {
+      html += '<button class="cal-day blank" type="button" tabindex="-1" aria-hidden="true"></button>';
+    }
+    for (var d = 1; d <= daysInMonth; d++) {
+      var key = y + '-' + pad2(m + 1) + '-' + pad2(d);
+      var e = entryFor(key);
+      var cls = 'cal-day';
+      if (key === tk) cls += ' today';
+      if (key === cal.sel) cls += ' sel';
+      if (hasRecord(e)) cls += ' has';
+      var aria = (lang === 'ja') ? ((m + 1) + '月' + d + '日') : ((m + 1) + '월 ' + d + '일');
+      html += '<button class="' + cls + '" type="button" data-day="' + key + '" aria-label="' + esc(aria) + '">' +
+        '<span>' + d + '</span><i class="dot"></i></button>';
+    }
+    $('calGrid').innerHTML = html;
+    $('calMonth').textContent = (lang === 'ja') ? (y + '年' + (m + 1) + '月') : (y + '년 ' + (m + 1) + '월');
+    renderCalWeek();
+    renderCalDetail();
+  }
+
+  function renderCalDetail() {
+    var wrap = $('calDetail');
+    if (!cal.sel) { wrap.innerHTML = ''; return; }
+    var parts = cal.sel.split('-');
+    var y = parseInt(parts[0], 10), mo = parseInt(parts[1], 10), da = parseInt(parts[2], 10);
+    var dt = new Date(y, mo - 1, da);
+    var wd = WEEK[lang][dt.getDay()];
+    var title = (lang === 'ja')
+      ? (mo + '月' + da + '日（' + wd + '）')
+      : (mo + '월 ' + da + '일 (' + wd + ')');
+
+    var e = entryFor(cal.sel);
+    var focusList = (e && e.focusDone) ? e.focusDone : [];
+    var routinesDone = (e && e.routinesDone) ? e.routinesDone : [];
+    var routineTotal = (e && typeof e.routineTotal === 'number') ? e.routineTotal : state.routines.length;
+
+    var html = '<div class="cal-date">' + esc(title) + '</div>';
+
+    if (!focusList.length && !routinesDone.length) {
+      html += '<div class="det-empty">' + esc(t('calEmpty')) + '</div>';
+      wrap.innerHTML = html;
+      return;
+    }
+
+    if (focusList.length) {
+      html += '<p class="det-label">' + esc(t('calFocus')) + '</p><ul class="det-list">';
+      focusList.forEach(function (f) {
+        var tm = timeHM(f.completedAt);
+        html += '<li class="det-item"><span class="tick">✓</span>' +
+          '<span class="det-text">' + esc(f.text) + '</span>' +
+          (tm ? '<span class="det-time">' + tm + '</span>' : '') +
+        '</li>';
+      });
+      html += '</ul>';
+    }
+
+    if (routineTotal > 0) {
+      var full = routinesDone.length >= routineTotal;
+      html += '<div class="det-row">' +
+        '<p class="det-label">' + esc(t('calRoutines')) + '</p>' +
+        '<span class="det-count' + (full ? ' full' : '') + '">' + routinesDone.length + '/' + routineTotal + '</span>' +
+      '</div>';
+      if (routinesDone.length) {
+        html += '<ul class="det-list">';
+        routinesDone.forEach(function (name) {
+          html += '<li class="det-item"><span class="tick">✓</span><span class="det-text">' +
+            esc(routineNameJa(name)) + '</span></li>';
+        });
+        html += '</ul>';
+      } else {
+        html += '<div class="det-empty" style="padding-top:2px">' + esc(lang === 'ja' ? 'まだチェックはありません' : '아직 체크한 루틴이 없어요') + '</div>';
+      }
+    }
+
+    wrap.innerHTML = html;
+  }
+
+  function openCal() {
+    var d = new Date();
+    cal.y = d.getFullYear();
+    cal.m = d.getMonth();
+    cal.sel = todayKey();
+    cal.isOpen = true;
+    var ov = $('calOverlay');
+    ov.hidden = false;
+    renderCal();
+    if (window.requestAnimationFrame) {
+      requestAnimationFrame(function () { ov.classList.add('open'); });
+    } else {
+      ov.classList.add('open');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCal() {
+    if (!cal.isOpen) return;
+    cal.isOpen = false;
+    var ov = $('calOverlay');
+    ov.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(function () { if (!cal.isOpen) ov.hidden = true; }, 240);
+  }
+
+  function shiftMonth(delta) {
+    var m = cal.m + delta;
+    var y = cal.y;
+    if (m < 0) { m = 11; y -= 1; }
+    if (m > 11) { m = 0; y += 1; }
+    cal.y = y; cal.m = m;
+    renderCal();
+  }
+
+  /* ---------- render all ---------- */
+
+  function applyStaticI18n() {
+    document.documentElement.lang = (lang === 'ja') ? 'ja' : 'ko';
+    var nodes = document.querySelectorAll('[data-i18n]');
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].textContent = t(nodes[i].getAttribute('data-i18n'));
+    }
+    var phs = document.querySelectorAll('[data-i18n-ph]');
+    for (var j = 0; j < phs.length; j++) {
+      phs[j].setAttribute('placeholder', t(phs[j].getAttribute('data-i18n-ph')));
+    }
+    var arias = document.querySelectorAll('[data-i18n-aria]');
+    for (var k = 0; k < arias.length; k++) {
+      arias[k].setAttribute('aria-label', t(arias[k].getAttribute('data-i18n-aria')));
+    }
+    var btns = document.querySelectorAll('.lang-btn');
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].setAttribute('aria-pressed', btns[b].getAttribute('data-lang') === lang ? 'true' : 'false');
+    }
+  }
+
+  function renderAll() {
+    $('dateLabel').textContent = dateLabelText();
     renderFocus();
     renderQueue();
     renderRoutines();
+    if (cal.isOpen) renderCal();
+  }
+
+  function setLang(next) {
+    if (next !== 'ko' && next !== 'ja') return;
+    if (lang === next) return;
+    lang = next;
+    saveLang();
+    if (editMode && draft) {
+      // 편집 중이면 입력값을 지금 언어 표기로 다시 그린다
+      renderRoutines();
+    }
+    applyStaticI18n();
+    renderAll();
   }
 
   /* ---------- events ---------- */
+
+  document.querySelector('.lang').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-lang]');
+    if (!btn) return;
+    setLang(btn.getAttribute('data-lang'));
+  });
+
+  $('dateBtn').addEventListener('click', openCal);
+  $('calClose').addEventListener('click', closeCal);
+  $('calPrev').addEventListener('click', function () { shiftMonth(-1); });
+  $('calNext').addEventListener('click', function () { shiftMonth(1); });
+  $('calOverlay').addEventListener('click', function (e) {
+    if (e.target === $('calOverlay')) closeCal();
+  });
+  $('calGrid').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-day]');
+    if (!btn) return;
+    cal.sel = btn.getAttribute('data-day');
+    var p = cal.sel.split('-');
+    cal.y = parseInt(p[0], 10);
+    cal.m = parseInt(p[1], 10) - 1;
+    renderCal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && cal.isOpen) closeCal();
+  });
 
   $('focusRegion').addEventListener('submit', function (e) {
     e.preventDefault();
     if (e.target.id === 'composeForm') {
       var input = $('goalInput');
       if (setGoal(input ? input.value : '')) {
-        toast('집중 시작');
+        toastKey('toastStart');
         if (navigator.vibrate) { try { navigator.vibrate(12); } catch (err) {} }
       } else if (input) {
         input.focus();
-        toast('한 가지만 적어주세요');
+        toastKey('toastNeedOne');
       }
     } else if (e.target.id === 'goalEditForm') {
       var v = $('goalEditInput');
@@ -556,7 +1146,7 @@
       state.goal = { text: text };
       save();
       renderAll();
-      toast('수정했어요');
+      toastKey('toastEdited');
     }
   });
 
@@ -572,7 +1162,7 @@
       state.goalStartedAt = null;
       save();
       renderAll();
-      toast('슬롯을 비웠어요');
+      toastKey('toastCleared');
     }
   });
 
@@ -586,7 +1176,7 @@
     renderQueue();
     input.value = '';
     $('queueDrawer').open = true;
-    toast('대기열에 담았어요');
+    toastKey('toastQueued');
   });
 
   $('queueList').addEventListener('click', function (e) {
@@ -598,7 +1188,7 @@
     if (kind === 'up') {
       var text = state.queue.splice(i, 1)[0];
       setGoal(text);
-      toast('지금의 FOCUS로 올렸어요');
+      toastKey('toastRaised');
     } else if (kind === 'del') {
       state.queue.splice(i, 1);
       save();
@@ -624,6 +1214,7 @@
     var r = state.routines.find(function (x) { return x.id === id; });
     if (!r) return;
     r.done = !r.done;
+    syncToday();
     save();
     renderRoutines();
     if (r.done && navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
@@ -639,7 +1230,11 @@
 
   $('editBtn').addEventListener('click', function () {
     editMode = true;
-    draft = state.routines.map(function (r) { return { id: r.id, text: r.text, done: r.done }; });
+    draft = state.routines.map(function (r) {
+      var c = { id: r.id, text: r.text, done: r.done };
+      if (typeof r.dk === 'number') c.dk = r.dk;
+      return c;
+    });
     renderRoutines();
   });
 
@@ -657,26 +1252,28 @@
   });
 
   $('saveRoutines').addEventListener('click', function () {
-    var clean = draft.filter(function (r) { return r.text.trim(); }).map(function (r) {
-      return { id: r.id, text: r.text.trim(), done: !!r.done };
-    });
+    var clean = draft.filter(function (r) { return r.text.trim(); }).map(normalizeRoutine);
     state.routines = clean;
+    syncToday();
     save();
     editMode = false;
     draft = null;
     renderRoutines();
-    toast('루틴을 저장했어요');
+    if (cal.isOpen) renderCal();
+    toastKey('toastSaved');
   });
 
   // 날짜 전환 감지
   function checkRollover() {
     if (state.date !== todayKey()) {
+      syncToday();          // 전날 기록을 확정
       state.date = todayKey();
       state.routines.forEach(function (r) { r.done = false; });
       state.todayCount = 0;
+      state.focusDone = [];
       save();
       renderAll();
-      toast('새 날 — 루틴을 새로 시작해요');
+      toastKey('toastNewDay');
     }
   }
   document.addEventListener('visibilitychange', function () {
@@ -690,6 +1287,8 @@
     if (el) el.textContent = elapsedText();
   }, 20000);
 
+  applyStaticI18n();
+  syncToday();
   renderAll();
 
   if ('serviceWorker' in navigator) {
