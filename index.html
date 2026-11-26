@@ -676,6 +676,7 @@
   .brk-wave{display:flex;align-items:baseline;gap:6px;min-width:0;white-space:nowrap}
   .brk-wave b{font-size:9.5px;font-weight:800;letter-spacing:.16em;color:#EDEDED;font-variant-numeric:tabular-nums}
   .brk-best{font-size:9px;font-weight:600;letter-spacing:.05em;color:#5E5E5E;font-variant-numeric:tabular-nums}
+  .brk-balls{font-size:9px;font-weight:700;letter-spacing:.04em;color:#A8A8A8;font-variant-numeric:tabular-nums}
   .brk-tools{display:flex;align-items:center;gap:5px;flex:0 0 auto}
   .brk-speed,.brk-recall{
     font-size:10px;font-weight:700;letter-spacing:.02em;color:#C7C7C7;
@@ -960,7 +961,7 @@
     <div id="tabBreak" hidden>
       <div class="brk">
         <div class="brk-head">
-          <span class="brk-wave"><b id="brkWave">WAVE 01</b><span class="brk-best" id="brkBest"></span></span>
+          <span class="brk-wave"><b id="brkWave">WAVE 01</b><span class="brk-best" id="brkBest"></span><span class="brk-balls" id="brkBalls">공 ×1</span></span>
           <div class="brk-tools">
             <button class="brk-speed" id="brkSpeed" type="button">1x</button>
             <button class="brk-recall" id="brkRecall" type="button" data-i18n="brkRecall">공 회수</button>
@@ -1547,6 +1548,7 @@
       brkRecall: '공 회수',
       brkDaily: '오늘 보상',
       brkBest: '최고',
+      brkBalls: '공',
       brkTip: '화면을 드래그해 각도를 조준하고 손을 떼면 별 공이 발사됩니다 · +1 오브를 부수면 다음 턴 공이 늘어요',
       brkOverTitle: '바닥선을 넘었어요',
       brkOverSub: '{n} 웨이브 도달 · 최고 {b} 웨이브',
@@ -1565,6 +1567,7 @@
       brkRecall: 'ボール回収',
       brkDaily: '今日の報酬',
       brkBest: 'ベスト',
+      brkBalls: 'ボール',
       brkTip: '画面をドラッグして角度を狙い、指を離すと星のボールが発射されます · +1オーブを壊すと次のターンのボールが増えます',
       brkOverTitle: '床線を越えてしまった',
       brkOverSub: 'ウェーブ{n}到達 · ベスト{b}ウェーブ',
@@ -3195,6 +3198,7 @@
     var rect = brkRect(br);
     if (br.type === 'orb') {
       brk.count += 1;
+      brkCountUI();
       brk.pops.push({ x: rect.x + rect.w / 2, y: rect.y, text: '+1', life: 0.9, max: 0.9 });
       SFX.orb();
     }
@@ -3221,6 +3225,7 @@
         brkSparks(b, false);
         if (b.type === 'orb') {
           brk.count += 1;
+          brkCountUI();
           brk.pops.push({ x: r.x + r.w / 2, y: r.y, text: '+1', life: 0.9, max: 0.9 });
           SFX.orb();
         }
@@ -3300,6 +3305,7 @@
             brkSparks(b, false);
             if (b.type === 'orb') {
               brk.count += 1;
+              brkCountUI();
               brk.pops.push({ x: r.x + r.w / 2, y: r.y, text: '+1', life: 0.9, max: 0.9 });
               SFX.orb();
             }
@@ -3391,12 +3397,18 @@
     SFX.uncheck();
   }
 
+  function brkCountUI() {
+    var el = $('brkBalls');
+    if (el && brk) el.textContent = t('brkBalls') + ' ×' + brk.count;
+  }
+
   function brkSyncHud() {
     if (!brk) return;
     var w = $('brkWave');
     if (w) w.textContent = 'WAVE ' + pad2(brk.wave);
     var best = $('brkBest');
     if (best) best.textContent = t('brkBest') + ' ' + pad2(Math.max(brkSave.best, brk.wave));
+    brkCountUI();
     var skin = equippedSkin();
     var ab = brk.ability ? BRK_ABILITY_INFO[brk.ability] : null;
     var sEl = $('brkSkin');
