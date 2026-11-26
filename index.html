@@ -536,14 +536,16 @@
   .g-card[data-r="legendary"] .g-rarity{color:#EDEDED}
   .g-hint{margin:13px 0 2px;font-size:10.5px;line-height:1.6;color:#4E4E4E;text-align:center}
 
-  /* ---------- hub tabs (뽑기·도감 / 성좌 토벌) ---------- */
-  .hub-tabs{display:flex;gap:5px;background:#101010;border:1px solid #232323;border-radius:13px;padding:4px;margin:0 2px 14px}
+  /* ---------- hub tabs (뽑기·도감 / 성좌 토벌 / 벽돌 깨기) ---------- */
+  .hub-tabs{display:flex;gap:4px;background:#101010;border:1px solid #232323;border-radius:13px;padding:4px;margin:0 2px 14px}
   .hub-tab{
-    flex:1 1 0;min-width:0;min-height:40px;border-radius:10px;
-    display:flex;align-items:center;justify-content:center;gap:5px;
-    font-size:12px;font-weight:700;letter-spacing:.02em;color:#767676;
+    flex:1 1 0;min-width:0;min-height:40px;border-radius:10px;padding:0 3px;
+    display:flex;align-items:center;justify-content:center;gap:4px;
+    font-size:11.5px;font-weight:700;letter-spacing:-.01em;color:#767676;white-space:nowrap;
     transition:background .16s ease,color .16s ease,box-shadow .16s ease;
   }
+  .hub-tab > span[data-i18n]{overflow:hidden;text-overflow:ellipsis}
+  @media (max-width:360px){.hub-tab{font-size:10.5px;gap:3px}}
   .hub-tab .hub-dot{width:4px;height:4px;border-radius:50%;background:#FFFFFF;opacity:0;transition:opacity .2s ease}
   .hub-tab.has .hub-dot{opacity:.9}
   .hub-tab.on{background:#1F1F1F;color:#F4F4F4;box-shadow:inset 0 0 0 1px #353535}
@@ -655,6 +657,54 @@
   .bt-result-reward b{color:#FFFFFF}
   .bt-result-btn{width:100%;margin-top:13px;min-height:46px;border-radius:13px;font-size:13.5px}
 
+  /* ---------- sound toggle ---------- */
+  .sound-btn{
+    display:flex;align-items:center;justify-content:center;
+    width:27px;height:27px;border-radius:9px;
+    font-size:12.5px;line-height:1;color:#C4C4C4;
+    background:#161616;border:1px solid #262626;
+    transition:transform .12s ease,color .16s ease,border-color .16s ease,background .16s ease;
+  }
+  .sound-btn:active{transform:scale(.92)}
+  .sound-btn.off{color:#6E6E6E;border-color:#212121;background:#101010}
+
+  /* ---------- ✦ 별빛 벽돌깨기 (star breaker) ---------- */
+  .brk{display:flex;flex-direction:column;gap:9px}
+  .brk-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px}
+  .brk-wave{display:flex;align-items:baseline;gap:6px;min-width:0;white-space:nowrap}
+  .brk-wave b{font-size:9.5px;font-weight:800;letter-spacing:.16em;color:#EDEDED;font-variant-numeric:tabular-nums}
+  .brk-best{font-size:9px;font-weight:600;letter-spacing:.05em;color:#5E5E5E;font-variant-numeric:tabular-nums}
+  .brk-tools{display:flex;align-items:center;gap:5px;flex:0 0 auto}
+  .brk-speed,.brk-recall{
+    font-size:10px;font-weight:700;letter-spacing:.02em;color:#C7C7C7;
+    background:#181818;border:1px solid #2B2B2B;border-radius:9px;
+    padding:0 9px;min-height:29px;display:flex;align-items:center;justify-content:center;
+    transition:background .14s ease,color .14s ease,border-color .14s ease;
+  }
+  .brk-speed.on{background:#F2F2F2;border-color:#F2F2F2;color:#0A0A0A}
+  .brk-speed:active,.brk-recall:active{border-color:#4E4E4E}
+  .brk-recall:disabled{color:#4A4A4A;border-color:#1F1F1F;background:#111111}
+  .brk-stage{
+    position:relative;border-radius:16px;overflow:hidden;
+    border:1px solid #242424;
+    background:radial-gradient(130% 70% at 50% 0%, #191919 0%, #0A0A0A 74%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+  }
+  #brkCanvas{display:block;width:100%;touch-action:none;-webkit-user-select:none;user-select:none}
+  .brk-over{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+    padding:18px;text-align:center;background:rgba(6,6,6,.91);
+    animation:gPop .34s cubic-bezier(.2,.9,.25,1) both;
+  }
+  .brk-over-title{font-size:16px;font-weight:800;color:#FFFFFF;letter-spacing:-.01em}
+  .brk-over-sub{font-size:11.5px;line-height:1.7;color:#B0B0B0;font-variant-numeric:tabular-nums}
+  .brk-over-sub b{color:#FFFFFF}
+  .brk-over-btn{margin-top:7px;min-height:44px;border-radius:12px;font-size:13px;min-width:156px;padding:0 18px}
+  .brk-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px}
+  .brk-skin{flex:1 1 auto;min-width:0;font-size:9.5px;line-height:1.5;color:#8A8A8A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brk-rew{flex:0 0 auto;font-size:9.5px;color:#6A6A6A;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .brk-tip{margin:1px 2px 0;font-size:9.5px;line-height:1.7;color:#575757;text-align:center}
+
   /* update gift */
   .upd-gift{
     display:flex;align-items:center;justify-content:center;gap:6px;
@@ -742,6 +792,7 @@
       <span class="brand-dot" id="brandDot" aria-hidden="true" hidden></span>
     </button>
     <div class="head-right">
+      <button class="sound-btn" id="soundBtn" type="button" aria-label="소리 끄기" aria-pressed="true">🔊</button>
       <div class="lang" role="group" aria-label="Language / 言語">
         <button class="lang-btn" type="button" data-lang="ko" aria-pressed="true">KR</button>
         <span class="lang-sep" aria-hidden="true">|</span>
@@ -834,6 +885,9 @@
       <button class="hub-tab" id="tabBtnRpg" type="button" role="tab" aria-selected="false" data-tab="rpg">
         <span data-i18n="tabRpg">성좌 토벌</span><span class="hub-dot" id="tabDotRpg" aria-hidden="true"></span>
       </button>
+      <button class="hub-tab" id="tabBtnBreak" type="button" role="tab" aria-selected="false" data-tab="break">
+        <span data-i18n="tabBreak">벽돌 깨기</span><span class="hub-dot" id="tabDotBreak" aria-hidden="true"></span>
+      </button>
     </div>
 
     <div id="tabGacha">
@@ -897,6 +951,27 @@
       </div>
       <div id="rpgBattle" hidden></div>
     </div>
+
+    <div id="tabBreak" hidden>
+      <div class="brk">
+        <div class="brk-head">
+          <span class="brk-wave"><b id="brkWave">WAVE 01</b><span class="brk-best" id="brkBest"></span></span>
+          <div class="brk-tools">
+            <button class="brk-speed" id="brkSpeed" type="button">1x</button>
+            <button class="brk-recall" id="brkRecall" type="button" data-i18n="brkRecall">공 회수</button>
+          </div>
+        </div>
+        <div class="brk-stage" id="brkStage">
+          <canvas id="brkCanvas" aria-label="별빛 벽돌깨기"></canvas>
+          <div class="brk-over" id="brkOver" hidden></div>
+        </div>
+        <div class="brk-foot">
+          <span class="brk-skin" id="brkSkin"></span>
+          <span class="brk-rew" id="brkRew"></span>
+        </div>
+        <p class="brk-tip" data-i18n="brkTip">화면을 드래그해 각도를 조준하고 손을 떼면 별 공이 발사됩니다 · +1 오브를 부수면 다음 턴 공이 늘어요</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -923,8 +998,26 @@
   var SEEN_VERSION_KEY = 'focus.seenVersion';
 
   // 업데이트 안내 — 버전과 변경사항만 고치면 새 소식 팝업이 자동으로 뜬다
-  var APP_VERSION = '1.5.0';
+  var APP_VERSION = '1.6.0';
   var CHANGELOG = {
+    '1.6.0': {
+      ko: [
+        '✦ 별빛 벽돌깨기 — 손가락으로 각도를 조준해 벽돌을 부수는 미니게임 (장착 스킨의 색·광채와 레전더리 능력이 그대로 반영)',
+        '성좌 토벌과 나란히 즐기는 세 번째 탭 — 웨이브를 돌파하면 뽑기권 +1장·별조각 +1~2개 (하루 2회)',
+        '전 구간 사운드 — 루틴 체크·FOCUS 완료·뽑기·성좌 토벌 전투·벽돌깨기에 효과음, 헤더의 🔊 버튼으로 한 번에 음소거',
+        '벽돌깨기 2배속과 공 회수 버튼 — 기다림 없이 바로 다음 턴으로',
+        '벽돌이 바닥선에 닿으면 종료 — +1 오브로 공이 늘어나고, 레전더리 스킨은 관통·폭발·광선·위성 능력이 붙습니다',
+        '업데이트 선물로 뽑기권 10장을 드렸어요'
+      ],
+      ja: [
+        '✦ 星明かりブロック崩し — 指で角度を狙ってブロックを壊すミニゲーム（装着スキンの色・輝きとレジェンダリー能力がそのまま反映）',
+        '星座討伐と並んで楽しめる3つ目のタブ — ウェーブ突破でガチャ券 +1枚・星のかけら +1〜2個（1日2回）',
+        '全編サウンド — ルーティンチェック・FOCUS完了・ガチャ・星座討伐の戦闘・ブロック崩しに効果音、ヘッダーの 🔊 ボタンでまとめてミュート',
+        'ブロック崩しに2倍速とボール回収ボタン — 待たずに次のターンへ',
+        'ブロックが床線に触れると終了 — +1オーブでボールが増え、レジェンダリースキンには貫通・爆発・光線・衛星の能力が付きます',
+        'アップデート記念でガチャ券10枚をプレゼントしました'
+      ]
+    },
     '1.5.0': {
       ko: [
         '✦ 별 스킨 100종 확장 — 커먼 40 · 레어 30 · 에픽 19 · 레전더리 10',
@@ -1441,6 +1534,49 @@
     Object.keys(STR_EXT[l]).forEach(function (k) { STR[l][k] = STR_EXT[l][k]; });
   });
 
+  /* v1.6 — 벽돌 깨기 · 사운드 */
+  var STR_EXT2 = {
+    ko: {
+      tabBreak: '벽돌 깨기',
+      brkTitle: '별빛 벽돌깨기',
+      brkRecall: '공 회수',
+      brkDaily: '오늘 보상',
+      brkBest: '최고',
+      brkTip: '화면을 드래그해 각도를 조준하고 손을 떼면 별 공이 발사됩니다 · +1 오브를 부수면 다음 턴 공이 늘어요',
+      brkOverTitle: '바닥선을 넘었어요',
+      brkOverSub: '{n} 웨이브 도달 · 최고 {b} 웨이브',
+      brkAgain: '다시 도전',
+      brkToastReward: '✦ {n}웨이브 돌파! 뽑기권 +1 · 별조각 +{s}',
+      brkNoReward: '오늘 보상 2회를 다 받았어요 · 내일 다시',
+      brkEpic: '에픽 — 시작 공 +1 · 치명타 10%',
+      brkBasic: '기본 공 · 벽돌을 부술수록 피치가 올라가요',
+      brkStageClear: 'STAGE CLEAR',
+      soundOn: '소리 끄기',
+      soundOff: '소리 켜기'
+    },
+    ja: {
+      tabBreak: 'ブロック崩し',
+      brkTitle: '星明かりブロック崩し',
+      brkRecall: 'ボール回収',
+      brkDaily: '今日の報酬',
+      brkBest: 'ベスト',
+      brkTip: '画面をドラッグして角度を狙い、指を離すと星のボールが発射されます · +1オーブを壊すと次のターンのボールが増えます',
+      brkOverTitle: '床線を越えてしまった',
+      brkOverSub: 'ウェーブ{n}到達 · ベスト{b}ウェーブ',
+      brkAgain: 'もう一度',
+      brkToastReward: '✦ ウェーブ{n}突破！ガチャ券 +1 · 星のかけら +{s}',
+      brkNoReward: '今日の報酬2回を受け取り済み · 明日また',
+      brkEpic: 'エピック — 開始ボール +1 · クリティカル10%',
+      brkBasic: '基本ボール · 壊すほど音が高くなる',
+      brkStageClear: 'STAGE CLEAR',
+      soundOn: 'サウンドを消す',
+      soundOff: 'サウンドを入れる'
+    }
+  };
+  Object.keys(STR_EXT2).forEach(function (l) {
+    Object.keys(STR_EXT2[l]).forEach(function (k) { STR[l][k] = STR_EXT2[l][k]; });
+  });
+
   function fmt(key, vars) {
     var s = t(key);
     if (vars) {
@@ -1538,6 +1674,198 @@
     if (!ts) return '';
     var d = new Date(ts);
     return pad2s(d.getHours()) + ':' + pad2s(d.getMinutes());
+  }
+
+  /* ---------- sound (Web Audio API, no audio files) ---------- */
+
+  var SOUND_KEY = 'focus.sound';
+  var soundOn = true;
+  try { if (localStorage.getItem(SOUND_KEY) === '0') soundOn = false; } catch (e) {}
+  var actx = null;
+  var soundBus = null;
+  var soundUnlocked = false;
+
+  function soundCtx() {
+    var Ctor = window.AudioContext || window.webkitAudioContext;
+    if (!Ctor) return null;
+    if (!actx) {
+      try {
+        actx = new Ctor();
+        soundBus = actx.createGain();
+        soundBus.gain.value = 0.9;
+        soundBus.connect(actx.destination);
+      } catch (e) { actx = null; soundBus = null; return null; }
+    }
+    if (actx.state === 'suspended' && actx.resume) { try { actx.resume(); } catch (e) {} }
+    return actx;
+  }
+
+  // iOS Safari — 첫 사용자 제스처에서 무음 버퍼를 한 번 재생해야 소리가 열린다
+  function unlockSound() {
+    if (!soundOn) return;
+    var c = soundCtx();
+    if (!c || soundUnlocked) return;
+    try {
+      var buf = c.createBuffer(1, 1, c.sampleRate || 44100);
+      var src = c.createBufferSource();
+      src.buffer = buf;
+      src.connect(soundBus);
+      src.start(0);
+      soundUnlocked = true;
+    } catch (e) {}
+  }
+
+  function tone(opt) {
+    if (!soundOn) return;
+    var c = soundCtx();
+    if (!c || !soundBus) return;
+    var dur = opt.dur || 0.12;
+    var t0 = c.currentTime + (opt.delay || 0);
+    var f0 = opt.f || 440;
+    var f1 = (opt.f2 == null) ? f0 : opt.f2;
+    var osc, g;
+    try {
+      osc = c.createOscillator();
+      g = c.createGain();
+    } catch (e) { return; }
+    osc.type = opt.type || 'sine';
+    try {
+      osc.frequency.setValueAtTime(f0, t0);
+      if (f1 !== f0) osc.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t0 + dur);
+    } catch (e) {}
+    var peak = (opt.gain == null) ? 0.12 : opt.gain;
+    try {
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(peak, t0 + (opt.atk || 0.008));
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    } catch (e) {}
+    osc.connect(g);
+    g.connect(soundBus);
+    try { osc.start(t0); osc.stop(t0 + dur + 0.05); } catch (e) {}
+  }
+
+  var SFX = {
+    check: function () {
+      tone({ f: 784, f2: 1046, dur: .12, type: 'triangle', gain: .10 });
+      tone({ f: 1568, dur: .09, type: 'sine', gain: .045, delay: .05 });
+    },
+    uncheck: function () {
+      tone({ f: 620, f2: 400, dur: .10, type: 'sine', gain: .08 });
+    },
+    focusDone: function () {
+      [523, 659, 784, 1046].forEach(function (f, i) {
+        tone({ f: f, dur: .32, type: 'triangle', gain: .095, delay: i * .08 });
+        tone({ f: f * 2, dur: .18, type: 'sine', gain: .032, delay: i * .08 });
+      });
+      tone({ f: 1568, dur: .5, type: 'sine', gain: .045, delay: .34 });
+    },
+    spin: function () {
+      for (var i = 0; i < 11; i++) {
+        tone({ f: 420 + i * 30, dur: .04, type: 'square', gain: .032, delay: i * .082 });
+      }
+    },
+    result: function (rarity) {
+      var notes = rarity === 'legendary' ? [523, 659, 784, 1046, 1318, 1568]
+        : rarity === 'epic' ? [523, 659, 784, 1046]
+        : rarity === 'rare' ? [659, 830, 988]
+        : [523, 659];
+      notes.forEach(function (f, i) {
+        tone({ f: f, dur: .34, type: 'triangle', gain: .10, delay: i * .075 });
+        tone({ f: f * 1.5, dur: .20, type: 'sine', gain: .038, delay: i * .075 });
+      });
+      if (rarity === 'legendary') {
+        [1046, 1318, 1568, 2093].forEach(function (f, i) {
+          tone({ f: f, dur: .55, type: 'sine', gain: .05, delay: .46 + i * .05 });
+        });
+      } else if (rarity === 'epic') {
+        tone({ f: 1568, dur: .4, type: 'sine', gain: .038, delay: .32 });
+      }
+    },
+    hit: function (crit) {
+      if (crit) {
+        tone({ f: 900, f2: 1600, dur: .12, type: 'square', gain: .08 });
+        tone({ f: 220, f2: 120, dur: .16, type: 'triangle', gain: .07 });
+      } else {
+        tone({ f: 420, f2: 260, dur: .11, type: 'triangle', gain: .08 });
+      }
+    },
+    guard: function () {
+      tone({ f: 320, f2: 210, dur: .22, type: 'sine', gain: .09 });
+      tone({ f: 640, dur: .18, type: 'triangle', gain: .035, delay: .03 });
+    },
+    skill: function () {
+      [392, 523, 659, 784, 1046].forEach(function (f, i) {
+        tone({ f: f, dur: .24, type: 'sawtooth', gain: .045, delay: i * .045 });
+      });
+      tone({ f: 120, f2: 60, dur: .5, type: 'sine', gain: .09 });
+    },
+    bossHit: function () {
+      tone({ f: 180, f2: 90, dur: .18, type: 'triangle', gain: .06 });
+    },
+    win: function () {
+      [523, 659, 784, 1046, 1318].forEach(function (f, i) {
+        tone({ f: f, dur: .4, type: 'triangle', gain: .09, delay: i * .09 });
+      });
+    },
+    lose: function () {
+      [392, 330, 262].forEach(function (f, i) {
+        tone({ f: f, dur: .3, type: 'sine', gain: .075, delay: i * .12 });
+      });
+    },
+    launch: function () {
+      tone({ f: 520, f2: 940, dur: .12, type: 'triangle', gain: .08 });
+    },
+    brickHit: function (combo, crit) {
+      var f = Math.min(1240, 470 + combo * 24);
+      tone({ f: f, dur: .055, type: 'square', gain: crit ? .065 : .045 });
+      if (crit) tone({ f: f * 1.5, dur: .1, type: 'triangle', gain: .045 });
+    },
+    brickBreak: function (combo) {
+      var f = Math.min(1100, 300 + (combo || 0) * 20);
+      tone({ f: f, f2: f * 1.6, dur: .1, type: 'triangle', gain: .065 });
+      tone({ f: f * 2.4, dur: .07, type: 'sine', gain: .035, delay: .04 });
+    },
+    orb: function () {
+      [784, 988, 1175, 1568].forEach(function (f, i) {
+        tone({ f: f, dur: .16, type: 'triangle', gain: .07, delay: i * .05 });
+      });
+    },
+    laser: function () {
+      tone({ f: 1400, f2: 300, dur: .28, type: 'sawtooth', gain: .045 });
+    },
+    stageClear: function () {
+      [523, 659, 784, 1046, 1318, 1568].forEach(function (f, i) {
+        tone({ f: f, dur: .34, type: 'triangle', gain: .075, delay: i * .07 });
+      });
+    },
+    bossClear: function () {
+      tone({ f: 90, f2: 40, dur: .6, type: 'sine', gain: .11 });
+      [659, 784, 988, 1318].forEach(function (f, i) {
+        tone({ f: f, dur: .3, type: 'square', gain: .035, delay: .1 + i * .07 });
+      });
+    },
+    gameOver: function () {
+      [440, 349, 294, 196].forEach(function (f, i) {
+        tone({ f: f, dur: .34, type: 'triangle', gain: .08, delay: i * .14 });
+      });
+    }
+  };
+
+  function renderSoundBtn() {
+    var b = $('soundBtn');
+    if (!b) return;
+    b.textContent = soundOn ? '🔊' : '🔇';
+    b.setAttribute('aria-label', t(soundOn ? 'soundOn' : 'soundOff'));
+    b.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+    b.classList.toggle('off', !soundOn);
+  }
+
+  function toggleSound() {
+    soundOn = !soundOn;
+    try { localStorage.setItem(SOUND_KEY, soundOn ? '1' : '0'); } catch (e) {}
+    renderSoundBtn();
+    if (soundOn) { soundUnlocked = false; unlockSound(); SFX.check(); }
+    else if (actx && actx.suspend) { try { actx.suspend(); } catch (e) {} }
   }
 
   /* ---------- history storage ---------- */
@@ -1995,6 +2323,7 @@
   function closeGacha() {
     if (!gachaOpen) return;
     gachaOpen = false;
+    brkLeave();
     if (bt) {
       bt = null;
       $('rpgBattle').hidden = true;
@@ -2030,6 +2359,7 @@
     renderGacha();
     updateBrandBadge();
     if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
+    SFX.spin();
 
     setTimeout(function () {
       var skin = pickSkin();
@@ -2046,6 +2376,7 @@
       drawing = false;
       lastResult = { skin: skin, isNew: isNew };
       renderGacha();
+      SFX.result(skin.rarity);
       if (navigator.vibrate) { try { navigator.vibrate(isNew ? [12, 40, 18] : 14); } catch (e) {} }
     }, 980);
   }
@@ -2466,12 +2797,14 @@
 
     if (kind === 'guard') {
       bt.guard = true;
+      SFX.guard();
       var heal = Math.round(bt.hpMax * (0.06 + st.guardHeal));
       if (heal > 0) bt.php = Math.min(bt.hpMax, bt.php + heal);
       btLog('', esc(t('logGuard')));
       if (heal > 0) btLog('sys', fmtHtml('logHeal', { n: heal }));
     } else if (kind === 'skill' && sk) {
       btLog('crit', esc(lang === 'ja' ? sk.qja : sk.qko));
+      SFX.skill();
       var hits = sk.kind === 'double' ? 2 : 1;
       var total = 0;
       var critBonus = sk.kind === 'burst' && sk.power >= 3 ? 0.25 : 0;
@@ -2506,6 +2839,7 @@
       var dm = rollDamage(st.atk, st, 0);
       bt.bhp = Math.max(0, bt.bhp - dm.n);
       btLog(dm.crit ? 'crit' : '', fmtHtml(dm.crit ? 'logCrit' : 'logAtk', { n: dm.n }));
+      SFX.hit(dm.crit);
     }
 
     renderBattle();
@@ -2532,6 +2866,7 @@
       dmg = Math.max(1, dmg);
       bt.php = Math.max(0, bt.php - dmg);
       btLog('boss', fmtHtml('logBoss', { name: (lang === 'ja' ? b.ja : b.ko), n: dmg }));
+      SFX.bossHit();
     }
     bt.guard = false;
     bt.turn += 1;
@@ -2553,6 +2888,7 @@
     bt.win = !!win;
     bt.busy = false;
     var st = playerStats();
+    if (win) SFX.win(); else SFX.lose();
     if (win) {
       var first = rpg.cleared.indexOf(bt.idx) < 0;
       if (first) { rpg.cleared.push(bt.idx); saveRpg(); }
@@ -2571,17 +2907,794 @@
     renderBattle();
   }
 
+  /* ---------- ✦ 별빛 벽돌깨기 (star breaker) ---------- */
+
+  var BRK_KEY = 'focus.break.v1';
+  var BRK_COLS = 7;
+  var BRK_DAILY = 2;
+
+  // 레전더리 10종의 벽돌깨기 능력 — 스킨마다 테마에 맞는 효과
+  var BRK_ABILITY = {
+    aurora: 'pierce', crescent: 'power', midnight: 'blast', phoenix: 'blast',
+    celestial: 'laser', eternal: 'power', sovereign: 'laser', abyss: 'pierce',
+    seraph: 'orbit', genesis: 'orbit'
+  };
+  var BRK_ABILITY_INFO = {
+    pierce: { ko: '프리즘 관통', ja: 'プリズム貫通', dko: '공이 벽돌을 뚫고 지나간다', dja: 'ボールがブロックを貫通する' },
+    power:  { ko: '월광 참격', ja: '月光斬撃', dko: '타격마다 데미지 2', dja: 'ヒットごとにダメージ2' },
+    blast:  { ko: '심야 폭발', ja: '深夜爆発', dko: '벽돌 파괴 시 주변에 1 피해', dja: '破壊時に周囲へ1ダメージ' },
+    laser:  { ko: '성좌 광선', ja: '星座光線', dko: '발사할 때 조준선 레이저가 벽돌을 긁는다', dja: '発射時に照準レーザーがブロックを削る' },
+    orbit:  { ko: '세라핌 위성', ja: 'セラフィム衛星', dko: '매 턴 공 +1', dja: '毎ターンボール+1' }
+  };
+
+  function brkDefaults() {
+    return { best: 0, day: { date: todayKey(), rewards: 0 } };
+  }
+
+  function loadBrkSave() {
+    var base = brkDefaults();
+    var raw = null;
+    try { raw = localStorage.getItem(BRK_KEY); } catch (e) { return base; }
+    if (!raw) return base;
+    var s = null;
+    try { s = JSON.parse(raw); } catch (e) { return base; }
+    if (!s || typeof s !== 'object') return base;
+    var b = brkDefaults();
+    if (typeof s.best === 'number' && s.best >= 0) b.best = Math.floor(s.best);
+    if (s.day && typeof s.day === 'object') {
+      if (typeof s.day.date === 'string') b.day.date = s.day.date;
+      if (typeof s.day.rewards === 'number' && s.day.rewards >= 0) b.day.rewards = Math.floor(s.day.rewards);
+    }
+    if (b.day.date !== todayKey()) b.day = { date: todayKey(), rewards: 0 };
+    b.day.rewards = Math.min(BRK_DAILY, b.day.rewards);
+    return b;
+  }
+
+  var brkSave = loadBrkSave();
+  var brk = null;
+  var brkCanvas = null;
+  var brkCtx = null;
+  var brkRaf = 0;
+  var brkLast = 0;
+  var brkActive = false;
+
+  function saveBrk() {
+    try { localStorage.setItem(BRK_KEY, JSON.stringify(brkSave)); } catch (e) {}
+  }
+
+  function brkInitEls() {
+    if (brkCanvas) return !!brkCtx;
+    brkCanvas = $('brkCanvas');
+    if (!brkCanvas) return false;
+    try { brkCtx = brkCanvas.getContext('2d'); } catch (e) { brkCtx = null; }
+    return !!brkCtx;
+  }
+
+  function brkResize() {
+    if (!brk || !brkCanvas) return;
+    var w = Math.round(brkCanvas.clientWidth || 0);
+    if (!w) w = 320;
+    var h = Math.round(w * 1.32);
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    brkCanvas.width = Math.round(w * dpr);
+    brkCanvas.height = Math.round(h * dpr);
+    brkCanvas.style.height = h + 'px';
+    if (brkCtx.setTransform) brkCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    brk.W = w;
+    brk.H = h;
+    brk.pad = Math.round(w * 0.032);
+    brk.gap = Math.max(3, Math.round(w * 0.011));
+    brk.brickH = Math.round(w * 0.052);
+    brk.brickW = (w - brk.pad * 2 - brk.gap * (BRK_COLS - 1)) / BRK_COLS;
+    brk.topY = brk.pad;
+    brk.launchY = h - Math.round(w * 0.115);
+    brk.ballR = Math.max(4, Math.round(w * 0.0155));
+    brk.baseSpeed = Math.max(210, w * 0.95);
+    brk.stars = [];
+    for (var i = 0; i < 34; i++) {
+      brk.stars.push({
+        x: Math.random() * w,
+        y: Math.random() * h * 0.9,
+        r: 0.5 + Math.random() * 1.1,
+        a: 0.10 + Math.random() * 0.35,
+        p: Math.random() * 6.28
+      });
+    }
+  }
+
+  function brkNewGame() {
+    if (!brkInitEls()) return;
+    var prevMul = (brk && brk.speedMul === 2) ? 2 : 1;
+    var skin = equippedSkin();
+    var abil = BRK_ABILITY[gacha.equipped] || null;
+    var high = !!(skin && (skin.rarity === 'epic' || skin.rarity === 'legendary'));
+    brk = {
+      W: 0, H: 0, pad: 0, gap: 0, brickW: 0, brickH: 0, topY: 0,
+      launchY: 0, ballR: 5, baseSpeed: 300, stars: [],
+      bricks: [], balls: [], parts: [], pops: [],
+      count: 1 + (high ? 1 : 0),
+      crit: high ? 0.10 : 0,
+      dmg: (abil === 'power') ? 2 : 1,
+      ability: abil,
+      wave: 1, combo: 0, aiming: false, aim: 0, shotAim: 0,
+      queue: 0, fireTimer: 0, volley: false, over: false,
+      speedMul: prevMul, laser: null, flash: 0, t: 0
+    };
+    brkResize();
+    for (var r = 0; r < 4; r++) brk.bricks = brk.bricks.concat(brkRow(r));
+    var ov = $('brkOver');
+    if (ov) { ov.hidden = true; ov.innerHTML = ''; }
+    brkSyncHud();
+    brkDraw();
+  }
+
+  function brkRow(r) {
+    var out = [];
+    var hpBase = 1 + Math.floor(brk.wave / 5);
+    for (var c = 0; c < BRK_COLS; c++) {
+      if (Math.random() < 0.10) continue;
+      var hp = Math.min(7, hpBase + (Math.random() < 0.22 ? 1 : 0));
+      out.push({ col: c, row: r, span: 1, hp: hp, max: hp, type: 'brick', dead: false });
+    }
+    if (Math.random() < 0.55) {
+      var free = out.filter(function (b) { return b.col > 0 && b.col < BRK_COLS - 1; });
+      if (free.length) {
+        var pick = free[Math.floor(Math.random() * free.length)];
+        pick.type = 'orb';
+        pick.hp = 1;
+        pick.max = 1;
+      }
+    }
+    return out;
+  }
+
+  function brkBossRow(r) {
+    var hp = 10 + brk.wave * 2;
+    return [{ col: 0, row: r, span: BRK_COLS, hp: hp, max: hp, type: 'boss', dead: false }];
+  }
+
+  function brkRect(b) {
+    var x = brk.pad + b.col * (brk.brickW + brk.gap);
+    var w = b.span * brk.brickW + (b.span - 1) * brk.gap;
+    var y = brk.topY + b.row * (brk.brickH + brk.gap);
+    return { x: x, y: y, w: w, h: brk.brickH };
+  }
+
+  function brkStartLoop() {
+    if (brkRaf) return;
+    brkLast = 0;
+    if (!window.requestAnimationFrame) return;
+    brkRaf = requestAnimationFrame(brkLoop);
+  }
+
+  function brkStopLoop() {
+    if (brkRaf && window.cancelAnimationFrame) cancelAnimationFrame(brkRaf);
+    brkRaf = 0;
+  }
+
+  function brkLoop(ts) {
+    brkRaf = window.requestAnimationFrame ? requestAnimationFrame(brkLoop) : 0;
+    if (!brk || !brkActive) return;
+    if (!brkLast) brkLast = ts;
+    var dt = (ts - brkLast) / 1000;
+    brkLast = ts;
+    if (dt > 0.06) dt = 0.06;
+    if (dt < 0) dt = 0;
+    dt *= brk.speedMul;
+    if (!brk.over) brkUpdate(dt);
+    brkDraw();
+  }
+
+  function brkUpdate(dt) {
+    brk.t += dt;
+    if (brk.flash > 0) brk.flash = Math.max(0, brk.flash - dt);
+    if (brk.laser) { brk.laser.t -= dt; if (brk.laser.t <= 0) brk.laser = null; }
+
+    if (brk.queue > 0) {
+      brk.fireTimer -= dt;
+      if (brk.fireTimer <= 0) { brkFireOne(); brk.fireTimer = 0.07; }
+    }
+
+    var speed = brk.baseSpeed;
+    for (var i = brk.balls.length - 1; i >= 0; i--) {
+      var b = brk.balls[i];
+      var step = dt / Math.max(1, Math.ceil((speed * dt) / 5));
+      for (var s = 0; s < 64; s++) {
+        if (!b.alive) break;
+        brkStepBall(b, step, speed);
+        if (b.y > brk.launchY + brk.ballR * 1.2 && b.vy > 0) { b.alive = false; break; }
+        if (b.life > 7) { b.alive = false; break; }
+      }
+      if (!b.alive) brk.balls.splice(i, 1);
+    }
+
+    for (var p = brk.parts.length - 1; p >= 0; p--) {
+      var pt = brk.parts[p];
+      pt.x += pt.vx * dt;
+      pt.y += pt.vy * dt;
+      pt.vx *= 0.985;
+      pt.vy *= 0.985;
+      pt.life -= dt;
+      if (pt.life <= 0) brk.parts.splice(p, 1);
+    }
+
+    for (var q = brk.pops.length - 1; q >= 0; q--) {
+      var pop = brk.pops[q];
+      pop.y -= 30 * dt;
+      pop.life -= dt;
+      if (pop.life <= 0) brk.pops.splice(q, 1);
+    }
+
+    if (brk.volley && brk.queue === 0 && !brk.balls.length) brkEndTurn();
+  }
+
+  function brkStepBall(b, sdt, speed) {
+    b.x += b.vx * speed * sdt;
+    b.y += b.vy * speed * sdt;
+    b.life += sdt;
+    var r = brk.ballR;
+    var wall = brk.pad * 0.5;
+    if (b.x - r < wall) { b.x = wall + r; b.vx = Math.abs(b.vx); }
+    else if (b.x + r > brk.W - wall) { b.x = brk.W - wall - r; b.vx = -Math.abs(b.vx); }
+    if (b.y - r < wall) { b.y = wall + r; b.vy = Math.abs(b.vy); }
+
+    for (var i = 0; i < brk.bricks.length; i++) {
+      var br = brk.bricks[i];
+      if (br.dead) continue;
+      var rect = brkRect(br);
+      var cx = Math.max(rect.x, Math.min(b.x, rect.x + rect.w));
+      var cy = Math.max(rect.y, Math.min(b.y, rect.y + rect.h));
+      var dx = b.x - cx;
+      var dy = b.y - cy;
+      if (dx * dx + dy * dy > r * r) continue;
+      if (brk.ability === 'pierce') {
+        if (b.hits.indexOf(br) >= 0) continue;
+        b.hits.push(br);
+        brkHitBrick(br, b);
+      } else {
+        brkHitBrick(br, b);
+        brkBounce(b, rect);
+        break;
+      }
+    }
+  }
+
+  function brkBounce(b, rect) {
+    var cx = rect.x + rect.w / 2;
+    var cy = rect.y + rect.h / 2;
+    var ox = (rect.w / 2 + brk.ballR) - Math.abs(b.x - cx);
+    var oy = (rect.h / 2 + brk.ballR) - Math.abs(b.y - cy);
+    if (ox < oy) {
+      b.vx = b.x < cx ? -Math.abs(b.vx) : Math.abs(b.vx);
+      b.x += b.x < cx ? -ox : ox;
+    } else {
+      b.vy = b.y < cy ? -Math.abs(b.vy) : Math.abs(b.vy);
+      b.y += b.y < cy ? -oy : oy;
+    }
+  }
+
+  function brkHitBrick(br, ball) {
+    if (!br || br.dead) return;
+    var crit = Math.random() < brk.crit;
+    br.hp -= brk.dmg * (crit ? 2 : 1);
+    brk.combo += 1;
+    if (br.hp > 0) {
+      SFX.brickHit(brk.combo, crit);
+      return;
+    }
+    br.dead = true;
+    SFX.brickBreak(brk.combo);
+    brkSparks(br, crit);
+    var rect = brkRect(br);
+    if (br.type === 'orb') {
+      brk.count += 1;
+      brk.pops.push({ x: rect.x + rect.w / 2, y: rect.y, text: '+1', life: 0.9, max: 0.9 });
+      SFX.orb();
+    }
+    if (br.type === 'boss') { SFX.bossClear(); brk.flash = 0.55; }
+    if (brk.ability === 'blast') brkBlast(br);
+  }
+
+  function brkBlast(src) {
+    var sr = brkRect(src);
+    var sx = sr.x + sr.w / 2;
+    var sy = sr.y + sr.h / 2;
+    var reach = Math.max(sr.w, sr.h) * 1.8 + brk.gap;
+    var list = brk.bricks.slice();
+    for (var i = 0; i < list.length; i++) {
+      var b = list[i];
+      if (b === src || b.dead) continue;
+      var r = brkRect(b);
+      var dx = (r.x + r.w / 2) - sx;
+      var dy = (r.y + r.h / 2) - sy;
+      if (Math.sqrt(dx * dx + dy * dy) > reach) continue;
+      b.hp -= 1;
+      if (b.hp <= 0) {
+        b.dead = true;
+        brkSparks(b, false);
+        if (b.type === 'orb') {
+          brk.count += 1;
+          brk.pops.push({ x: r.x + r.w / 2, y: r.y, text: '+1', life: 0.9, max: 0.9 });
+          SFX.orb();
+        }
+        if (b.type === 'boss') { SFX.bossClear(); brk.flash = 0.55; }
+      }
+    }
+  }
+
+  function brkSparks(b, crit) {
+    var r = brkRect(b);
+    var n = crit ? 12 : 7;
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * 6.2832;
+      var sp = 40 + Math.random() * 110;
+      brk.parts.push({
+        x: r.x + r.w / 2,
+        y: r.y + r.h / 2,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp,
+        life: 0.32 + Math.random() * 0.32,
+        max: 0.64,
+        r: 1 + Math.random() * (crit ? 2.2 : 1.3)
+      });
+    }
+  }
+
+  function brkFireOne() {
+    if (!brk || brk.queue <= 0) return;
+    var a = brk.shotAim + (Math.random() - 0.5) * 0.05;
+    brk.balls.push({
+      x: brk.W / 2,
+      y: brk.launchY - brk.ballR * 0.5,
+      vx: Math.sin(a),
+      vy: -Math.cos(a),
+      life: 0,
+      alive: true,
+      hits: []
+    });
+    brk.queue -= 1;
+    tone({ f: 700 + Math.random() * 140, dur: .05, type: 'sine', gain: .025 });
+  }
+
+  function brkRelease() {
+    if (!brk || brk.over || brk.volley) return;
+    brk.volley = true;
+    brk.combo = 0;
+    brk.shotAim = brk.aim;
+    brk.queue = brk.count;
+    brk.fireTimer = 0;
+    SFX.launch();
+    if (brk.ability === 'laser') brkLaserBeam(brk.aim);
+    brkSyncHud();
+  }
+
+  function brkLaserBeam(a) {
+    brk.laser = { a: a, t: 0.4, max: 0.4 };
+    SFX.laser();
+    var cx = brk.W / 2;
+    var cy = brk.launchY;
+    var dx = Math.sin(a);
+    var dy = -Math.cos(a);
+    var steps = Math.ceil((brk.H * 1.15) / 5);
+    var hitRefs = [];
+    for (var s = 0; s < steps; s++) {
+      var x = cx + dx * s * 5;
+      var y = cy + dy * s * 5;
+      if (y < 0 || x < 0 || x > brk.W) break;
+      for (var i = 0; i < brk.bricks.length; i++) {
+        var b = brk.bricks[i];
+        if (b.dead || hitRefs.indexOf(b) >= 0) continue;
+        var r = brkRect(b);
+        if (x >= r.x - 1 && x <= r.x + r.w + 1 && y >= r.y - 1 && y <= r.y + r.h + 1) {
+          hitRefs.push(b);
+          b.hp -= 1;
+          if (b.hp <= 0) {
+            b.dead = true;
+            brkSparks(b, false);
+            if (b.type === 'orb') {
+              brk.count += 1;
+              brk.pops.push({ x: r.x + r.w / 2, y: r.y, text: '+1', life: 0.9, max: 0.9 });
+              SFX.orb();
+            }
+            if (b.type === 'boss') { SFX.bossClear(); brk.flash = 0.55; }
+          }
+        }
+      }
+    }
+    if (hitRefs.length) SFX.brickBreak(0);
+  }
+
+  function brkEndTurn() {
+    if (!brk || brk.over) return;
+    brk.volley = false;
+    brk.queue = 0;
+    brk.bricks = brk.bricks.filter(function (b) { return !b.dead; });
+    var cleared = brk.bricks.length === 0;
+    brk.combo = 0;
+    if (brk.ability === 'orbit') brk.count += 1;
+    brk.wave += 1;
+    brk.bricks.forEach(function (b) { b.row += 1; });
+    if (brk.wave % 5 === 0) brk.bricks = brk.bricks.concat(brkBossRow(0));
+    else brk.bricks = brk.bricks.concat(brkRow(0));
+    if (cleared) {
+      SFX.stageClear();
+      brk.flash = 0.8;
+      for (var r = 1; r < 4; r++) brk.bricks = brk.bricks.concat(brkRow(r));
+    }
+    if (brk.wave % 5 === 0) {
+      var got = brkReward(brk.wave);
+      if (got) toast(fmt('brkToastReward', { n: brk.wave, s: got.shard }));
+      else if (brkSave.day.rewards >= BRK_DAILY) toastKey('brkNoReward');
+    }
+    brkCheckOver();
+    brkSyncHud();
+  }
+
+  function brkReward(wave) {
+    if (brkSave.day.date !== todayKey()) brkSave.day = { date: todayKey(), rewards: 0 };
+    if (brkSave.day.rewards >= BRK_DAILY) return null;
+    brkSave.day.rewards += 1;
+    var shard = wave >= 15 ? 2 : 1;
+    grantTickets(1);
+    gacha.shards += shard;
+    saveGacha();
+    saveBrk();
+    if (hubTab === 'gacha') renderGacha();
+    return { shard: shard };
+  }
+
+  function brkCheckOver() {
+    for (var i = 0; i < brk.bricks.length; i++) {
+      var r = brkRect(brk.bricks[i]);
+      if (r.y + r.h >= brk.launchY - 2) { brkGameOver(); return; }
+    }
+  }
+
+  function brkGameOver() {
+    if (!brk || brk.over) return;
+    brk.over = true;
+    brk.volley = false;
+    brk.queue = 0;
+    brk.balls = [];
+    SFX.gameOver();
+    if (brk.wave > brkSave.best) { brkSave.best = brk.wave; saveBrk(); }
+    var ov = $('brkOver');
+    if (ov) {
+      ov.hidden = false;
+      ov.innerHTML =
+        '<div class="brk-over-title">' + esc(t('brkOverTitle')) + '</div>' +
+        '<div class="brk-over-sub">' + esc(fmt('brkOverSub', { n: brk.wave, b: brkSave.best })) + '</div>' +
+        '<button class="btn-primary brk-over-btn" type="button" data-brk="again">' + esc(t('brkAgain')) + '</button>';
+    }
+    brkSyncHud();
+  }
+
+  function brkToggleSpeed() {
+    if (!brk) return;
+    brk.speedMul = brk.speedMul === 2 ? 1 : 2;
+    brkSyncHud();
+    SFX.check();
+  }
+
+  function brkRecallBalls() {
+    if (!brk || brk.over || !brk.volley) return;
+    brk.queue = 0;
+    brk.balls = [];
+    brkSyncHud();
+    SFX.uncheck();
+  }
+
+  function brkSyncHud() {
+    if (!brk) return;
+    var w = $('brkWave');
+    if (w) w.textContent = 'WAVE ' + pad2(brk.wave);
+    var best = $('brkBest');
+    if (best) best.textContent = t('brkBest') + ' ' + pad2(brkSave.best);
+    var skin = equippedSkin();
+    var ab = brk.ability ? BRK_ABILITY_INFO[brk.ability] : null;
+    var sEl = $('brkSkin');
+    if (sEl) {
+      sEl.textContent = skinName(skin) + ' · ' + (ab
+        ? (lang === 'ja' ? ab.ja + ' — ' + ab.dja : ab.ko + ' — ' + ab.dko)
+        : t(skin && (skin.rarity === 'epic' || skin.rarity === 'legendary') ? 'brkEpic' : 'brkBasic'));
+    }
+    var rew = $('brkRew');
+    if (rew) rew.textContent = t('brkDaily') + ' ' + brkSave.day.rewards + '/' + BRK_DAILY;
+    var sp = $('brkSpeed');
+    if (sp) {
+      sp.textContent = brk.speedMul === 2 ? '2x' : '1x';
+      sp.classList.toggle('on', brk.speedMul === 2);
+    }
+    var rc = $('brkRecall');
+    if (rc) rc.disabled = !brk.volley;
+  }
+
+  function brkRound(g, x, y, w, h, r) {
+    var rr = Math.min(r, w / 2, h / 2);
+    g.moveTo(x + rr, y);
+    g.lineTo(x + w - rr, y);
+    g.quadraticCurveTo(x + w, y, x + w, y + rr);
+    g.lineTo(x + w, y + h - rr);
+    g.quadraticCurveTo(x + w, y + h, x + w - rr, y + h);
+    g.lineTo(x + rr, y + h);
+    g.quadraticCurveTo(x, y + h, x, y + h - rr);
+    g.lineTo(x, y + rr);
+    g.quadraticCurveTo(x, y, x + rr, y);
+    g.closePath();
+  }
+
+  function brkDraw() {
+    if (!brk || !brkCtx) return;
+    var g = brkCtx;
+    var W = brk.W, H = brk.H;
+    var skin = equippedSkin();
+    var main = (skin && skin.color) || '#FFFFFF';
+    var glow = (skin && skin.glow) || 'rgba(255,255,255,.45)';
+    g.clearRect(0, 0, W, H);
+
+    for (var s = 0; s < brk.stars.length; s++) {
+      var st = brk.stars[s];
+      g.globalAlpha = Math.max(0, st.a * (0.6 + 0.4 * Math.sin(brk.t * 1.4 + st.p)));
+      g.fillStyle = '#FFFFFF';
+      g.beginPath();
+      g.arc(st.x, st.y, st.r, 0, 6.2832);
+      g.fill();
+    }
+    g.globalAlpha = 1;
+
+    g.save();
+    g.strokeStyle = 'rgba(255,255,255,.13)';
+    g.lineWidth = 1;
+    if (g.setLineDash) g.setLineDash([3, 5]);
+    g.beginPath();
+    g.moveTo(brk.pad * 0.5, brk.launchY);
+    g.lineTo(W - brk.pad * 0.5, brk.launchY);
+    g.stroke();
+    g.restore();
+
+    for (var i = 0; i < brk.bricks.length; i++) {
+      var b = brk.bricks[i];
+      if (b.dead) continue;
+      var r = brkRect(b);
+      var ratio = Math.max(0, Math.min(1, b.hp / b.max));
+      var rad = Math.min(r.h * 0.3, 6);
+
+      if (b.type === 'orb') {
+        var ox = r.x + r.w / 2;
+        var oy = r.y + r.h / 2;
+        var orad = Math.min(r.w, r.h) * 0.42;
+        g.save();
+        g.shadowColor = glow;
+        g.shadowBlur = 10;
+        g.globalAlpha = 0.9;
+        g.fillStyle = 'rgba(255,255,255,.14)';
+        g.strokeStyle = 'rgba(255,255,255,.6)';
+        g.lineWidth = 1.2;
+        g.beginPath();
+        g.arc(ox, oy, orad, 0, 6.2832);
+        g.fill();
+        g.stroke();
+        g.restore();
+        g.fillStyle = 'rgba(255,255,255,.94)';
+        g.font = '700 ' + Math.max(7, Math.round(r.h * 0.5)) + 'px -apple-system,sans-serif';
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillText('+1', ox, oy + 0.5);
+        continue;
+      }
+
+      g.beginPath();
+      brkRound(g, r.x, r.y, r.w, r.h, rad);
+      g.globalAlpha = 0.14 + 0.42 * ratio;
+      g.fillStyle = main;
+      g.fill();
+      g.globalAlpha = 1;
+      g.strokeStyle = 'rgba(255,255,255,' + (0.10 + 0.30 * ratio).toFixed(2) + ')';
+      g.lineWidth = 1;
+      g.stroke();
+
+      if (b.type === 'boss') {
+        g.save();
+        g.shadowColor = glow;
+        g.shadowBlur = 14;
+        g.strokeStyle = 'rgba(255,255,255,.55)';
+        g.lineWidth = 1.6;
+        g.beginPath();
+        brkRound(g, r.x + 1, r.y + 1, r.w - 2, r.h - 2, rad);
+        g.stroke();
+        g.restore();
+      }
+      if (b.hp > 1) {
+        g.fillStyle = 'rgba(255,255,255,.9)';
+        g.font = '700 ' + Math.max(7, Math.round(r.h * 0.5)) + 'px -apple-system,sans-serif';
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillText(String(b.hp), r.x + r.w / 2, r.y + r.h / 2 + 0.5);
+      }
+    }
+
+    var cx = W / 2;
+    var cy = brk.launchY;
+    var a = brk.aim;
+    var dx = Math.sin(a), dy = -Math.cos(a);
+
+    if (!brk.over && !brk.volley) {
+      g.save();
+      if (g.setLineDash) g.setLineDash([2, 7]);
+      g.strokeStyle = 'rgba(255,255,255,' + (brk.aiming ? .6 : .32) + ')';
+      g.lineWidth = 2;
+      g.beginPath();
+      g.moveTo(cx + dx * 15, cy + dy * 15);
+      g.lineTo(cx + dx * H, cy + dy * H);
+      g.stroke();
+      g.restore();
+    }
+
+    if (brk.laser) {
+      var lt = Math.max(0, brk.laser.t / brk.laser.max);
+      var la = brk.laser.a;
+      g.save();
+      g.globalAlpha = lt;
+      g.shadowColor = glow;
+      g.shadowBlur = 16;
+      g.strokeStyle = 'rgba(255,255,255,.9)';
+      g.lineWidth = 2.6;
+      g.beginPath();
+      g.moveTo(cx, cy);
+      g.lineTo(cx + Math.sin(la) * H, cy - Math.cos(la) * H);
+      g.stroke();
+      g.restore();
+    }
+
+    g.save();
+    var core = g.createRadialGradient(cx, cy, 1, cx, cy, 22);
+    core.addColorStop(0, 'rgba(255,255,255,.95)');
+    core.addColorStop(0.42, main);
+    core.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = core;
+    g.beginPath();
+    g.arc(cx, cy, 22, 0, 6.2832);
+    g.fill();
+    g.strokeStyle = 'rgba(255,255,255,.32)';
+    g.lineWidth = 1;
+    g.beginPath();
+    g.arc(cx, cy, 12, 0, 6.2832);
+    g.stroke();
+    g.restore();
+
+    for (var bi = 0; bi < brk.balls.length; bi++) {
+      var ball = brk.balls[bi];
+      var bg = g.createRadialGradient(ball.x - brk.ballR * 0.4, ball.y - brk.ballR * 0.4, 0.5, ball.x, ball.y, brk.ballR * 1.9);
+      bg.addColorStop(0, '#FFFFFF');
+      bg.addColorStop(0.5, main);
+      bg.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = bg;
+      g.beginPath();
+      g.arc(ball.x, ball.y, brk.ballR * 1.6, 0, 6.2832);
+      g.fill();
+    }
+
+    for (var pi = 0; pi < brk.parts.length; pi++) {
+      var pt = brk.parts[pi];
+      g.globalAlpha = Math.max(0, pt.life / pt.max);
+      g.fillStyle = main;
+      g.beginPath();
+      g.arc(pt.x, pt.y, pt.r, 0, 6.2832);
+      g.fill();
+    }
+    g.globalAlpha = 1;
+
+    for (var qi = 0; qi < brk.pops.length; qi++) {
+      var pop = brk.pops[qi];
+      g.globalAlpha = Math.max(0, pop.life / pop.max);
+      g.fillStyle = 'rgba(255,255,255,.95)';
+      g.font = '800 ' + Math.round(W * 0.035) + 'px -apple-system,sans-serif';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.fillText(pop.text, pop.x, pop.y);
+    }
+    g.globalAlpha = 1;
+
+    if (brk.flash > 0) {
+      g.save();
+      g.globalAlpha = Math.min(1, brk.flash * 1.6);
+      g.fillStyle = 'rgba(255,255,255,.92)';
+      g.font = '800 ' + Math.round(W * 0.062) + 'px -apple-system,sans-serif';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.fillText(t('brkStageClear'), W / 2, brk.topY + brk.brickH * 3.4);
+      g.restore();
+    }
+  }
+
+  function brkPoint(e) {
+    var rect = brkCanvas.getBoundingClientRect();
+    var src = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
+    return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+  }
+
+  function brkSetAim(p) {
+    if (!brk) return;
+    var dx = p.x - brk.W / 2;
+    var dy = Math.min(-6, p.y - brk.launchY);
+    var a = Math.atan2(dx, -dy);
+    var lim = 1.31;
+    if (a > lim) a = lim;
+    if (a < -lim) a = -lim;
+    brk.aim = a;
+  }
+
+  function brkOpen() {
+    if (!brkInitEls()) return;
+    brkActive = true;
+    if (!brk) brkNewGame();
+    else { brkResize(); brkSyncHud(); brkDraw(); }
+    var ov = $('brkOver');
+    if (ov && brk) ov.hidden = !brk.over;
+    brkStartLoop();
+  }
+
+  function brkLeave() {
+    brkActive = false;
+    brkStopLoop();
+  }
+
+  function bindBreakGame() {
+    if (!brkInitEls()) return;
+    var c = brkCanvas;
+    c.addEventListener('pointerdown', function (e) {
+      if (!brk || brk.over || brk.volley) return;
+      if (e.cancelable) e.preventDefault();
+      unlockSound();
+      brk.aiming = true;
+      brkSetAim(brkPoint(e));
+    });
+    c.addEventListener('pointermove', function (e) {
+      if (!brk || !brk.aiming) return;
+      if (e.cancelable) e.preventDefault();
+      brkSetAim(brkPoint(e));
+    });
+    c.addEventListener('pointerup', function (e) {
+      if (!brk || !brk.aiming) return;
+      if (e.cancelable) e.preventDefault();
+      brkSetAim(brkPoint(e));
+      brk.aiming = false;
+      brkRelease();
+    });
+    c.addEventListener('pointercancel', function () {
+      if (brk) brk.aiming = false;
+    });
+    var again = $('brkOver');
+    if (again) {
+      again.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-brk]');
+        if (!b) return;
+        brkNewGame();
+        brkActive = true;
+        brkStartLoop();
+      });
+    }
+    var sp = $('brkSpeed');
+    if (sp) sp.addEventListener('click', brkToggleSpeed);
+    var rc = $('brkRecall');
+    if (rc) rc.addEventListener('click', brkRecallBalls);
+  }
+
   function setHubTab(tab) {
-    hubTab = (tab === 'rpg') ? 'rpg' : 'gacha';
+    hubTab = (tab === 'rpg' || tab === 'break') ? tab : 'gacha';
     $('tabGacha').hidden = hubTab !== 'gacha';
     $('tabRpg').hidden = hubTab !== 'rpg';
+    $('tabBreak').hidden = hubTab !== 'break';
     $('tabBtnGacha').classList.toggle('on', hubTab === 'gacha');
     $('tabBtnRpg').classList.toggle('on', hubTab === 'rpg');
+    $('tabBtnBreak').classList.toggle('on', hubTab === 'break');
     $('tabBtnGacha').setAttribute('aria-selected', hubTab === 'gacha' ? 'true' : 'false');
     $('tabBtnRpg').setAttribute('aria-selected', hubTab === 'rpg' ? 'true' : 'false');
-    $('hubTitleText').textContent = t(hubTab === 'rpg' ? 'rpgTitle' : 'gTitle');
-    if (hubTab === 'rpg') renderRpg();
-    else renderGacha();
+    $('tabBtnBreak').setAttribute('aria-selected', hubTab === 'break' ? 'true' : 'false');
+    $('hubTitleText').textContent = t(hubTab === 'rpg' ? 'rpgTitle' : hubTab === 'break' ? 'brkTitle' : 'gTitle');
+    if (hubTab === 'rpg') { brkLeave(); renderRpg(); }
+    else if (hubTab === 'break') { brkOpen(); }
+    else { brkLeave(); renderGacha(); }
   }
 
   /* ---------- refresh ---------- */
@@ -2734,6 +3847,7 @@
       renderAll();
       addExp(20, true);
       var gotTicket = awardFocusTicket();
+      SFX.focusDone();
       toastKey(gotTicket ? 'toastFocusTicket' : 'toastFocusTicketMax');
       if (navigator.vibrate) { try { navigator.vibrate(18); } catch (e) {} }
     }, 230);
@@ -2949,6 +4063,7 @@
     for (var b = 0; b < btns.length; b++) {
       btns[b].setAttribute('aria-pressed', btns[b].getAttribute('data-lang') === lang ? 'true' : 'false');
     }
+    renderSoundBtn();
   }
 
   function renderAll() {
@@ -2958,8 +4073,9 @@
     renderRoutines();
     if (cal.isOpen) renderCal();
     if (gachaOpen) {
-      $('hubTitleText').textContent = t(hubTab === 'rpg' ? 'rpgTitle' : 'gTitle');
+      $('hubTitleText').textContent = t(hubTab === 'rpg' ? 'rpgTitle' : hubTab === 'break' ? 'brkTitle' : 'gTitle');
       if (hubTab === 'rpg') renderRpg();
+      else if (hubTab === 'break') brkSyncHud();
       else renderGacha();
     }
     if (updateOpen) renderUpdate();
@@ -2990,6 +4106,7 @@
   $('brandBtn').addEventListener('click', openGacha);
   $('tabBtnGacha').addEventListener('click', function () { setHubTab('gacha'); });
   $('tabBtnRpg').addEventListener('click', function () { setHubTab('rpg'); });
+  $('tabBtnBreak').addEventListener('click', function () { setHubTab('break'); });
   $('gFilters').addEventListener('click', function (e) {
     var b = e.target.closest('[data-f]');
     if (!b) return;
@@ -3138,6 +4255,7 @@
     syncToday();
     save();
     renderRoutines();
+    if (r.done) SFX.check(); else SFX.uncheck();
     awardRoutineExp(r.id, r.done);
     if (r.done) {
       if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
@@ -3220,6 +4338,14 @@
   updateBrandBadge();
   syncToday();
   renderAll();
+
+  // 사운드 — 첫 사용자 터치에서 iOS AudioContext 잠금 해제
+  renderSoundBtn();
+  bindBreakGame();
+  $('soundBtn').addEventListener('click', function () { unlockSound(); toggleSound(); });
+  ['pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
+    document.addEventListener(ev, unlockSound, { passive: true });
+  });
 
   // 이 버전의 소식을 아직 안 봤으면 한 번만 안내
   if (readSeenVersion() !== APP_VERSION) openUpdate();
