@@ -156,6 +156,51 @@
   }
   body[data-skin="aurora"] .fx-spark::after{animation-delay:.8s}
 
+  /* v1.5 — 100종 스킨용 추가 이펙트 */
+  @keyframes starFlare{0%,100%{opacity:.72;transform:scale(.9)}38%{opacity:1;transform:scale(1.12)}64%{opacity:.86;transform:scale(.98)}}
+  @keyframes starSway{0%,100%{transform:translateX(-.5px) rotate(-3deg)}50%{transform:translateX(.5px) rotate(3deg)}}
+  @keyframes starHaloPulse{0%,100%{filter:drop-shadow(0 0 5px var(--star-glow))}50%{filter:drop-shadow(0 0 18px var(--star-glow))}}
+  @keyframes starFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2px)}}
+  .fx-halo::before{
+    inset:-40%;border-radius:50%;border:1px solid rgba(255,255,255,.42);
+    box-shadow:inset 0 0 12px rgba(255,255,255,.22),0 0 10px rgba(255,255,255,.18);
+    animation:haloRing 4.2s ease-in-out infinite;
+  }
+  @keyframes haloRing{0%,100%{transform:scale(.9) rotate(0deg);opacity:.4}50%{transform:scale(1.06) rotate(180deg);opacity:.95}}
+  .fx-pulse::before{
+    inset:-30%;border-radius:50%;border:1px solid rgba(255,255,255,.45);
+    animation:pulseRing 2.9s ease-out infinite;
+  }
+  @keyframes pulseRing{0%{transform:scale(.45);opacity:.9}100%{transform:scale(1.55);opacity:0}}
+  .fx-comet::after{
+    left:-44%;top:50%;width:44%;height:2px;border-radius:2px;
+    background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.85));
+    animation:cometTrail 3.4s ease-in-out infinite;
+  }
+  @keyframes cometTrail{0%,100%{opacity:0;transform:translateX(0)}36%{opacity:.9}72%{opacity:0;transform:translateX(48%)}}
+  .fx-cross::after{
+    inset:-32%;opacity:.5;
+    background:
+      radial-gradient(circle 1.2px at 50% 2%,#FFFFFF 0 60%,transparent 61%),
+      radial-gradient(circle 1.2px at 50% 98%,#FFFFFF 0 60%,transparent 61%),
+      radial-gradient(circle 1.2px at 2% 50%,#FFFFFF 0 60%,transparent 61%),
+      radial-gradient(circle 1.2px at 98% 50%,#FFFFFF 0 60%,transparent 61%);
+    animation:crossTwinkle 3.4s ease-in-out infinite;
+  }
+  @keyframes crossTwinkle{0%,100%{opacity:.2;transform:rotate(0deg)}50%{opacity:1;transform:rotate(45deg)}}
+  .fx-aura::before{
+    inset:-56%;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.3),rgba(255,255,255,0) 66%);
+    animation:auraBreath 4.8s ease-in-out infinite;
+  }
+  @keyframes auraBreath{0%,100%{opacity:.3;transform:scale(.9)}50%{opacity:.78;transform:scale(1.08)}}
+  .fx-beam::before{
+    width:2px;height:150%;top:-25%;
+    background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.78),rgba(255,255,255,0));
+    animation:beamGlow 3.8s ease-in-out infinite;
+  }
+  @keyframes beamGlow{0%,100%{opacity:.18}50%{opacity:.85}}
+
   /* midnight — 장착 시 앱 상단·FOCUS 카드에 밤하늘 무드 */
   html[data-skin="midnight"]{background:#070A12}
   body[data-skin="midnight"]{background:#080C16;transition:background .45s ease}
@@ -491,6 +536,134 @@
   .g-card[data-r="legendary"] .g-rarity{color:#EDEDED}
   .g-hint{margin:13px 0 2px;font-size:10.5px;line-height:1.6;color:#4E4E4E;text-align:center}
 
+  /* ---------- hub tabs (뽑기·도감 / 성좌 토벌) ---------- */
+  .hub-tabs{display:flex;gap:5px;background:#101010;border:1px solid #232323;border-radius:13px;padding:4px;margin:0 2px 14px}
+  .hub-tab{
+    flex:1 1 0;min-width:0;min-height:40px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;gap:5px;
+    font-size:12px;font-weight:700;letter-spacing:.02em;color:#767676;
+    transition:background .16s ease,color .16s ease,box-shadow .16s ease;
+  }
+  .hub-tab .hub-dot{width:4px;height:4px;border-radius:50%;background:#FFFFFF;opacity:0;transition:opacity .2s ease}
+  .hub-tab.has .hub-dot{opacity:.9}
+  .hub-tab.on{background:#1F1F1F;color:#F4F4F4;box-shadow:inset 0 0 0 1px #353535}
+  .hub-tab:active{color:#EDEDED}
+
+  /* ---------- collection progress & filters ---------- */
+  .g-progress{display:flex;align-items:center;gap:9px;margin:2px 2px 9px}
+  .g-pbar{flex:1 1 auto;height:4px;border-radius:999px;background:#1C1C1C;overflow:hidden}
+  .g-pbar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#6A6A6A,#FFFFFF);transition:width .45s cubic-bezier(.4,0,.2,1)}
+  .g-ptext{flex:0 0 auto;font-size:10px;color:#7E7E7E;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  .g-ptext b{font-size:11.5px;font-weight:800;color:#F4F4F4}
+  .g-filters{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 0 10px;padding:0 1px 2px}
+  .g-filters::-webkit-scrollbar{display:none}
+  .g-chip{
+    flex:0 0 auto;font-size:10.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap;
+    padding:6px 11px;border-radius:999px;border:1px solid #272727;background:#141414;color:#8A8A8A;
+    transition:background .15s ease,color .15s ease,border-color .15s ease;
+  }
+  .g-chip.on{background:#F0F0F0;border-color:#F0F0F0;color:#0A0A0A}
+  .g-chip:active{color:#E4E4E4}
+  .g-chip.on:active{color:#0A0A0A}
+  .g-empty{padding:26px 0 20px;text-align:center;font-size:11.5px;color:#5C5C5C}
+  .g-earn{margin:9px 0 0;font-size:10px;line-height:1.7;color:#565656;text-align:center;letter-spacing:.01em}
+
+  /* ---------- star conquest (성좌 토벌) ---------- */
+  .rpg-wrap{display:flex;flex-direction:column;gap:8px}
+  .rpg-hero{
+    display:flex;align-items:center;gap:13px;
+    background:linear-gradient(140deg,#171717 0%,#101010 100%);
+    border:1px solid #262626;border-radius:16px;padding:14px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .rpg-star{position:relative;flex:0 0 auto;width:40px;height:40px;line-height:0}
+  .rpg-star svg{width:40px;height:40px;display:block}
+  .rpg-hero-body{flex:1 1 auto;min-width:0}
+  .rpg-lv{display:flex;align-items:baseline;gap:6px;font-size:10.5px;letter-spacing:.14em;color:#8C8C8C;margin-bottom:8px}
+  .rpg-lv b{font-size:20px;font-weight:800;letter-spacing:-.02em;color:#FFFFFF;font-variant-numeric:tabular-nums}
+  .rpg-xp{height:4px;border-radius:999px;background:#1E1E1E;overflow:hidden}
+  .rpg-xp i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#707070,#FFFFFF);transition:width .45s cubic-bezier(.4,0,.2,1)}
+  .rpg-xp-text{margin-top:6px;font-size:9.5px;color:#6E6E6E;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  .rpg-skin{display:flex;align-items:center;gap:10px;background:#131313;border:1px solid #232323;border-radius:13px;padding:10px 12px}
+  .rpg-skin-star{flex:0 0 auto;line-height:0}
+  .rpg-skin-star svg{width:19px;height:19px;display:block}
+  .rpg-skin-meta{flex:1 1 auto;min-width:0}
+  .rpg-skin-name{font-size:12px;font-weight:600;color:#EDEDED;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rpg-skin-sub{font-size:9.5px;color:#7A7A7A;margin-top:3px;line-height:1.45}
+  .rpg-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .rpg-stats div{background:#131313;border:1px solid #222222;border-radius:12px;padding:9px 3px;text-align:center}
+  .rpg-stats b{display:block;font-size:14.5px;font-weight:700;color:#F2F2F2;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .rpg-stats span{display:block;margin-top:3px;font-size:8.5px;letter-spacing:.06em;color:#6A6A6A}
+  .rpg-note{margin:3px 2px 0;font-size:9.5px;line-height:1.7;color:#575757;text-align:center}
+  .boss-list{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+  .boss{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#141414;border:1px solid #232323;border-radius:13px;padding:11px 12px;transition:border-color .15s ease,background .15s ease,transform .12s ease}
+  .boss:active{transform:scale(.995)}
+  .boss.locked{opacity:.42}
+  .boss.cleared{border-color:#2C2C2C;background:#151515}
+  .boss-idx{flex:0 0 auto;width:24px;font-size:9px;font-weight:800;letter-spacing:.06em;color:#696969;font-variant-numeric:tabular-nums}
+  .boss-main{flex:1 1 auto;min-width:0}
+  .boss-name{font-size:12.5px;font-weight:600;color:#E9E9E9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .boss-sub{margin-top:3px;font-size:9px;color:#6A6A6A;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .boss-go{flex:0 0 auto;font-size:10px;font-weight:800;letter-spacing:.04em;color:#0A0A0A;background:#EFEFEF;border-radius:9px;padding:7px 10px;white-space:nowrap}
+  .boss.locked .boss-go{background:#242424;color:#5C5C5C}
+  .boss.cleared .boss-go{background:#1E1E1E;color:#B6B6B6;box-shadow:inset 0 0 0 1px #333333}
+
+  /* battle */
+  .bt-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 11px}
+  .bt-back{font-size:11px;color:#8A8A8A;padding:5px 2px 5px 0}
+  .bt-back:active{color:#FFFFFF}
+  .bt-stage{font-size:9px;font-weight:800;letter-spacing:.18em;color:#6A6A6A;font-variant-numeric:tabular-nums}
+  .bt-boss{position:relative;overflow:hidden;background:linear-gradient(158deg,#1F1515 0%,#120E0E 100%);border:1px solid #3B2727;border-radius:17px;padding:14px}
+  .bt-boss::after{content:"";position:absolute;top:-70px;right:-50px;width:160px;height:160px;background:radial-gradient(circle,rgba(240,140,140,.16),rgba(240,140,140,0) 70%);pointer-events:none}
+  .bt-boss-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .bt-boss-name{font-size:15.5px;font-weight:700;color:#F7EDED;letter-spacing:-.01em}
+  .bt-boss-tag{margin-top:4px;font-size:9px;letter-spacing:.1em;color:#8E7474}
+  .bt-boss-atk{flex:0 0 auto;font-size:9px;color:#9C8080;letter-spacing:.04em;font-variant-numeric:tabular-nums;padding-top:3px}
+  .bt-hp{height:7px;border-radius:999px;background:#241919;overflow:hidden;margin-top:11px}
+  .bt-hp i{display:block;height:100%;width:100%;border-radius:999px;background:linear-gradient(90deg,#A66060,#F4ACAC);transition:width .34s cubic-bezier(.4,0,.2,1)}
+  .bt-hp-text{margin-top:6px;font-size:9.5px;color:#8E7474;text-align:right;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+  .bt-log{min-height:66px;margin:10px 0;background:#0E0E0E;border:1px solid #1D1D1D;border-radius:13px;padding:10px 12px;display:flex;flex-direction:column;justify-content:flex-end;gap:3px}
+  .bt-line{font-size:11.5px;line-height:1.5;color:#A8A8A8;word-break:keep-all;overflow-wrap:anywhere}
+  .bt-line b{font-weight:700;color:#FFFFFF}
+  .bt-line.boss b{color:#F4ACAC}
+  .bt-line.crit b{color:#FFD166}
+  .bt-line.sys{color:#707070;font-size:10.5px}
+  .bt-me{background:#131313;border:1px solid #272727;border-radius:16px;padding:12px 14px}
+  .bt-me-top{display:flex;align-items:center;gap:9px}
+  .bt-me-star{line-height:0;flex:0 0 auto}
+  .bt-me-star svg{width:20px;height:20px;display:block}
+  .bt-me-name{font-size:12.5px;font-weight:600;color:#EEEEEE;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bt-me-lv{margin-left:auto;flex:0 0 auto;font-size:9px;letter-spacing:.08em;color:#6E6E6E;font-variant-numeric:tabular-nums}
+  .bt-me-hp{height:6px;border-radius:999px;background:#1E1E1E;overflow:hidden;margin-top:10px}
+  .bt-me-hp i{display:block;height:100%;width:100%;border-radius:999px;background:linear-gradient(90deg,#868686,#FFFFFF);transition:width .34s cubic-bezier(.4,0,.2,1)}
+  .bt-me-hp-text{margin-top:6px;font-size:9.5px;color:#7A7A7A;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+  .bt-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+  .bt-chip{font-size:9px;letter-spacing:.02em;color:#B0B0B0;background:#1B1B1B;border:1px solid #2C2C2C;border-radius:999px;padding:3px 8px}
+  .bt-chip.sk{color:#F2DCA8;background:#1A1710;border-color:#43381F}
+  .bt-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+  .bt-act{min-height:47px;border-radius:13px;font-size:13px;font-weight:700;letter-spacing:.01em;background:#1B1B1B;border:1px solid #2E2E2E;color:#EDEDED;transition:transform .12s ease,opacity .16s ease}
+  .bt-act:active{transform:scale(.98)}
+  .bt-act.atk{grid-column:span 2;background:#F0F0F0;color:#0A0A0A;border-color:#F0F0F0;font-size:14px}
+  .bt-act.sk{background:#1C1712;border-color:#4C3D22;color:#F6DBA4}
+  .bt-act.def{background:#131A21;border-color:#25333F;color:#BDD5E9}
+  .bt-act.wide{grid-column:span 2}
+  .bt-act:disabled{opacity:.35}
+  .bt-result{padding:14px 4px 2px;text-align:center;animation:gPop .42s cubic-bezier(.2,.9,.25,1) both}
+  .bt-result-title{font-size:17px;font-weight:800;letter-spacing:.01em;color:#FFFFFF}
+  .bt-result-title.lose{color:#E6A2A2}
+  .bt-result-reward{margin-top:9px;font-size:11.5px;line-height:1.8;color:#CCCCCC}
+  .bt-result-reward b{color:#FFFFFF}
+  .bt-result-btn{width:100%;margin-top:13px;min-height:46px;border-radius:13px;font-size:13.5px}
+
+  /* update gift */
+  .upd-gift{
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    margin-top:12px;padding:10px 12px;border-radius:12px;
+    background:#171717;border:1px dashed #3E3E3E;
+    font-size:11.5px;font-weight:600;color:#EDEDED;letter-spacing:.01em;
+  }
+  .upd-gift b{color:#FFFFFF;font-weight:800}
+
   /* ---------- update notice ---------- */
   .upd-overlay{align-items:center;z-index:58;padding:0 18px calc(env(safe-area-inset-bottom) + 18px)}
   .upd-card{
@@ -518,6 +691,46 @@
       <stop offset="34%" stop-color="#A78BFA"/>
       <stop offset="68%" stop-color="#F0ABFC"/>
       <stop offset="100%" stop-color="#6EE7B7"/>
+    </linearGradient>
+    <linearGradient id="starPhoenix" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFD166"/>
+      <stop offset="42%" stop-color="#FF8A3D"/>
+      <stop offset="78%" stop-color="#FF4D4D"/>
+      <stop offset="100%" stop-color="#B31E5B"/>
+    </linearGradient>
+    <linearGradient id="starCelestial" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFE9A8"/>
+      <stop offset="40%" stop-color="#FFD166"/>
+      <stop offset="76%" stop-color="#A8E6FF"/>
+      <stop offset="100%" stop-color="#E8EEFF"/>
+    </linearGradient>
+    <linearGradient id="starEternal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="52%" stop-color="#F4F0E2"/>
+      <stop offset="100%" stop-color="#D9E6FF"/>
+    </linearGradient>
+    <linearGradient id="starSovereign" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF3C4"/>
+      <stop offset="36%" stop-color="#FFD466"/>
+      <stop offset="72%" stop-color="#C08A2E"/>
+      <stop offset="100%" stop-color="#8A5A18"/>
+    </linearGradient>
+    <linearGradient id="starAbyss" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8FA8FF"/>
+      <stop offset="40%" stop-color="#5B4BE0"/>
+      <stop offset="74%" stop-color="#2B1E6B"/>
+      <stop offset="100%" stop-color="#0E0A2A"/>
+    </linearGradient>
+    <linearGradient id="starSeraph" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="45%" stop-color="#C9F0FF"/>
+      <stop offset="100%" stop-color="#7DD3FC"/>
+    </linearGradient>
+    <linearGradient id="starGenesis" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6EE7B7"/>
+      <stop offset="38%" stop-color="#7DD3FC"/>
+      <stop offset="70%" stop-color="#C4B5FD"/>
+      <stop offset="100%" stop-color="#FBCFE8"/>
     </linearGradient>
   </defs>
 </svg>
@@ -611,25 +824,79 @@
 <div class="cal-overlay" id="gachaOverlay" hidden>
   <div class="cal-sheet gacha-sheet" role="dialog" aria-modal="true" aria-labelledby="gachaTitle">
     <div class="gacha-head">
-      <div class="gacha-title" id="gachaTitle">✦ <span data-i18n="gTitle">별 스킨</span></div>
+      <div class="gacha-title" id="gachaTitle">✦ <span id="hubTitleText" data-i18n="gTitle">별 스킨</span></div>
       <button class="gacha-close" id="gachaClose" type="button" data-i18n-aria="gClose" aria-label="닫기">✕</button>
     </div>
-    <button class="g-test" id="gTest" type="button" hidden></button>
-    <div class="g-wallet">
-      <div class="g-w-item"><span class="g-w-num" id="gTickets">0</span><span class="g-w-label" data-i18n="gTickets">뽑기권</span></div>
-      <span class="g-w-sep" aria-hidden="true"></span>
-      <div class="g-w-item"><span class="g-w-num" id="gShards">0</span><span class="g-w-label" data-i18n="gShards">별조각</span></div>
-      <span class="g-w-owned" id="gOwned"></span>
+    <div class="hub-tabs" role="tablist">
+      <button class="hub-tab on" id="tabBtnGacha" type="button" role="tab" aria-selected="true" data-tab="gacha">
+        <span data-i18n="tabGacha">뽑기 · 도감</span><span class="hub-dot" id="tabDotGacha" aria-hidden="true"></span>
+      </button>
+      <button class="hub-tab" id="tabBtnRpg" type="button" role="tab" aria-selected="false" data-tab="rpg">
+        <span data-i18n="tabRpg">성좌 토벌</span><span class="hub-dot" id="tabDotRpg" aria-hidden="true"></span>
+      </button>
     </div>
-    <div class="g-stage" id="gStage"></div>
-    <button class="btn-primary g-draw" id="gDraw" type="button">✦ 뽑기 (1장)</button>
-    <button class="g-exchange" id="gExchange" type="button">별조각 3개 → 뽑기권 1장</button>
-    <div class="g-sec">
-      <h3 data-i18n="gCollection">도감</h3>
-      <span id="gCount"></span>
+
+    <div id="tabGacha">
+      <button class="g-test" id="gTest" type="button" hidden></button>
+      <div class="g-wallet">
+        <div class="g-w-item"><span class="g-w-num" id="gTickets">0</span><span class="g-w-label" data-i18n="gTickets">뽑기권</span></div>
+        <span class="g-w-sep" aria-hidden="true"></span>
+        <div class="g-w-item"><span class="g-w-num" id="gShards">0</span><span class="g-w-label" data-i18n="gShards">별조각</span></div>
+        <span class="g-w-owned" id="gOwned"></span>
+      </div>
+      <div class="g-stage" id="gStage"></div>
+      <button class="btn-primary g-draw" id="gDraw" type="button">✦ 뽑기 (1장)</button>
+      <button class="g-exchange" id="gExchange" type="button">별조각 3개 → 뽑기권 1장</button>
+      <div class="g-sec">
+        <h3 data-i18n="gCollection">도감</h3>
+        <span id="gCount"></span>
+      </div>
+      <div class="g-progress">
+        <span class="g-ptext"><b id="gRate">0%</b> <span data-i18n="gRate">수집률</span></span>
+        <span class="g-pbar"><i id="gPbar"></i></span>
+      </div>
+      <div class="g-filters" id="gFilters" role="group">
+        <button class="g-chip on" type="button" data-f="all" data-i18n="fAll">전체</button>
+        <button class="g-chip" type="button" data-f="owned" data-i18n="fOwned">보유</button>
+        <button class="g-chip" type="button" data-f="locked" data-i18n="fLocked">미보유</button>
+        <button class="g-chip" type="button" data-f="common" data-i18n="fCommon">커먼</button>
+        <button class="g-chip" type="button" data-f="rare" data-i18n="fRare">레어</button>
+        <button class="g-chip" type="button" data-f="epic" data-i18n="fEpic">에픽</button>
+        <button class="g-chip" type="button" data-f="legendary" data-i18n="fLegendary">레전더리</button>
+      </div>
+      <div class="g-grid" id="gGrid"></div>
+      <p class="g-hint" data-i18n="gHint">보유한 스킨을 탭하면 바로 장착됩니다</p>
+      <p class="g-earn" data-i18n="gEarn">지금의 FOCUS 완료 +1장 (하루 최대 3장) · 루틴 100% +1장 · 3일 연속 +2장 · 7일 연속 +5장</p>
     </div>
-    <div class="g-grid" id="gGrid"></div>
-    <p class="g-hint" data-i18n="gHint">보유한 스킨을 탭하면 바로 장착됩니다</p>
+
+    <div id="tabRpg" hidden>
+      <div class="rpg-wrap" id="rpgHome">
+        <div class="rpg-hero">
+          <div class="rpg-star fx" id="rpgStar"></div>
+          <div class="rpg-hero-body">
+            <div class="rpg-lv"><span data-i18n="rpgLvLabel">성좌 레벨</span><b id="rpgLv">1</b></div>
+            <div class="rpg-xp"><i id="rpgXpFill"></i></div>
+            <div class="rpg-xp-text" id="rpgXpText"></div>
+          </div>
+        </div>
+        <div class="rpg-skin">
+          <span class="rpg-skin-star" id="rpgSkinStar"></span>
+          <div class="rpg-skin-meta">
+            <div class="rpg-skin-name" id="rpgSkinName"></div>
+            <div class="rpg-skin-sub" id="rpgSkinSub"></div>
+          </div>
+        </div>
+        <div class="rpg-stats">
+          <div><b id="rpgAtk">18</b><span data-i18n="rpgAtk">공격력</span></div>
+          <div><b id="rpgHp">112</b><span data-i18n="rpgHp">체력</span></div>
+          <div><b id="rpgTicketCount">2/2</b><span data-i18n="rpgTickets">도전권</span></div>
+          <div><b id="rpgStreakCount">0</b><span data-i18n="rpgStreak">연속</span></div>
+        </div>
+        <p class="rpg-note" id="rpgNote" data-i18n="rpgNote">현실의 집중이 EXP가 됩니다 · FOCUS 완료 +20 · 루틴 체크 +10</p>
+        <div class="boss-list" id="rpgBossList"></div>
+      </div>
+      <div id="rpgBattle" hidden></div>
+    </div>
   </div>
 </div>
 
@@ -640,6 +907,7 @@
       <div class="upd-ver" id="updVer"></div>
     </div>
     <ul class="upd-list" id="updList"></ul>
+    <div class="upd-gift" id="updGift" hidden></div>
     <button class="btn-primary upd-ok" id="updOk" type="button" data-i18n="updOk">확인</button>
   </div>
 </div>
@@ -655,8 +923,26 @@
   var SEEN_VERSION_KEY = 'focus.seenVersion';
 
   // 업데이트 안내 — 버전과 변경사항만 고치면 새 소식 팝업이 자동으로 뜬다
-  var APP_VERSION = '1.4.0';
+  var APP_VERSION = '1.5.0';
   var CHANGELOG = {
+    '1.5.0': {
+      ko: [
+        '✦ 별 스킨 100종 확장 — 커먼 40 · 레어 30 · 에픽 19 · 레전더리 10',
+        '도감에 수집률 바와 등급/보유 필터를 넣었어요',
+        '✦ 성좌 토벌 RPG — FOCUS 완료 +20 EXP, 루틴 체크 +10 EXP로 별이 성장하고 하루 2회 보스와 전투',
+        '레전더리 10종에 고유 필살기, 에픽 스킨에는 패시브 효과',
+        '뽑기권 수급 확대 — FOCUS 완료 +1장(하루 3장까지) · 3일 연속 +2장 · 7일 연속 +5장',
+        '업데이트 선물로 뽑기권 10장을 드렸어요'
+      ],
+      ja: [
+        '✦ 星スキンを100種に拡張 — コモン40・レア30・エピック19・レジェンダリー10',
+        '図鑑に収集率バーとレア度/所持の絞り込みを追加',
+        '✦ 星座討伐RPG — FOCUS完了+20EXP、ルーティンチェック+10EXPで星が成長し、1日2回ボスと戦闘',
+        'レジェンダリー10種に固有の必殺技、エピックスキンにはパッシブ効果',
+        'ガチャ券の入手拡大 — FOCUS完了+1枚（1日3枚まで）・3日連続+2枚・7日連続+5枚',
+        'アップデート記念でガチャ券10枚をプレゼントしました'
+      ]
+    },
     '1.4.0': {
       ko: [
         '✦ 별 스킨 도감 & 뽑기 (18종) — 매일 루틴 완료 시 뽑기권 +1장',
@@ -697,7 +983,7 @@
     '체단실 · 식단 관리 (주 4회)'
   ];
 
-  /* ✦ 별 스킨 — 12종 (base 1 + common 5 + rare 4 + epic 1 + legendary 1) */
+  /* ✦ 별 스킨 — 100종 (기본 1 + 뽑기 99: 커먼 40 · 레어 30 · 에픽 19 · 레전더리 10) */
   var RARITY = {
     base:      { ko: '기본',      ja: 'ベーシック' },
     common:    { ko: '커먼',      ja: 'コモン' },
@@ -707,7 +993,9 @@
   };
   // 등급별 뽑기 확률(%) — 등급 안에서 균등 분배
   var TIER_CHANCE = { common: 45, rare: 35, epic: 15, legendary: 5 };
-  var SKINS = [
+
+  // v1.4의 18종 — id·색·글로우·이펙트를 그대로 둬서 기존 장착 스킨이 100% 그대로 보인다
+  var LEGACY_SKINS = [
     { id: 'mono',     rarity: 'base',      ko: '모노 화이트',   ja: 'モノホワイト',      color: '#FFFFFF', glow: 'rgba(255,255,255,.30)' },
     { id: 'silver',   rarity: 'common',    ko: '실버 미스트',   ja: 'シルバーミスト',    color: '#E7EDF4', glow: 'rgba(206,224,240,.50)' },
     { id: 'ash',      rarity: 'common',    ko: '애쉬 스파클',   ja: 'アッシュスパークル', color: '#C6CBD1', glow: 'rgba(202,208,216,.42)' },
@@ -727,6 +1015,185 @@
     { id: 'crescent', rarity: 'legendary', ko: '크레센트 문',   ja: 'クレセントムーン',  color: '#F0DAA8', glow: 'rgba(240,214,160,.55)' },
     { id: 'midnight', rarity: 'legendary', ko: '미드나잇 아우라', ja: 'ミッドナイトオーラ', color: '#9DBCFF', glow: 'rgba(120,150,255,.60)' }
   ];
+
+  // v1.5 신규 82종 — [id, ko, ja, hue, sat, light, fx, anim, gradient]
+  var NEW_SKINS = {
+    common: [
+      ['pearl', '펄 화이트', 'パールホワイト', 40, 25, 94, '', 'breathe'],
+      ['cloud', '클라우드', 'クラウド', 210, 35, 88, '', 'float'],
+      ['fog', '포그 그레이', 'フォググレー', 220, 10, 74, '', 'breathe'],
+      ['steel', '스틸 그레이', 'スチールグレー', 215, 14, 63, '', 'twinkle'],
+      ['slate', '슬레이트', 'スレート', 210, 14, 55, '', 'breathe'],
+      ['graphite', '그라파이트', 'グラファイト', 220, 8, 46, '', ''],
+      ['sand', '샌드 베이지', 'サンドベージュ', 38, 45, 80, '', 'float'],
+      ['cream', '크림 아이보리', 'クリームアイボリー', 46, 70, 90, '', 'breathe'],
+      ['butter', '버터', 'バター', 48, 85, 78, '', 'float'],
+      ['wheat', '밀', 'ウィート', 40, 58, 70, '', ''],
+      ['honey', '허니', 'ハニー', 42, 80, 62, '', 'twinkle'],
+      ['clay', '클레이', 'クレイ', 22, 36, 60, '', ''],
+      ['rust', '러스트', 'ラスト', 18, 55, 52, '', ''],
+      ['brick', '브릭', 'ブリック', 5, 50, 52, '', 'twinkle'],
+      ['cocoa', '코코아', 'ココア', 20, 30, 42, '', ''],
+      ['olive', '올리브', 'オリーブ', 70, 35, 48, '', ''],
+      ['moss', '모스', 'モス', 90, 30, 42, '', ''],
+      ['sage', '세이지', 'セージ', 120, 18, 62, '', 'breathe'],
+      ['fern', '펀', 'ファーン', 140, 30, 45, '', 'twinkle'],
+      ['jade', '제이드', 'ジェイド', 155, 40, 52, '', 'breathe'],
+      ['teal', '틸', 'ティール', 180, 45, 48, '', ''],
+      ['aqua', '아쿠아', 'アクア', 190, 60, 60, '', 'float'],
+      ['ice', '아이스', 'アイス', 195, 70, 80, 'fx-snow', 'twinkle'],
+      ['denim', '데님', 'デニム', 215, 45, 55, '', ''],
+      ['navy', '네이비', 'ネイビー', 225, 45, 40, '', 'breathe'],
+      ['indigo', '인디고', 'インディゴ', 245, 40, 55, '', 'breathe'],
+      ['iris', '아이리스', 'アイリス', 260, 35, 62, '', 'float'],
+      ['violet', '바이올렛', 'バイオレット', 275, 45, 65, '', 'breathe'],
+      ['plum', '플럼', 'プラム', 300, 30, 50, '', ''],
+      ['mauve', '모브', 'モーヴ', 320, 25, 62, '', ''],
+      ['blush', '블러시', 'ブラッシュ', 345, 55, 80, '', 'float'],
+      ['peach', '피치', 'ピーチ', 20, 80, 78, '', 'breathe'],
+      ['apricot', '아프리콧', 'アプリコット', 30, 75, 72, '', ''],
+      ['lemon', '레몬', 'レモン', 55, 90, 72, '', 'twinkle'],
+      ['lime', '라임', 'ライム', 80, 60, 60, '', '']
+    ],
+    rare: [
+      ['sapphire', '사파이어', 'サファイア', 220, 80, 55, 'fx-spark', 'pulse'],
+      ['azure', '애저', 'アジュール', 205, 85, 58, '', 'pulse'],
+      ['cerulean', '세룰리안', 'セルリアン', 200, 90, 52, '', 'breathe'],
+      ['turquoise', '터쿼이즈', 'ターコイズ', 175, 75, 50, 'fx-spark', 'twinkle'],
+      ['emerald', '에메랄드', 'エメラルド', 150, 70, 45, '', 'pulse'],
+      ['peridot', '페리도트', 'ペリドット', 85, 65, 52, '', 'twinkle'],
+      ['chartreuse', '샤르트뢰즈', 'シャルトリューズ', 75, 75, 55, '', 'breathe'],
+      ['citrine', '시트린', 'シトリン', 50, 85, 58, 'fx-spark', 'pulse'],
+      ['marigold', '메리골드', 'マリーゴールド', 40, 90, 55, '', 'breathe'],
+      ['tangerine', '탠저린', 'タンジェリン', 25, 95, 58, 'fx-spark', 'twinkle'],
+      ['vermilion', '버밀리언', 'バーミリオン', 12, 85, 55, '', 'pulse'],
+      ['scarlet', '스칼렛', 'スカーレット', 355, 80, 55, '', 'breathe'],
+      ['crimson', '크림슨', 'クリムゾン', 345, 75, 48, '', 'pulse'],
+      ['ruby', '루비', 'ルビー', 340, 80, 52, 'fx-cross', 'twinkle'],
+      ['magenta', '마젠타', 'マゼンタ', 315, 80, 58, '', 'pulse'],
+      ['fuchsia', '푹샤', 'フクシャ', 300, 75, 60, '', 'breathe'],
+      ['orchid', '오키드', 'オーキッド', 285, 55, 62, '', 'float'],
+      ['amethyst', '아메시스트', 'アメジスト', 270, 55, 58, '', 'breathe'],
+      ['periwinkle', '페리윙클', 'ペリウィンクル', 240, 60, 68, '', 'float'],
+      ['lilac', '라일락', 'ライラック', 265, 45, 72, '', 'breathe'],
+      ['wisteria', '위스테리아', 'ウィステリア', 275, 35, 68, '', 'twinkle'],
+      ['hyacinth', '히아신스', 'ヒヤシンス', 255, 45, 62, '', 'breathe'],
+      ['topaz', '토파즈', 'トパーズ', 35, 85, 60, 'fx-spark', 'pulse'],
+      ['onyx', '오닉스', 'オニキス', 240, 15, 42, '', ''],
+      ['opal', '오팔', 'オパール', 195, 50, 78, 'fx-halo', 'float']
+    ],
+    epic: [
+      ['prism', '프리즘', 'プリズム', 280, 70, 70, 'fx-halo', 'pulse'],
+      ['comet', '코멧 테일', 'コメットテイル', 195, 90, 65, 'fx-comet', 'float'],
+      ['nova', '노바 플레어', 'ノヴァフレア', 350, 95, 65, 'fx-pulse', 'flare'],
+      ['nebula', '네뷸러스', 'ネビュラス', 290, 55, 60, 'fx-aura', 'breathe'],
+      ['quasar', '퀘이사', 'クエーサー', 45, 100, 62, 'fx-beam', 'flare'],
+      ['meteor', '메테오', 'メテオ', 15, 70, 55, 'fx-comet', 'pulse'],
+      ['eclipse', '이클립스', 'イクリプス', 265, 30, 45, 'fx-halo', 'sway'],
+      ['solstice', '솔스티스', 'ソルスティス', 30, 95, 58, 'fx-aura', 'flare'],
+      ['equinox', '이퀴녹스', 'エクイノックス', 165, 60, 55, 'fx-pulse', 'breathe'],
+      ['zenith', '제니스', 'ゼニス', 215, 85, 62, 'fx-beam', 'pulse'],
+      ['halo', '헤일로 크라운', 'ヘイロー クラウン', 50, 90, 72, 'fx-halo', 'float'],
+      ['lunar', '루나 릴리', 'ルナリリー', 230, 45, 75, 'fx-crescent', 'sway'],
+      ['solar', '솔라 스파크', 'ソーラースパーク', 38, 100, 60, 'fx-spark', 'flare'],
+      ['frost', '프로스트 오로라', 'フロストオーロラ', 185, 80, 78, 'fx-snow', 'aurora'],
+      ['obsidian', '옵시디언', 'オブシディアン', 230, 15, 35, 'fx-aura', 'sway']
+    ],
+    legendary: [
+      ['phoenix', '피닉스 블레이즈', 'フェニックスブレイズ', 18, 100, 62, 'fx-spark', 'flare', 'url(#starPhoenix)'],
+      ['celestial', '셀레스티얼 크라운', 'セレスティアルクラウン', 48, 100, 68, 'fx-halo', 'pulse', 'url(#starCelestial)'],
+      ['eternal', '이터널 라이트', 'エターナルライト', 55, 30, 96, 'fx-beam', 'breathe', 'url(#starEternal)'],
+      ['sovereign', '소버린 글로리', 'ソヴリンゴーリー', 42, 95, 60, 'fx-aura', 'flare', 'url(#starSovereign)'],
+      ['abyss', '어비스 게이트', 'アビスゲート', 250, 70, 40, 'fx-orbit', 'sway', 'url(#starAbyss)'],
+      ['seraph', '세라프 윙', 'セラフウィング', 200, 100, 80, 'fx-cross', 'float', 'url(#starSeraph)'],
+      ['genesis', '제네시스', 'ジェネシス', 160, 90, 55, 'fx-stardust', 'aurora', 'url(#starGenesis)']
+    ]
+  };
+
+  var SKIN_ANIM = {
+    breathe: 'starBreathe 4.6s ease-in-out infinite',
+    twinkle: 'starTwinkle 4.2s ease-in-out infinite',
+    pulse:   'starGlowPulse 3.4s ease-in-out infinite',
+    flare:   'starFlare 2.9s ease-in-out infinite',
+    sway:    'starSway 5s ease-in-out infinite',
+    float:   'starFloat 5.4s ease-in-out infinite',
+    aurora:  'auroraShift 7s linear infinite'
+  };
+
+  function makeSkin(row, rarity) {
+    var h = row[3], s = row[4], l = row[5];
+    var a = rarity === 'legendary' ? .62 : rarity === 'epic' ? .56 : rarity === 'rare' ? .50 : .44;
+    return {
+      id: row[0], rarity: rarity, ko: row[1], ja: row[2],
+      color: 'hsl(' + h + ', ' + s + '%, ' + l + '%)',
+      glow: 'hsla(' + h + ', ' + s + '%, ' + Math.min(96, l + 12) + '%, ' + a + ')',
+      glow2: 'hsla(' + h + ', ' + s + '%, ' + Math.min(96, l + 12) + '%, ' + (a * .8).toFixed(2) + ')',
+      h: h, s: s, l: l, fx: row[6] || '', anim: row[7] || '', fill: row[8] || null, v15: true
+    };
+  }
+
+  var SKINS = (function () {
+    var out = [];
+    ['base', 'common', 'rare', 'epic', 'legendary'].forEach(function (r) {
+      LEGACY_SKINS.forEach(function (s) { if (s.rarity === r) out.push(s); });
+      (NEW_SKINS[r] || []).forEach(function (row) { out.push(makeSkin(row, r)); });
+    });
+    return out;
+  })();
+
+  /* ✦ 전투 연동 — 에픽 패시브 · 레전더리 필살기 */
+  var PASSIVES = {
+    gold:      { ko: '황금 손길', ja: '黄金の手', dko: '치명타 확률 +12%', dja: 'クリティカル率 +12%', type: 'crit', v: 0.12 },
+    orbit:     { ko: '궤도 방패', ja: '軌道の盾', dko: '받는 피해 -12%', dja: '被ダメージ -12%', type: 'dr', v: 0.12 },
+    stardust:  { ko: '별가루 수확', ja: '星屑の収穫', dko: '승리 시 별조각 +1', dja: '勝利時に星のかけら +1', type: 'shard', v: 1 },
+    snow:      { ko: '서리 갑옷', ja: '霜の鎧', dko: '최대 체력 +15%', dja: '最大HP +15%', type: 'hp', v: 0.15 },
+    prism:     { ko: '분광', ja: '分光', dko: '치명타 확률 +14%', dja: 'クリティカル率 +14%', type: 'crit', v: 0.14 },
+    comet:     { ko: '꼬리 불꽃', ja: '尾の炎', dko: '공격력 +8%', dja: '攻撃力 +8%', type: 'atk', v: 0.08 },
+    nova:      { ko: '폭발 주기', ja: '爆発周期', dko: '공격력 +10%', dja: '攻撃力 +10%', type: 'atk', v: 0.10 },
+    nebula:    { ko: '성운 막', ja: '星雲膜', dko: '받는 피해 -10%', dja: '被ダメージ -10%', type: 'dr', v: 0.10 },
+    quasar:    { ko: '광핵', ja: '光核', dko: '치명타 피해 +60%', dja: 'クリティカルダメージ +60%', type: 'critd', v: 0.6 },
+    meteor:    { ko: '충돌 가속', ja: '衝突加速', dko: '공격력 +12%', dja: '攻撃力 +12%', type: 'atk', v: 0.12 },
+    eclipse:   { ko: '그림자 회복', ja: '影の回復', dko: '방어 시 체력 +6%', dja: '防御時にHP +6%', type: 'guardheal', v: 0.06 },
+    solstice:  { ko: '하지의 열', ja: '夏至の熱', dko: '공격력 +9%', dja: '攻撃力 +9%', type: 'atk', v: 0.09 },
+    equinox:   { ko: '균형', ja: '均衡', dko: '최대 체력 +12%', dja: '最大HP +12%', type: 'hp', v: 0.12 },
+    zenith:    { ko: '정점', ja: '頂点', dko: '공격력 +11%', dja: '攻撃力 +11%', type: 'atk', v: 0.11 },
+    halo:      { ko: '후광', ja: '後光', dko: '승리 시 별조각 +1', dja: '勝利時に星のかけら +1', type: 'shard', v: 1 },
+    lunar:     { ko: '월광 재생', ja: '月光再生', dko: '매 턴 체력 +3%', dja: '毎ターンHP +3%', type: 'regen', v: 0.03 },
+    solar:     { ko: '태양핵', ja: '太陽核', dko: '공격력 +13%', dja: '攻撃力 +13%', type: 'atk', v: 0.13 },
+    frost:     { ko: '빙결 장막', ja: '氷結の幕', dko: '받는 피해 -14%', dja: '被ダメージ -14%', type: 'dr', v: 0.14 },
+    obsidian:  { ko: '흑요 칼날', ja: '黒曜の刃', dko: '치명타 확률 +10%', dja: 'クリティカル率 +10%', type: 'crit', v: 0.10 }
+  };
+
+  var SKILLS = {
+    aurora:    { ko: '프리즘 버스트', ja: 'プリズムバースト', dko: '3중 광선 · 공격력 260%', dja: '三重光線 · 攻撃力260%', qko: '빛의 층을 넘어, 한 번에 꿰뚫는다.', qja: '光の層を越えて、一撃で貫く。', power: 2.6, kind: 'burst' },
+    crescent:  { ko: '월식 베기', ja: '月蝕斬り', dko: '공격력 240% · 준 피해 30% 회복', dja: '攻撃力240% · 与ダメの30%回復', qko: '달이 가려질 때, 칼날은 더 밝다.', qja: '月が翳る時、刃はさらに輝く。', power: 2.4, kind: 'drain' },
+    midnight:  { ko: '심야의 일격', ja: '深夜の一撃', dko: '공격력 320% · 치명타 확률 +25%', dja: '攻撃力320% · クリティカル率 +25%', qko: '모두가 잠든 새벽, 나만 깨어 있다.', qja: '皆が眠る夜明け、起きているのは私だけ。', power: 3.2, kind: 'burst' },
+    phoenix:   { ko: '불사조 강림', ja: '不死鳥降臨', dko: '공격력 180% · 최대 체력 40% 회복', dja: '攻撃力180% · 最大HP40%回復', qko: '타버린 자리에서 다시 피어난다.', qja: '焼け落ちた場所から、もう一度咲く。', power: 1.8, kind: 'heal', heal: 0.4 },
+    celestial: { ko: '성좌 관통', ja: '星座貫通', dko: '공격력 280% · 방어 무시', dja: '攻撃力280% · 防御無視', qko: '별이 정렬했다. 네 운명은 여기까지다.', qja: '星が揃った。私の運命はここまでだ。', power: 2.8, kind: 'pierce' },
+    eternal:   { ko: '영원의 빛', ja: '永遠の光', dko: '공격력 140% · 다음 피해 무효', dja: '攻撃力140% · 次のダメージ無効', qko: '빛은 꺼지지 않는다. 시간이 증명했다.', qja: '光は消えない。時間が証明した。', power: 1.4, kind: 'shield' },
+    sovereign: { ko: '군주의 포효', ja: '君主の咆哮', dko: '공격력 220% · 보스 공격 -25% (2턴)', dja: '攻撃力220% · ボス攻撃 -25%（2ターン）', qko: '무릎 꿇어라. 이 별은 내 것이다.', qja: '跪け。この星は私のものだ。', power: 2.2, kind: 'weaken' },
+    abyss:     { ko: '심연 개방', ja: '深淵開放', dko: '공격력 340% · 내 체력 6% 소모', dja: '攻撃力340% · 自身HP6%消費', qko: '들여다보지 마라. 심연이 먼저 웃는다.', qja: '覗くな。深淵が先に笑う。', power: 3.4, kind: 'recoil' },
+    seraph:    { ko: '세라핌 윙', ja: 'セラフィムウィング', dko: '2연격 · 각 160%', dja: '2連撃 · 各160%', qko: '날개를 펼치면 남는 것은 침묵뿐.', qja: '翼を広げれば、残るのは沈黙だけ。', power: 1.6, kind: 'double' },
+    genesis:   { ko: '창세의 빛', ja: '創世の光', dko: '공격력 200% · 별조각 +1 확정', dja: '攻撃力200% · 星のかけら+1確定', qko: '처음의 빛으로, 끝을 다시 쓴다.', qja: '始まりの光で、終わりを書き直す。', power: 2.0, kind: 'bonus' }
+  };
+
+  /* ✦ 성좌 토벌 보스 */
+  var BOSSES = [
+    { ko: '잡념의 그림자', ja: '雑念の影', hp: 90,   atk: 8,  iko: '머릿속을 어지럽히는 잡념이 그림자가 되어 달려든다.', ija: '頭の中をかき乱す雑念が影となって襲いかかる。' },
+    { ko: '미룸의 거인', ja: '先延ばしの巨人', hp: 150,  atk: 10, iko: '“내일 하지 뭐.” 거인이 그 말로 발을 붙잡는다.', ija: '「明日やればいい。」巨人がその一言で足を止める。' },
+    { ko: '야근의 성좌', ja: '残業の星座', hp: 220,  atk: 12, iko: '하루 끝을 삼키는 별자리가 하늘을 덮는다.', ija: '一日の終わりを飲み込む星座が空を覆う。' },
+    { ko: '완벽주의의 수호자', ja: '完璧主義の守護者', hp: 300,  atk: 15, iko: '“그걸로 충분해?” 방패 뒤에서 물어 온다.', ija: '「それで十分か？」盾の後ろから問いかける。' },
+    { ko: '도파민의 마왕', ja: 'ドーパミンの魔王', hp: 390,  atk: 18, iko: '한 번 던지면 던지지 않고는 못 배기는 중독의 왕.', ija: '一度投げたら最後、投げずにはいられない中毒の王。' },
+    { ko: '무기력의 왕좌', ja: '無気力の王座', hp: 490,  atk: 21, iko: '아무것도 하지 않는 편안함의 압력.', ija: '何もしない安楽の圧力。' },
+    { ko: '후회의 예언자', ja: '後悔の預言者', hp: 600,  atk: 24, iko: '이미 지나간 일을 미래처럼 말한다.', ija: '過ぎたことを未来のように告げる。' },
+    { ko: '비교의 거울', ja: '比較の鏡', hp: 730,  atk: 28, iko: '나보다 나은 타인만 비춘다.', ija: '自分より優れた他人ばかりを映す。' },
+    { ko: '자책의 사냥꾼', ja: '自責の狩人', hp: 870,  atk: 32, iko: '한 번의 실수를 영원히 쫓는다.', ija: '一度の失敗を永遠に追い回す。' },
+    { ko: '불안의 성운', ja: '不安の星雲', hp: 1030, atk: 36, iko: '일어나지 않은 일들의 무게.', ija: '起こっていないことの重さ。' },
+    { ko: '게으름의 별', ja: '怠惰の星', hp: 1200, atk: 40, iko: '“조금만 더”가 별을 만들어 버렸다.', ija: '「もう少しだけ」が星になってしまった。' },
+    { ko: '성좌의 군주', ja: '星座の君主', hp: 1400, atk: 45, iko: '모든 집중을 먹은 스스로의 상처 — 마지막 상대.', ija: 'すべての集中を飲み込んだ自身の傷———最後の相手。' }
+  ];
+
+  var BOSS_TAG = { ko: '별의 표적', ja: '星の標的' };
 
   var STR = {
     ko: {
@@ -882,6 +1349,107 @@
     ko: ['일', '월', '화', '수', '목', '금', '토'],
     ja: ['日', '月', '火', '水', '木', '金', '土']
   };
+
+  /* v1.5 — 허브 탭 · 도감 필터 · 성좌 토벌 문구 */
+  var STR_EXT = {
+    ko: {
+      tabGacha: '뽑기 · 도감',
+      tabRpg: '성좌 토벌',
+      rpgTitle: '성좌 토벌',
+      fAll: '전체', fOwned: '보유', fLocked: '미보유',
+      fCommon: '커먼', fRare: '레어', fEpic: '에픽', fLegendary: '레전더리',
+      gRate: '수집률',
+      gEmpty: '조건에 맞는 스킨이 없어요',
+      gEarn: '지금의 FOCUS 완료 +1장 (하루 최대 3장) · 루틴 100% +1장 · 3일 연속 +2장 · 7일 연속 +5장',
+      updGift: '업데이트 기념 뽑기권 +10장 지급',
+      rpgLvLabel: '성좌 레벨',
+      rpgAtk: '공격력', rpgHp: '체력', rpgTickets: '도전권', rpgStreak: '연속',
+      rpgNote: '현실의 집중이 EXP가 됩니다 · FOCUS 완료 +20 · 루틴 체크 +10',
+      rpgNoSkill: '커먼·레어 스킨은 기본 공격력 보너스',
+      rpgPassive: '패시브', rpgSkillLabel: '필살기',
+      rpgGo: '도전', rpgCleared: '클리어', rpgLocked: '잠금', rpgLockedSub: '이전 단계를 먼저 처치',
+      rpgNoTicket: '오늘 도전권을 다 썼어요 · 내일 자정에 2회 충전',
+      toastExp: '✦ +{n} EXP',
+      toastLevelUp: '✦ 별이 자랐어요 — Lv.{n}',
+      toastFocusTicket: '✦ FOCUS 완료! 뽑기권 +1',
+      toastFocusTicketMax: '✦ FOCUS 완료! 뽑기권은 오늘 3장 다 받았어요',
+      toastStreak3: '✦ 3일 연속 달성! 뽑기권 +2',
+      toastStreak7: '✦ 7일 연속 달성! 뽑기권 +5',
+      btAttack: '공격', btSkill: '필살기', btGuard: '방어', btBack: '← 목록',
+      btStage: 'STAGE', btAtkLabel: '공격 {n}',
+      btWin: '토벌 성공', btLose: '토벌 실패',
+      btFirst: '첫 처치 보상', btRepeat: '재도전 보상',
+      btRetry: '다시 도전', btToList: '목록으로',
+      btRewardTicket: '뽑기권 +1', btRewardShard: '별조각 +{n}',
+      logAtk: '<b>{n}</b> 피해',
+      logCrit: '치명타! <b>{n}</b> 피해',
+      logSkill: '{s} 발동! <b>{n}</b> 피해',
+      logGuard: '방어 태세 — 다음 피해 65% 감소',
+      logBoss: '{name}의 반격 <b>{n}</b>',
+      logBlock: '{name}의 공격을 막았다',
+      logHeal: '체력 <b>{n}</b> 회복',
+      logShield: '다음 피해를 막는 빛을 둘렀다',
+      logWeaken: '보스 공격력 -25% (2턴)',
+      logTurn: '{n}턴',
+      btCd: '쿨다운 {n}',
+      btIntro: '✦ 토벌 시작'
+    },
+    ja: {
+      tabGacha: 'ガチャ · 図鑑',
+      tabRpg: '星座討伐',
+      rpgTitle: '星座討伐',
+      fAll: 'すべて', fOwned: '所持', fLocked: '未所持',
+      fCommon: 'コモン', fRare: 'レア', fEpic: 'エピック', fLegendary: 'レジェンダリー',
+      gRate: '収集率',
+      gEmpty: '条件に合うスキンがありません',
+      gEarn: 'FOCUS完了 +1枚（1日3枚まで）・ルーティン100% +1枚・3日連続 +2枚・7日連続 +5枚',
+      updGift: 'アップデート記念 ガチャ券 +10枚をプレゼント',
+      rpgLvLabel: '星座レベル',
+      rpgAtk: '攻撃力', rpgHp: 'HP', rpgTickets: '挑戦券', rpgStreak: '連続',
+      rpgNote: '現実の集中がEXPになります · FOCUS完了 +20 · ルーティン +10',
+      rpgNoSkill: 'コモン・レアスキンは基本攻撃力ボーナス',
+      rpgPassive: 'パッシブ', rpgSkillLabel: '必殺技',
+      rpgGo: '挑戦', rpgCleared: 'クリア', rpgLocked: 'ロック', rpgLockedSub: '前の段階を先に討伐',
+      rpgNoTicket: '今日の挑戦券を使い切りました · 明日0時に2回回復',
+      toastExp: '✦ +{n} EXP',
+      toastLevelUp: '✦ 星が育ちました — Lv.{n}',
+      toastFocusTicket: '✦ FOCUS完了！ガチャ券 +1',
+      toastFocusTicketMax: '✦ FOCUS完了！ガチャ券は今日3枚受け取り済み',
+      toastStreak3: '✦ 3日連続達成！ガチャ券 +2',
+      toastStreak7: '✦ 7日連続達成！ガチャ券 +5',
+      btAttack: '攻撃', btSkill: '必殺技', btGuard: '防御', btBack: '← 一覧',
+      btStage: 'STAGE', btAtkLabel: '攻撃 {n}',
+      btWin: '討伐成功', btLose: '討伐失敗',
+      btFirst: '初討伐報酬', btRepeat: '再挑戦報酬',
+      btRetry: 'もう一度', btToList: '一覧へ',
+      btRewardTicket: 'ガチャ券 +1', btRewardShard: '星のかけら +{n}',
+      logAtk: '<b>{n}</b> ダメージ',
+      logCrit: 'クリティカル！<b>{n}</b> ダメージ',
+      logSkill: '{s} 発動！<b>{n}</b> ダメージ',
+      logGuard: '防御態勢 — 次のダメージ65%減',
+      logBoss: '{name}の反撃 <b>{n}</b>',
+      logBlock: '{name}の攻撃を防いだ',
+      logHeal: 'HP <b>{n}</b> 回復',
+      logShield: '次のダメージを防ぐ光をまとった',
+      logWeaken: 'ボスの攻撃力 -25%（2ターン）',
+      logTurn: '{n}ターン',
+      btCd: 'クールダウン {n}',
+      btIntro: '✦ 討伐開始'
+    }
+  };
+  Object.keys(STR_EXT).forEach(function (l) {
+    Object.keys(STR_EXT[l]).forEach(function (k) { STR[l][k] = STR_EXT[l][k]; });
+  });
+
+  function fmt(key, vars) {
+    var s = t(key);
+    if (vars) {
+      Object.keys(vars).forEach(function (k) {
+        s = s.split('{' + k + '}').join(String(vars[k]));
+      });
+    }
+    return s;
+  }
 
   function sameRoutineSet(list, target) {
     if (list.length !== target.length) return false;
@@ -1198,8 +1766,32 @@
     orbit: 'fx-orbit', stardust: 'fx-stardust', snow: 'fx-snow', crescent: 'fx-crescent'
   };
 
-  function fxClass(id) {
-    return SKIN_FX[id] ? ' ' + SKIN_FX[id] : '';
+  function fxClass(skin) {
+    if (!skin) return '';
+    var id = typeof skin === 'string' ? skin : skin.id;
+    var fx = (typeof skin === 'string' ? '' : (skin.fx || '')) || SKIN_FX[id] || '';
+    return fx ? ' ' + fx : '';
+  }
+
+  // 100종 스킨의 색·광채·모션을 CSS 변수로 주입 (기존 18종은 <style>에 그대로 있음)
+  function injectSkinCSS() {
+    if (document.getElementById('skinVars')) return;
+    var css = '';
+    SKINS.forEach(function (s) {
+      if (!s.v15) return;
+      css += 'body[data-skin="' + s.id + '"]{--star:' + s.color + ';--tag-star:' + s.color +
+        ';--star-glow:' + s.glow + ';--tag-glow:' + s.glow2 + '}\n';
+      if (s.fill) {
+        css += 'body[data-skin="' + s.id + '"] .brand svg path,body[data-skin="' + s.id + '"] .tag svg path{fill:' + s.fill + '}\n';
+      }
+      if (s.anim && SKIN_ANIM[s.anim]) {
+        css += 'body[data-skin="' + s.id + '"] .brand svg,body[data-skin="' + s.id + '"] .tag svg{animation:' + SKIN_ANIM[s.anim] + '}\n';
+      }
+    });
+    var el = document.createElement('style');
+    el.id = 'skinVars';
+    el.textContent = css;
+    document.head.appendChild(el);
   }
 
   function starMark(fill) {
@@ -1207,8 +1799,14 @@
   }
 
   function gachaDefaults() {
-    // 첫 접속: 웰컴 뽑기권 10장, 기본 스킨인 모노 화이트를 장착한 상태
-    return { tickets: 10, shards: 0, owned: ['mono'], equipped: 'mono', lastTicketDate: null };
+    // 첫 접속: 웰컴 뽑기권 10장 + 기본 스킨 '모노 화이트' 장착
+    return {
+      tickets: 10, shards: 0, owned: ['mono'], equipped: 'mono',
+      lastTicketDate: null,
+      focusTicketDate: null, focusTicketCount: 0,
+      streakLast: null, ticketStreak: 0,
+      giftVersion: null
+    };
   }
 
   function loadGacha() {
@@ -1229,10 +1827,24 @@
     g.owned = Object.keys(set);
     if (typeof s.equipped === 'string' && g.owned.indexOf(s.equipped) >= 0) g.equipped = s.equipped;
     if (typeof s.lastTicketDate === 'string') g.lastTicketDate = s.lastTicketDate;
+    if (typeof s.focusTicketDate === 'string') g.focusTicketDate = s.focusTicketDate;
+    if (typeof s.focusTicketCount === 'number' && s.focusTicketCount >= 0) g.focusTicketCount = Math.floor(s.focusTicketCount);
+    if (typeof s.streakLast === 'string') g.streakLast = s.streakLast;
+    if (typeof s.ticketStreak === 'number' && s.ticketStreak >= 0) g.ticketStreak = Math.floor(s.ticketStreak);
+    if (typeof s.giftVersion === 'string') g.giftVersion = s.giftVersion;
     return g;
   }
 
   var gacha = loadGacha();
+
+  // v1.5.0 업데이트 보상 — 새 기기 첫 접속·기존 사용자 모두 버전당 1회, 뽑기권 +10장
+  var giftGranted = false;
+  if (gacha.giftVersion !== APP_VERSION) {
+    gacha.giftVersion = APP_VERSION;
+    gacha.tickets += 10;
+    giftGranted = true;
+    try { localStorage.setItem(GACHA_KEY, JSON.stringify(gacha)); } catch (e) {}
+  }
   var gachaOpen = false;
   var drawing = false;
   var lastResult = null;
@@ -1247,12 +1859,18 @@
     document.documentElement.setAttribute('data-skin', id);
     document.body.setAttribute('data-skin', id);
     var mark = $('brandMark');
-    if (mark) mark.className = 'brand-mark fx' + fxClass(id);
+    if (mark) mark.className = 'brand-mark fx' + fxClass(skinById(id));
   }
 
   function updateBrandBadge() {
     var dot = $('brandDot');
     if (dot) dot.hidden = gacha.tickets < 1;
+    var dg = $('tabDotGacha');
+    if (dg && dg.parentNode) dg.parentNode.classList.toggle('has', gacha.tickets >= 1);
+    var dr = $('tabDotRpg');
+    if (dr && dr.parentNode && typeof rpg !== 'undefined' && rpg) {
+      dr.parentNode.classList.toggle('has', rpg.day.used < DAILY_CHALLENGE);
+    }
   }
 
   function gachaCardHTML(s) {
@@ -1263,7 +1881,7 @@
     var label = owned ? skinName(s) : '???';
     var tappable = owned || gachaTest === 'unlock';
     return '<button class="' + cls + '" type="button" data-gs="' + s.id + '" data-r="' + s.rarity + '"' + (tappable ? '' : ' disabled') + ' aria-label="' + esc(label + ' · ' + rarityName(s.rarity)) + '">' +
-      '<span class="g-star fx' + (owned ? fxClass(s.id) : '') + '"' + (owned ? ' style="filter:drop-shadow(0 0 7px ' + s.glow + ')"' : '') + '>' + starMark(fill) + '</span>' +
+      '<span class="g-star fx' + (owned ? fxClass(s) : '') + '"' + (owned ? ' style="filter:drop-shadow(0 0 7px ' + s.glow + ')"' : '') + '>' + starMark(fill) + '</span>' +
       '<span class="g-name">' + esc(label) + '</span>' +
       '<span class="g-rarity">' + esc(rarityName(s.rarity)) + '</span>' +
     '</button>';
@@ -1273,18 +1891,39 @@
     var s = res.skin;
     $('gStage').innerHTML =
       '<div class="g-res">' +
-        '<div class="g-res-star fx' + fxClass(s.id) + '" style="filter:drop-shadow(0 0 16px ' + s.glow + ')">' + starMark(skinFill(s)) + '</div>' +
+        '<div class="g-res-star fx' + fxClass(s) + '" style="filter:drop-shadow(0 0 16px ' + s.glow + ')">' + starMark(skinFill(s)) + '</div>' +
         '<div class="g-res-name">' + esc(skinName(s)) + '</div>' +
         '<div class="g-res-meta">' + esc(rarityName(s.rarity)) + '</div>' +
         '<div class="g-res-tag' + (res.isNew ? '' : ' dup') + '">' + esc(t(res.isNew ? 'gNew' : 'gDup')) + '</div>' +
       '</div>';
   }
 
+  var gFilter = 'all';
+
+  function skinMatches(s, f) {
+    var owned = gacha.owned.indexOf(s.id) >= 0;
+    if (f === 'owned') return owned;
+    if (f === 'locked') return !owned;
+    if (f === 'common' || f === 'rare' || f === 'epic' || f === 'legendary') return s.rarity === f;
+    return true;
+  }
+
   function renderGacha() {
+    var total = SKINS.length;
+    var ownedCount = gacha.owned.length;
+    var pct = Math.round(ownedCount / total * 100);
+
     $('gTickets').textContent = String(gacha.tickets);
     $('gShards').textContent = String(gacha.shards);
-    $('gOwned').textContent = t('gOwned') + ' ' + gacha.owned.length + '/' + SKINS.length;
-    $('gCount').textContent = gacha.owned.length + '/' + SKINS.length;
+    $('gOwned').textContent = t('gOwned') + ' ' + ownedCount + '/' + total;
+    $('gCount').textContent = ownedCount + '/' + total;
+    $('gRate').textContent = pct + '%';
+    $('gPbar').style.width = pct + '%';
+
+    var chips = $('gFilters').querySelectorAll('[data-f]');
+    for (var ci = 0; ci < chips.length; ci++) {
+      chips[ci].classList.toggle('on', chips[ci].getAttribute('data-f') === gFilter);
+    }
 
     var db = $('gDraw');
     db.textContent = drawing ? t('gDrawBusy') : t('gDraw');
@@ -1294,7 +1933,10 @@
     ex.disabled = gacha.shards < 3;
     ex.textContent = t('gExchange') + (gacha.shards < 3 ? ' · ' + gacha.shards + '/3' : '');
 
-    $('gGrid').innerHTML = SKINS.map(gachaCardHTML).join('');
+    var list = SKINS.filter(function (s) { return skinMatches(s, gFilter); });
+    $('gGrid').innerHTML = list.length
+      ? list.map(gachaCardHTML).join('')
+      : '<div class="g-empty">' + esc(t('gEmpty')) + '</div>';
 
     var tb = $('gTest');
     if (gachaTest) {
@@ -1322,9 +1964,15 @@
     gachaOpen = true;
     lastResult = null;
     drawing = false;
+    if (bt) {
+      bt = null;
+      $('rpgBattle').hidden = true;
+      $('rpgBattle').innerHTML = '';
+      $('rpgHome').hidden = false;
+    }
     var ov = $('gachaOverlay');
     ov.hidden = false;
-    renderGacha();
+    setHubTab('gacha');
     if (window.requestAnimationFrame) {
       requestAnimationFrame(function () { ov.classList.add('open'); });
     } else {
@@ -1336,6 +1984,12 @@
   function closeGacha() {
     if (!gachaOpen) return;
     gachaOpen = false;
+    if (bt) {
+      bt = null;
+      $('rpgBattle').hidden = true;
+      $('rpgBattle').innerHTML = '';
+      $('rpgHome').hidden = false;
+    }
     var ov = $('gachaOverlay');
     ov.classList.remove('open');
     document.body.style.overflow = '';
@@ -1457,7 +2111,32 @@
     }
   }
 
-  // 루틴을 그날 모두 체크했을 때 뽑기권 1장 (하루 1회)
+  /* ---------- ticket economy ---------- */
+
+  var FOCUS_TICKET_DAILY = 3;   // '지금의 FOCUS' 완료 보상은 하루 3장까지
+
+  function grantTickets(n) {
+    if (!n || n <= 0) return;
+    gacha.tickets += n;
+    saveGacha();
+    updateBrandBadge();
+    if (gachaOpen) renderGacha();
+  }
+
+  // '지금의 FOCUS' 완료 → 뽑기권 +1 (하루 3장 상한, KR/JP 안내 문구 노출)
+  function awardFocusTicket() {
+    var tk = todayKey();
+    if (gacha.focusTicketDate !== tk) {
+      gacha.focusTicketDate = tk;
+      gacha.focusTicketCount = 0;
+    }
+    if (gacha.focusTicketCount >= FOCUS_TICKET_DAILY) return false;
+    gacha.focusTicketCount += 1;
+    grantTickets(1);
+    return true;
+  }
+
+  // 루틴을 그날 모두 체크했을 때 뽑기권 1장 (하루 1회) + 연속 달성 보너스(3일 +2 · 7일 +5)
   function maybeAwardTicket() {
     var total = state.routines.length;
     if (total < 1) return;
@@ -1466,11 +2145,432 @@
     var tk = todayKey();
     if (gacha.lastTicketDate === tk) return;
     gacha.lastTicketDate = tk;
-    gacha.tickets += 1;
+    grantTickets(1);
+
+    var yesterday = dayKey(new Date(Date.now() - 86400000));
+    var streak = (gacha.streakLast === yesterday) ? (gacha.ticketStreak || 0) + 1 : 1;
+    gacha.streakLast = tk;
+    gacha.ticketStreak = streak;
+    var bonus = streak === 3 ? 2 : (streak === 7 ? 5 : 0);
+    if (bonus) grantTickets(bonus);
     saveGacha();
-    updateBrandBadge();
-    if (gachaOpen) renderGacha();
+
     toastKey('toastTicket');
+    if (bonus) {
+      setTimeout(function () { toastKey(bonus === 5 ? 'toastStreak7' : 'toastStreak3'); }, 1700);
+    }
+  }
+
+  /* ---------- 성좌 토벌 (star conquest RPG) ---------- */
+
+  var RPG_KEY = 'focus.rpg.v1';
+  var DAILY_CHALLENGE = 2;
+  var BASE_ATK = 16;
+  var BASE_HP = 100;
+  var hubTab = 'gacha';
+  var bt = null;
+
+  function rpgDefaults() {
+    return { exp: 0, cleared: [], day: { date: todayKey(), used: 0, routineExp: [] } };
+  }
+
+  function loadRpg() {
+    var base = rpgDefaults();
+    var raw = null;
+    try { raw = localStorage.getItem(RPG_KEY); } catch (e) { return base; }
+    if (!raw) return base;
+    var s = null;
+    try { s = JSON.parse(raw); } catch (e) { return base; }
+    if (!s || typeof s !== 'object') return base;
+    var r = rpgDefaults();
+    if (typeof s.exp === 'number' && s.exp >= 0) r.exp = Math.floor(s.exp);
+    if (Array.isArray(s.cleared)) {
+      s.cleared.forEach(function (i) {
+        if (typeof i === 'number' && i >= 0 && i < BOSSES.length && r.cleared.indexOf(i) < 0) r.cleared.push(i);
+      });
+    }
+    if (s.day && typeof s.day === 'object') {
+      if (typeof s.day.date === 'string') r.day.date = s.day.date;
+      if (typeof s.day.used === 'number' && s.day.used >= 0) r.day.used = Math.floor(s.day.used);
+      if (Array.isArray(s.day.routineExp)) {
+        r.day.routineExp = s.day.routineExp.filter(function (x) { return typeof x === 'string'; });
+      }
+    }
+    if (r.day.date !== todayKey()) r.day = { date: todayKey(), used: 0, routineExp: [] };
+    return r;
+  }
+
+  var rpg = loadRpg();
+
+  function saveRpg() {
+    try { localStorage.setItem(RPG_KEY, JSON.stringify(rpg)); } catch (e) {}
+  }
+
+  function expToNext(lv) { return 80 + (lv - 1) * 40; }
+
+  function expInfo(exp) {
+    var lv = 1, rest = Math.max(0, exp);
+    while (rest >= expToNext(lv) && lv < 99) { rest -= expToNext(lv); lv += 1; }
+    return { lv: lv, cur: rest, need: expToNext(lv) };
+  }
+
+  function rollDay() {
+    if (rpg.day.date !== todayKey()) {
+      rpg.day = { date: todayKey(), used: 0, routineExp: [] };
+      saveRpg();
+    }
+  }
+
+  // 현실의 집중 → EXP (FOCUS 완료 +20 / 루틴 체크 +10, 해제하면 회수)
+  function addExp(n, quiet) {
+    if (!n) return;
+    var before = expInfo(rpg.exp).lv;
+    rpg.exp = Math.max(0, rpg.exp + n);
+    saveRpg();
+    var after = expInfo(rpg.exp).lv;
+    if (after > before) {
+      setTimeout(function () { toast(fmt('toastLevelUp', { n: after })); }, quiet ? 1700 : 0);
+    } else if (n > 0 && !quiet) {
+      toast(fmt('toastExp', { n: n }));
+    }
+    if (gachaOpen && hubTab === 'rpg' && !bt) renderRpg();
+  }
+
+  function awardRoutineExp(id, on) {
+    rollDay();
+    var list = rpg.day.routineExp;
+    var at = list.indexOf(id);
+    if (on) {
+      if (at < 0) { list.push(id); saveRpg(); addExp(10); }
+    } else if (at >= 0) {
+      list.splice(at, 1);
+      saveRpg();
+      addExp(-10, true);
+    }
+  }
+
+  function equippedSkin() { return skinById(gacha.equipped) || SKINS[0]; }
+  function passiveOf(skin) { return skin ? (PASSIVES[skin.id] || null) : null; }
+  function skillOf(skin) { return skin ? (SKILLS[skin.id] || null) : null; }
+
+  function rarityAtkBonus(s) {
+    if (!s) return 0;
+    if (s.rarity === 'legendary') return 0.08;
+    if (s.rarity === 'epic') return 0.04;
+    if (s.rarity === 'rare') return 0.05;
+    if (s.rarity === 'common') return 0.02;
+    return 0;
+  }
+
+  function playerStats() {
+    var info = expInfo(rpg.exp);
+    var skin = equippedSkin();
+    var p = passiveOf(skin);
+    var atk = (BASE_ATK + (info.lv - 1) * 2.4) * (1 + rarityAtkBonus(skin));
+    var hp = BASE_HP + (info.lv - 1) * 12;
+    if (p && p.type === 'atk') atk *= 1 + p.v;
+    if (p && p.type === 'hp') hp *= 1 + p.v;
+    return {
+      lv: info.lv, cur: info.cur, need: info.need,
+      atk: Math.round(atk), hp: Math.round(hp),
+      crit: 0.08 + (p && p.type === 'crit' ? p.v : 0),
+      critd: 1.8 + (p && p.type === 'critd' ? p.v : 0),
+      dr: (p && p.type === 'dr') ? p.v : 0,
+      shard: (p && p.type === 'shard') ? p.v : 0,
+      regen: (p && p.type === 'regen') ? p.v : 0,
+      guardHeal: (p && p.type === 'guardheal') ? p.v : 0
+    };
+  }
+
+  function rollDamage(base, st, critBonus) {
+    var crit = Math.random() < (st.crit + (critBonus || 0));
+    var v = base * (0.9 + Math.random() * 0.2) * (crit ? st.critd : 1);
+    return { n: Math.max(1, Math.round(v)), crit: crit };
+  }
+
+  function renderRpg() {
+    rollDay();
+    var st = playerStats();
+    var skin = equippedSkin();
+    var p = passiveOf(skin);
+    var sk = skillOf(skin);
+
+    $('rpgLv').textContent = String(st.lv);
+    $('rpgXpFill').style.width = (st.need ? Math.min(100, st.cur / st.need * 100) : 0) + '%';
+    $('rpgXpText').textContent = st.cur + ' / ' + st.need + ' EXP';
+
+    var star = $('rpgStar');
+    star.className = 'rpg-star fx' + fxClass(skin);
+    star.innerHTML = '<span style="filter:drop-shadow(0 0 12px ' + skin.glow + ')">' + starMark(skinFill(skin)) + '</span>';
+
+    $('rpgSkinStar').innerHTML = '<span style="filter:drop-shadow(0 0 6px ' + skin.glow + ')">' + starMark(skinFill(skin)) + '</span>';
+    $('rpgSkinName').textContent = skinName(skin) + ' · ' + rarityName(skin.rarity);
+    $('rpgSkinSub').textContent = sk
+      ? t('rpgSkillLabel') + ' — ' + (lang === 'ja' ? sk.ja : sk.ko) + ' · ' + (lang === 'ja' ? sk.dja : sk.dko)
+      : (p
+        ? t('rpgPassive') + ' — ' + (lang === 'ja' ? p.ja : p.ko) + ' · ' + (lang === 'ja' ? p.dja : p.dko)
+        : t('rpgNoSkill'));
+
+    var left = Math.max(0, DAILY_CHALLENGE - rpg.day.used);
+    $('rpgAtk').textContent = String(st.atk);
+    $('rpgHp').textContent = String(st.hp);
+    $('rpgTicketCount').textContent = left + '/' + DAILY_CHALLENGE;
+    $('rpgStreakCount').textContent = String(gacha.ticketStreak || 0);
+
+    var note = $('rpgNote');
+    if (note) note.textContent = left < 1 ? t('rpgNoTicket') : t('rpgNote');
+
+    renderBossList();
+  }
+
+  function renderBossList() {
+    var wrap = $('rpgBossList');
+    if (!wrap) return;
+    wrap.innerHTML = BOSSES.map(function (b, i) {
+      var isCleared = rpg.cleared.indexOf(i) >= 0;
+      var unlocked = i === 0 || isCleared || rpg.cleared.indexOf(i - 1) >= 0;
+      var cls = 'boss' + (unlocked ? '' : ' locked') + (isCleared ? ' cleared' : '');
+      var label = !unlocked ? t('rpgLocked') : (isCleared ? t('rpgCleared') : t('rpgGo'));
+      return '<button class="' + cls + '" type="button" data-boss="' + i + '"' + (unlocked ? '' : ' disabled') + '>' +
+        '<span class="boss-idx">' + pad2(i + 1) + '</span>' +
+        '<span class="boss-main">' +
+          '<span class="boss-name">' + esc(lang === 'ja' ? b.ja : b.ko) + '</span>' +
+          '<span class="boss-sub">HP ' + b.hp + ' · ATK ' + b.atk + '</span>' +
+        '</span>' +
+        '<span class="boss-go">' + esc(label) + '</span>' +
+      '</button>';
+    }).join('');
+  }
+
+  function btLog(kind, html) {
+    if (!bt) return;
+    bt.log.push({ kind: kind || '', html: html });
+    if (bt.log.length > 24) bt.log.shift();
+  }
+
+  function startBattle(idx) {
+    rollDay();
+    var b = BOSSES[idx];
+    if (!b) return;
+    var isCleared = rpg.cleared.indexOf(idx) >= 0;
+    if (!isCleared && idx > 0 && rpg.cleared.indexOf(idx - 1) < 0) return;
+    if (rpg.day.used >= DAILY_CHALLENGE) { toastKey('rpgNoTicket'); return; }
+    rpg.day.used += 1;
+    saveRpg();
+
+    var st = playerStats();
+    bt = {
+      idx: idx, boss: b, php: st.hp, hpMax: st.hp, bhp: b.hp, bhpMax: b.hp,
+      turn: 1, guard: false, shield: false, weaken: 0, cd: 0,
+      busy: false, over: false, win: false, bonusShard: false, log: []
+    };
+    btLog('sys', esc(lang === 'ja' ? b.ija : b.iko));
+    $('rpgHome').hidden = true;
+    $('rpgBattle').hidden = false;
+    renderBattle();
+    if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
+  }
+
+  function closeBattle() {
+    bt = null;
+    $('rpgBattle').hidden = true;
+    $('rpgBattle').innerHTML = '';
+    $('rpgHome').hidden = false;
+    renderRpg();
+  }
+
+  function renderBattle() {
+    var host = $('rpgBattle');
+    if (!host) return;
+    if (!bt) { host.hidden = true; host.innerHTML = ''; if ($('rpgHome')) $('rpgHome').hidden = false; return; }
+    var b = bt.boss;
+    var skin = equippedSkin();
+    var st = playerStats();
+    var p = passiveOf(skin);
+    var sk = skillOf(skin);
+    var lines = bt.log.slice(-4).map(function (l) {
+      return '<div class="bt-line ' + l.kind + '">' + l.html + '</div>';
+    }).join('');
+    var hpPct = Math.max(0, bt.php / bt.hpMax * 100);
+    var bhpPct = Math.max(0, bt.bhp / bt.bhpMax * 100);
+    var chips = '<span class="bt-chip">' + esc(skinName(skin)) + '</span>';
+    if (p) chips += '<span class="bt-chip">' + esc(t('rpgPassive') + ' · ' + (lang === 'ja' ? p.dja : p.dko)) + '</span>';
+    if (sk) chips += '<span class="bt-chip sk">' + esc(t('rpgSkillLabel') + ' · ' + (lang === 'ja' ? sk.ja : sk.ko)) + '</span>';
+
+    var actions;
+    if (bt.over) {
+      var reward = bt.win && bt.reward ? bt.reward.join('<br>') : '';
+      actions = '<div class="bt-result">' +
+        '<div class="bt-result-title' + (bt.win ? '' : ' lose') + '">' + esc(t(bt.win ? 'btWin' : 'btLose')) + '</div>' +
+        (reward ? '<div class="bt-result-reward"><span class="bt-chip">' + esc(t(bt.first ? 'btFirst' : 'btRepeat')) + '</span><br>' + reward + '</div>' : '') +
+        '<button class="btn-primary bt-result-btn" type="button" data-bt="retry">' + esc(t('btRetry')) + '</button>' +
+        '<button class="btn-ghost bt-result-btn" type="button" data-bt="list">' + esc(t('btToList')) + '</button>' +
+      '</div>';
+    } else {
+      actions = '<div class="bt-actions">' +
+        '<button class="bt-act atk" type="button" data-bt="atk"' + (bt.busy ? ' disabled' : '') + '>' + esc(t('btAttack')) + '</button>' +
+        (sk
+          ? '<button class="bt-act sk" type="button" data-bt="skill"' + (bt.busy || bt.cd > 0 ? ' disabled' : '') + '>' +
+              esc(t('btSkill')) + (bt.cd > 0 ? ' · ' + esc(fmt('btCd', { n: bt.cd })) : '') + '</button>'
+          : '') +
+        '<button class="bt-act def' + (sk ? '' : ' wide') + '" type="button" data-bt="guard"' + (bt.busy ? ' disabled' : '') + '>' + esc(t('btGuard')) + '</button>' +
+      '</div>';
+    }
+
+    host.innerHTML =
+      '<div class="bt-head">' +
+        '<button class="bt-back" type="button" data-bt="back">' + esc(t('btBack')) + '</button>' +
+        '<span class="bt-stage">' + esc(t('btStage')) + ' ' + pad2(bt.idx + 1) + '</span>' +
+      '</div>' +
+      '<div class="bt-boss">' +
+        '<div class="bt-boss-top">' +
+          '<div><div class="bt-boss-name">' + esc(lang === 'ja' ? b.ja : b.ko) + '</div>' +
+          '<div class="bt-boss-tag">' + esc(BOSS_TAG[lang] || BOSS_TAG.ko) + ' · ' + esc(fmt('logTurn', { n: bt.turn })) + '</div></div>' +
+          '<div class="bt-boss-atk">' + esc(fmt('btAtkLabel', { n: Math.round(b.atk * (bt.weaken > 0 ? 0.75 : 1)) })) + '</div>' +
+        '</div>' +
+        '<div class="bt-hp"><i style="width:' + bhpPct + '%"></i></div>' +
+        '<div class="bt-hp-text">' + Math.max(0, bt.bhp) + ' / ' + bt.bhpMax + '</div>' +
+      '</div>' +
+      '<div class="bt-log">' + lines + '</div>' +
+      '<div class="bt-me">' +
+        '<div class="bt-me-top">' +
+          '<span class="bt-me-star fx' + fxClass(skin) + '" style="filter:drop-shadow(0 0 8px ' + skin.glow + ')">' + starMark(skinFill(skin)) + '</span>' +
+          '<span class="bt-me-name">' + esc(skinName(skin)) + '</span>' +
+          '<span class="bt-me-lv">Lv.' + st.lv + '</span>' +
+        '</div>' +
+        '<div class="bt-me-hp"><i style="width:' + hpPct + '%"></i></div>' +
+        '<div class="bt-me-hp-text">' + bt.php + ' / ' + bt.hpMax + '</div>' +
+        '<div class="bt-chips">' + chips + '</div>' +
+      '</div>' +
+      actions;
+  }
+
+  function btAct(kind) {
+    if (!bt || bt.busy || bt.over) return;
+    var st = playerStats();
+    var skin = equippedSkin();
+    var sk = skillOf(skin);
+    bt.busy = true;
+    bt.guard = false;
+
+    if (kind === 'guard') {
+      bt.guard = true;
+      var heal = Math.round(bt.hpMax * (0.06 + st.guardHeal));
+      if (heal > 0) bt.php = Math.min(bt.hpMax, bt.php + heal);
+      btLog('', esc(t('logGuard')));
+      if (heal > 0) btLog('sys', esc(fmt('logHeal', { n: heal })));
+    } else if (kind === 'skill' && sk) {
+      btLog('crit', esc(lang === 'ja' ? sk.qja : sk.qko));
+      var hits = sk.kind === 'double' ? 2 : 1;
+      var total = 0;
+      var critBonus = sk.kind === 'burst' && sk.power >= 3 ? 0.25 : 0;
+      for (var i = 0; i < hits; i++) {
+        var d = rollDamage(st.atk * sk.power, st, critBonus);
+        total += d.n;
+      }
+      bt.bhp = Math.max(0, bt.bhp - total);
+      btLog(sk.kind === 'burst' ? 'crit' : '', esc(fmt('logSkill', { s: (lang === 'ja' ? sk.ja : sk.ko), n: total })));
+      if (sk.kind === 'drain') {
+        var h1 = Math.round(total * 0.3);
+        bt.php = Math.min(bt.hpMax, bt.php + h1);
+        btLog('sys', esc(fmt('logHeal', { n: h1 })));
+      } else if (sk.kind === 'heal') {
+        var h2 = Math.round(bt.hpMax * (sk.heal || 0));
+        bt.php = Math.min(bt.hpMax, bt.php + h2);
+        btLog('sys', esc(fmt('logHeal', { n: h2 })));
+      } else if (sk.kind === 'shield') {
+        bt.shield = true;
+        btLog('sys', esc(t('logShield')));
+      } else if (sk.kind === 'weaken') {
+        bt.weaken = 2;
+        btLog('sys', esc(t('logWeaken')));
+      } else if (sk.kind === 'recoil') {
+        var rc = Math.max(1, Math.round(bt.hpMax * 0.06));
+        bt.php = Math.max(1, bt.php - rc);
+      } else if (sk.kind === 'bonus') {
+        bt.bonusShard = true;
+      }
+      bt.cd = 3;
+    } else {
+      var dm = rollDamage(st.atk, st, 0);
+      bt.bhp = Math.max(0, bt.bhp - dm.n);
+      btLog(dm.crit ? 'crit' : '', esc(fmt(dm.crit ? 'logCrit' : 'logAtk', { n: dm.n })));
+    }
+
+    renderBattle();
+    setTimeout(function () {
+      if (!bt) return;
+      if (bt.bhp <= 0) { btEnd(true); return; }
+      btBossTurn();
+    }, 520);
+  }
+
+  function btBossTurn() {
+    if (!bt || bt.over) return;
+    var st = playerStats();
+    var b = bt.boss;
+    var atk = b.atk * (bt.weaken > 0 ? 0.75 : 1);
+    var raw = Math.round(atk * (0.85 + Math.random() * 0.3));
+    if (bt.shield) {
+      bt.shield = false;
+      btLog('sys', esc(fmt('logBlock', { name: (lang === 'ja' ? b.ja : b.ko) })));
+    } else {
+      var dmg = raw;
+      if (bt.guard) dmg = Math.round(dmg * 0.35);
+      dmg = Math.round(dmg * (1 - st.dr));
+      dmg = Math.max(1, dmg);
+      bt.php = Math.max(0, bt.php - dmg);
+      btLog('boss', esc(fmt('logBoss', { name: (lang === 'ja' ? b.ja : b.ko), n: dmg })));
+    }
+    bt.guard = false;
+    bt.turn += 1;
+    if (bt.cd > 0) bt.cd -= 1;
+    if (bt.weaken > 0) bt.weaken -= 1;
+    if (st.regen > 0 && bt.php > 0) {
+      var rh = Math.round(bt.hpMax * st.regen);
+      bt.php = Math.min(bt.hpMax, bt.php + rh);
+      btLog('sys', esc(fmt('logHeal', { n: rh })));
+    }
+    if (bt.php <= 0) { bt.php = 0; bt.busy = false; btEnd(false); return; }
+    bt.busy = false;
+    renderBattle();
+  }
+
+  function btEnd(win) {
+    if (!bt) return;
+    bt.over = true;
+    bt.win = !!win;
+    bt.busy = false;
+    var st = playerStats();
+    if (win) {
+      var first = rpg.cleared.indexOf(bt.idx) < 0;
+      if (first) { rpg.cleared.push(bt.idx); saveRpg(); }
+      var shards = (first ? 2 : 1) + Math.round(st.shard) + (bt.bonusShard ? 1 : 0);
+      gacha.shards += shards;
+      saveGacha();
+      bt.reward = [];
+      if (first) {
+        grantTickets(1);
+        bt.reward.push(esc(t('btRewardTicket')));
+      }
+      bt.reward.push(esc(fmt('btRewardShard', { n: shards })));
+      bt.first = first;
+      if (navigator.vibrate) { try { navigator.vibrate([10, 30, 12]); } catch (e) {} }
+    }
+    renderBattle();
+  }
+
+  function setHubTab(tab) {
+    hubTab = (tab === 'rpg') ? 'rpg' : 'gacha';
+    $('tabGacha').hidden = hubTab !== 'gacha';
+    $('tabRpg').hidden = hubTab !== 'rpg';
+    $('tabBtnGacha').classList.toggle('on', hubTab === 'gacha');
+    $('tabBtnRpg').classList.toggle('on', hubTab === 'rpg');
+    $('tabBtnGacha').setAttribute('aria-selected', hubTab === 'gacha' ? 'true' : 'false');
+    $('tabBtnRpg').setAttribute('aria-selected', hubTab === 'rpg' ? 'true' : 'false');
+    $('hubTitleText').textContent = t(hubTab === 'rpg' ? 'rpgTitle' : 'gTitle');
+    if (hubTab === 'rpg') renderRpg();
+    else renderGacha();
   }
 
   /* ---------- refresh ---------- */
@@ -1514,6 +2614,16 @@
     $('updList').innerHTML = list.map(function (line) {
       return '<li>' + esc(String(line).replace(/^✦\s*/, '')) + '</li>';
     }).join('');
+    var gift = $('updGift');
+    if (gift) {
+      if (giftGranted) {
+        gift.hidden = false;
+        gift.innerHTML = '<span aria-hidden="true">✦</span><b>' + esc(t('updGift')) + '</b>';
+      } else {
+        gift.hidden = true;
+        gift.innerHTML = '';
+      }
+    }
   }
 
   function openUpdate() {
@@ -1611,7 +2721,9 @@
       save();
       completing = false;
       renderAll();
-      toastKey('toastDone');
+      addExp(20, true);
+      var gotTicket = awardFocusTicket();
+      toastKey(gotTicket ? 'toastFocusTicket' : 'toastFocusTicketMax');
       if (navigator.vibrate) { try { navigator.vibrate(18); } catch (e) {} }
     }, 230);
   }
@@ -1834,7 +2946,11 @@
     renderQueue();
     renderRoutines();
     if (cal.isOpen) renderCal();
-    if (gachaOpen) renderGacha();
+    if (gachaOpen) {
+      $('hubTitleText').textContent = t(hubTab === 'rpg' ? 'rpgTitle' : 'gTitle');
+      if (hubTab === 'rpg') renderRpg();
+      else renderGacha();
+    }
     if (updateOpen) renderUpdate();
   }
 
@@ -1861,6 +2977,27 @@
 
   $('dateBtn').addEventListener('click', openCal);
   $('brandBtn').addEventListener('click', openGacha);
+  $('tabBtnGacha').addEventListener('click', function () { setHubTab('gacha'); });
+  $('tabBtnRpg').addEventListener('click', function () { setHubTab('rpg'); });
+  $('gFilters').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-f]');
+    if (!b) return;
+    gFilter = b.getAttribute('data-f');
+    renderGacha();
+  });
+  $('rpgBossList').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-boss]');
+    if (!b) return;
+    startBattle(parseInt(b.getAttribute('data-boss'), 10));
+  });
+  $('rpgBattle').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-bt]');
+    if (!b) return;
+    var k = b.getAttribute('data-bt');
+    if (k === 'atk' || k === 'skill' || k === 'guard') btAct(k);
+    else if (k === 'retry') { if (bt) startBattle(bt.idx); }
+    else if (k === 'back' || k === 'list') closeBattle();
+  });
   $('gachaClose').addEventListener('click', closeGacha);
   $('gachaOverlay').addEventListener('click', function (e) {
     if (e.target === $('gachaOverlay')) closeGacha();
@@ -1990,6 +3127,7 @@
     syncToday();
     save();
     renderRoutines();
+    awardRoutineExp(r.id, r.done);
     if (r.done) {
       if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
       maybeAwardTicket();
@@ -2065,6 +3203,7 @@
     if (el) el.textContent = elapsedText();
   }, 20000);
 
+  injectSkinCSS();
   applyStaticI18n();
   applySkin();
   updateBrandBadge();
