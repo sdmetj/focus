@@ -781,7 +781,8 @@
     font-size:10px;font-weight:800;letter-spacing:.24em;
     color:rgba(255,255,255,.88);
   }
-  @media (min-width:520px){ .glass-entry{right:calc(50% - 240px)} }
+  @media (min-width:560px){ .glass-entry{right:calc(50% - 278px)} }
+  @media (max-width:559px){ body{padding-right:calc(env(safe-area-inset-right) + 36px)} }
 
   /* 3 카테고리 탭 */
   .cat-tabs{
@@ -2955,7 +2956,7 @@
   }
 
   /* ---------- 스킨 테마 (배경·카드·글로우) ---------- */
-  var THEME_ALPHA = { base: .05, common: .09, rare: .12, epic: .15, legendary: .18, special: .20 };
+  var THEME_ALPHA = { base: .07, common: .13, rare: .17, epic: .21, legendary: .25, special: .27 };
 
   function hexToHsl(hex) {
     var m = /^#?([0-9a-f]{6})$/i.exec(String(hex || ''));
@@ -3000,7 +3001,7 @@
     st.setProperty('--theme-1', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + a + ')');
     st.setProperty('--theme-2', 'hsla(' + ((c.h + 42) % 360) + ', ' + sat + '%, ' + lit + '%, ' + (a * .72).toFixed(3) + ')');
     st.setProperty('--theme-3', 'hsla(' + ((c.h + 320) % 360) + ', ' + sat + '%, ' + lit + '%, ' + (a * .55).toFixed(3) + ')');
-    st.setProperty('--skin-line', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + Math.min(.6, a + .12).toFixed(3) + ')');
+    st.setProperty('--skin-line', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + Math.min(.6, a + .16).toFixed(3) + ')');
     st.setProperty('--skin-soft', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + (a * .7).toFixed(3) + ')');
     st.setProperty('--skin-accent', (s && (s.fill || s.color)) || '#FFFFFF');
   }
@@ -3696,7 +3697,9 @@
       ? t('rpgSkillLabel') + ' — ' + (lang === 'ja' ? sk.ja : sk.ko) + ' · ' + (lang === 'ja' ? sk.dja : sk.dko)
       : (p
         ? t('rpgPassive') + ' — ' + (lang === 'ja' ? p.ja : p.ko) + ' · ' + (lang === 'ja' ? p.dja : p.dko)
-        : t('rpgNoSkill'));
+        : (skin && skin.rarity === 'special'
+          ? (lang === 'ja' ? skin.descJa : skin.descKo)
+          : t('rpgNoSkill')));
 
     var left = Math.max(0, DAILY_CHALLENGE - rpg.day.used);
     $('rpgAtk').textContent = String(st.atk);
@@ -4901,6 +4904,19 @@
 
   var san = loadSanctuary();
 
+  // 어느 경로로 불러왔든 편성이 비어 있으면 장착 스킨부터 채운다
+  (function sanSeed() {
+    san.deploy = (san.deploy || []).filter(function (id) { return !!skinById(id); });
+    if (!san.deploy.length) {
+      var seed = [gacha.equipped];
+      gacha.owned.forEach(function (id) { if (seed.indexOf(id) < 0) seed.push(id); });
+      san.deploy = seed.filter(function (id) { return !!skinById(id); }).slice(0, san.slots);
+    }
+    if (!san.deploy.length) san.deploy = ['mono'];
+    san.deploy.forEach(function (id) { if (!san.levels[id]) san.levels[id] = { lv: 1, xp: 0 }; });
+    if (!san.levels.mono) san.levels.mono = { lv: 1, xp: 0 };
+  })();
+
   function saveSan() {
     try { localStorage.setItem(SAN_KEY, JSON.stringify(san)); } catch (e) {}
   }
@@ -5948,7 +5964,7 @@
       flash: 0, label: '', labelT: 0, best: miniSave.best.orbit
     };
     var ov = $('obHit');
-    if (ov) { ov.classList.remove('show'); ov.textContent = ''; }
+    if (ov) { ov.classList.remove('show'); ov.textContent = ''; ov.style.cssText = ''; }
     obSync();
     obActive = true;
     obLast = 0;
