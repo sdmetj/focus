@@ -2213,7 +2213,7 @@
       sanDeployed: '출전 중',
       sanPickTitle: '출전할 별 선택',
       sanPickSub: '슬롯 {n}개 · 탭해서 편성 / 해제',
-      sanTapTip: '성역을 탭하면 건물이 반응합니다 · 등대 폭발 · 제단 축복 · 포탑 일제사격 · 정원 수확',
+      sanTapTip: '별이 스스로 스킬을 씁니다 · 탭: 별 = 스킬 발동 · 건물 = 폭발/축복/사격/수확',
       sanSkinLv: 'Lv.{n}',
       sanLvBonus: 'Lv.5 공격력 +3% · Lv.10 치명타 +2% · Lv.20 별조각 +5%',
       sanKills: '사냥한 적',
@@ -2315,7 +2315,7 @@
       sanDeployed: '出撃中',
       sanPickTitle: '出撃する星を選択',
       sanPickSub: 'スロット{n}個 · タップで編成 / 解除',
-      sanTapTip: '聖域をタップすると建物が反応します · 灯台爆発 · 祭壇の祝福 · 砲塔一斉射撃 · 庭園の収穫',
+      sanTapTip: '星が自らスキルを放ちます · タップ: 星＝スキル · 建物＝爆発/祝福/射撃/収穫',
       sanSkinLv: 'Lv.{n}',
       sanLvBonus: 'Lv.5 攻撃力+3% · Lv.10 クリティカル+2% · Lv.20 かけら+5%',
       sanKills: '狩った敵',
@@ -4863,6 +4863,11 @@
   var SAN_BUILD_ORDER = ['beacon', 'altar', 'turret', 'garden'];
   var SAN_FX_CD = { beacon: 25000, altar: 30000, turret: 15000, garden: 45000 };
 
+  // ✦ 스킬 이펙트 — 등급별 스킬 주기(초) · 동시 표시 상한(모바일 프레임 보호)
+  var SAN_SKILL_CD = { base: 7.2, common: 6.2, rare: 5.2, epic: 4.2, legendary: 3.4, special: 3.6 };
+  var SAN_FX_CAP = { fx: 32, parts: 220, pops: 16, beams: 16 };
+  var SAN_SKY = '#7dd3fc';   // 린 캣 하늘색
+
   function sanDefaults() {
     return {
       slots: 3, deploy: [],
@@ -5043,7 +5048,7 @@
   }
 
   function sanNewSim() {
-    return { W: 0, H: 0, pad: 0, stars: [], enemies: [], bullets: [], parts: [], pops: [], beams: [], t: 0, spawn: 1.1, flash: 0, shake: 0 };
+    return { W: 0, H: 0, pad: 0, stars: [], enemies: [], bullets: [], parts: [], pops: [], beams: [], fx: [], t: 0, spawn: 1.1, flash: 0, shake: 0 };
   }
 
   function sanResize() {
@@ -5075,6 +5080,8 @@
         ox: Math.cos(i * 2.399) * W * 0.10,
         oy: Math.sin(i * 2.399) * W * 0.07,
         cool: p ? p.cool : 0.3 + Math.random() * 0.8,
+        sk: (p && typeof p.sk === 'number') ? p.sk : 1.1 + Math.random() * 1.8,
+        tap: p ? (p.tap || -9) : -9,
         t: Math.random() * 6.28,
         lv: Math.max(1, sanLevelOf(id))
       };
@@ -5109,6 +5116,180 @@
     var base = 1.1 + Math.min(6, san.buildings.turret || 0) * 0.35;
     var lvB = 1 + sanDeployLevelSum() * 0.004;
     return base * lvB;
+  }
+
+  /* --- ✦ 스킬 이펙트 헬퍼 (Canvas 2D 파티클 · 도형만 사용) --- */
+
+  // 배열 상한 — 넘치면 오래된 것부터 버려 iOS Safari 프레임을 지킨다
+  function sanFxCaps() {
+    var sim = sanSim;
+    if (!sim) return;
+    if (sim.fx && sim.fx.length > SAN_FX_CAP.fx) sim.fx.splice(0, sim.fx.length - SAN_FX_CAP.fx);
+    if (sim.parts.length > SAN_FX_CAP.parts) sim.parts.splice(0, sim.parts.length - SAN_FX_CAP.parts);
+    if (sim.pops.length > SAN_FX_CAP.pops) sim.pops.splice(0, sim.pops.length - SAN_FX_CAP.pops);
+    if (sim.beams.length > SAN_FX_CAP.beams) sim.beams.splice(0, sim.beams.length - SAN_FX_CAP.beams);
+  }
+
+  function sanPop(x, y, text, col, size) {
+    if (!sanSim) return;
+    sanSim.pops.push({ x: x, y: y, text: text, col: col || 'rgba(200,240,255,.95)', size: size || 0, life: .62, max: .62 });
+  }
+
+  function sanSparkBurst(x, y, col, n, spd) {
+    if (!sanSim) return;
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * 6.2832, sp = (spd || 40) * (0.45 + Math.random());
+      sanSim.parts.push({
+        x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+        life: .32 + Math.random() * .3, max: .62, r: 1 + Math.random() * 1.5,
+        star: i % 2 === 0, col: col
+      });
+    }
+  }
+
+  function sanRing(x, y, col, R, life, w) {
+    if (!sanSim) return;
+    sanSim.fx.push({ t: 'ring', x: x, y: y, R: R, col: col, life: life || .58, max: life || .58, w: w || 2.6 });
+  }
+
+  var sanToneAt = 0;
+  function sanSkillTone(f1, f2, dur, type) {
+    var now = Date.now();
+    if (now - sanToneAt < 220) return;
+    sanToneAt = now;
+    tone({ f: f1, f2: f2, dur: dur, type: type || 'sine', gain: .022 });
+  }
+
+  function sanNearest(x, y) {
+    var sim = sanSim, best = null, bd = 1e9;
+    if (!sim) return null;
+    for (var i = 0; i < sim.enemies.length; i++) {
+      var e = sim.enemies[i];
+      var dx = e.x - x, dy = e.y - y, d = dx * dx + dy * dy;
+      if (d < bd) { bd = d; best = e; }
+    }
+    return best;
+  }
+
+  // 등급: 기본·일반 — 작은 반짝임 (기본 공격의 맛을 더한다)
+  function sanFxSpark(st, col) {
+    var sim = sanSim;
+    sanRing(st.x, st.y, col, Math.max(34, sim.W * 0.13), .3, 1.2);
+    sanSparkBurst(st.x, st.y, col, 5, 52);
+  }
+
+  // 레어: 충격파 — 별에서 퍼져나가는 빛나는 링 + 범위 피해
+  function sanFxShock(st, col) {
+    var sim = sanSim;
+    var R = Math.max(88, Math.min(sim.W, sim.H) * 0.48);
+    sanRing(st.x, st.y, col, R, .62, 3);
+    sanRing(st.x, st.y, col, R * 0.68, .46, 1.5);
+    sanSparkBurst(st.x, st.y, col, 7, 78);
+    var dmg = sanDmg() * 1.9 * (1 + st.lv * 0.01), hits = 0;
+    for (var i = 0; i < sim.enemies.length; i++) {
+      var e = sim.enemies[i];
+      var dx = e.x - st.x, dy = e.y - st.y;
+      if (dx * dx + dy * dy <= R * R) { e.hp -= dmg; e.hit = 1; hits++; }
+    }
+    if (hits) sanSkillTone(320, 120, .2, 'sine');
+  }
+
+  // 에픽: 유성우 — 대각선으로 떨어지는 빛줄기 여러 갈래 + 착탄 파동
+  function sanFxMeteor(st, col) {
+    var sim = sanSim;
+    var n = 3 + Math.min(3, Math.floor(st.lv / 8));
+    var list = sim.enemies.slice().sort(function (a, b) {
+      var da = (a.x - st.x) * (a.x - st.x) + (a.y - st.y) * (a.y - st.y);
+      var db = (b.x - st.x) * (b.x - st.x) + (b.y - st.y) * (b.y - st.y);
+      return da - db;
+    });
+    for (var i = 0; i < n; i++) {
+      var src = list[i] || list[0] || null;
+      var tx = src ? src.x + (Math.random() - .5) * 14 : st.x + (Math.random() - .5) * sim.W * 0.24;
+      var ty = src ? src.y + (Math.random() - .5) * 14 : st.y + (Math.random() - .5) * 40;
+      var sx = tx - sim.W * (0.40 + Math.random() * 0.16);
+      var sy = ty - sim.H * (0.62 + Math.random() * 0.22);
+      var dur = .42 + i * 0.07;
+      sim.fx.push({ t: 'meteor', sx: sx, sy: sy, tx: tx, ty: ty, col: col, life: dur, max: dur, r: Math.max(2.2, sim.W * 0.011) });
+    }
+    sanSkillTone(560, 170, .3, 'sawtooth');
+  }
+
+  // 레전더리: 성운 번개 — 별에서 적들을 잇는 지그재그 전기 아크
+  function sanFxChain(st, col) {
+    var sim = sanSim;
+    var pts = [{ x: st.x, y: st.y }];
+    var pool = sim.enemies.slice();
+    var from = { x: st.x, y: st.y };
+    var hops = 3 + (st.lv >= 12 ? 1 : 0);
+    var maxD = (sim.W * 0.85) * (sim.W * 0.85);
+    for (var h = 0; h < hops && pool.length; h++) {
+      var best = null, bd = 1e9, bi = -1;
+      for (var i = 0; i < pool.length; i++) {
+        var dx = pool[i].x - from.x, dy = pool[i].y - from.y, d = dx * dx + dy * dy;
+        if (d < bd) { bd = d; best = pool[i]; bi = i; }
+      }
+      if (!best || bd > maxD) break;
+      pts.push({ x: best.x, y: best.y });
+      best.hp -= sanDmg() * 1.15;
+      best.hit = 1;
+      from = best;
+      pool.splice(bi, 1);
+    }
+    if (pts.length < 2) pts.push({ x: sim.W / 2, y: sim.H * 0.5 });   // 적이 없으면 제단으로 방전
+    sim.fx.push({ t: 'chain', pts: pts, col: col, life: .34, max: .34, seed: Math.random() * 100 });
+    var last = pts[pts.length - 1];
+    sanSparkBurst(last.x, last.y, col, 5, 62);
+    sanSkillTone(1180, 420, .13, 'square');
+  }
+
+  // 린 캣 전용 — 하늘색 발바닥 · 반짝임 폭죽
+  function sanFxPaw(st, col) {
+    var sim = sanSim;
+    var sky = SAN_SKY;
+    sanRing(st.x, st.y, sky, Math.max(72, sim.W * 0.26), .6, 2.2);
+    for (var i = 0; i < 3; i++) {
+      var dur = .85 + i * 0.12;
+      sim.fx.push({
+        t: 'paw',
+        x: st.x + (i - 1) * sim.W * 0.052 + (Math.random() - .5) * 6,
+        y: st.y + (Math.random() - .5) * 8,
+        life: dur, max: dur, vy: 24 + Math.random() * 12,
+        r: Math.max(4.5, sim.W * 0.015), rot: (Math.random() - .5) * .5
+      });
+    }
+    sanSparkBurst(st.x, st.y, sky, 12, 96);
+    var dmg = sanDmg() * 1.5, R = Math.max(78, sim.W * 0.3);
+    for (var e = 0; e < sim.enemies.length; e++) {
+      var en = sim.enemies[e];
+      var dx = en.x - st.x, dy = en.y - st.y;
+      if (dx * dx + dy * dy <= R * R) { en.hp -= dmg; en.hit = 1; }
+    }
+    sanSkillTone(1040, 1560, .16, 'triangle');
+  }
+
+  function sanSkillCd(st) {
+    var s = skinById(st.id);
+    var r = s ? (s.rarity || 'common') : 'common';
+    var base = SAN_SKILL_CD[r] || 6;
+    return Math.max(1.8, base / (1 + st.lv * 0.022));
+  }
+
+  // 별 하나의 스킬 발동 — 등급으로 갈라진다
+  function sanCast(st) {
+    var sim = sanSim;
+    if (!sim || !st) return;
+    if (!sim.fx) sim.fx = [];
+    var s = skinById(st.id);
+    var r = s ? (s.rarity || 'common') : 'common';
+    var col = sanStarColor(st.id);
+    if (r === 'special') { sanFxPaw(st, col); sanPop(st.x, st.y - 16, 'NYA!', SAN_SKY, 0); }
+    else if (r === 'legendary') { sanFxChain(st, col); sanPop(st.x, st.y - 16, 'CHAIN!', col, 0); }
+    else if (r === 'epic') { sanFxMeteor(st, col); sanPop(st.x, st.y - 16, 'METEOR!', col, 0); }
+    else if (r === 'rare') { sanFxShock(st, col); sanPop(st.x, st.y - 16, 'SHOCK!', col, 0); }
+    else { sanFxSpark(st, col); }
+    st.sk = sanSkillCd(st);
+    sanFxCaps();
   }
 
   function sanKill(e) {
@@ -5172,9 +5353,19 @@
         st.cool -= dt;
         if (st.cool <= 0) {
           st.cool = Math.max(0.35, 0.95 - st.lv * 0.012);
-          sim.bullets.push({ x: st.x, y: st.y, vx: (ax / ad) * 200, vy: (ay / ad) * 200, dmg: sanDmg() * (1 + st.lv * 0.01), life: 1.6, color: sanStarColor(st.id) });
+          var sCol = sanStarColor(st.id);
+          var crit = Math.random() < 0.08;
+          sim.bullets.push({
+            x: st.x, y: st.y, px: st.x, py: st.y,
+            vx: (ax / ad) * 200, vy: (ay / ad) * 200,
+            dmg: sanDmg() * (1 + st.lv * 0.01) * (crit ? 1.8 : 1),
+            life: 1.6, color: sCol, crit: crit
+          });
           tone({ f: 620 + Math.min(400, st.lv * 8), dur: .05, type: 'sine', gain: .02 });
         }
+        // 등급·레벨에 따른 자동 스킬
+        st.sk -= dt;
+        if (st.sk <= 0) sanCast(st);
       } else {
         var ax = W / 2 + Math.cos(st.t * 0.5 + s) * W * 0.22;
         var ay = H * 0.62 + Math.sin(st.t * 0.42 + s) * W * 0.12;
@@ -5216,6 +5407,7 @@
     // 탄환
     for (var b = sim.bullets.length - 1; b >= 0; b--) {
       var bu = sim.bullets[b];
+      bu.px = bu.x; bu.py = bu.y;
       bu.x += bu.vx * dt;
       bu.y += bu.vy * dt;
       bu.life -= dt;
@@ -5231,7 +5423,13 @@
         }
       }
       if (hit || bu.life <= 0 || bu.x < -20 || bu.x > W + 20 || bu.y < -20 || bu.y > H + 20) {
-        if (hit) { tone({ f: 880, dur: .04, type: 'triangle', gain: .02 }); }
+        if (hit) {
+          tone({ f: 880, dur: .04, type: 'triangle', gain: .02 });
+          // 착탄 스파크 + 짧은 팝업
+          sanSparkBurst(bu.x, bu.y, bu.color, 3, 46);
+          if (bu.crit) sanPop(bu.x, bu.y - 5, 'CRIT!', '#FFD79A', Math.round(W * 0.026));
+          else if (Math.random() < 0.14) sanPop(bu.x, bu.y - 5, '+1', 'rgba(220,246,255,.9)', Math.round(W * 0.023));
+        }
         sim.bullets.splice(b, 1);
       }
     }
@@ -5267,6 +5465,29 @@
       sim.beams[bm].life -= dt;
       if (sim.beams[bm].life <= 0) sim.beams.splice(bm, 1);
     }
+
+    // 스킬 이펙트 수명 · 유성 착탄 판정
+    if (!sim.fx) sim.fx = [];
+    for (var fi = sim.fx.length - 1; fi >= 0; fi--) {
+      var f = sim.fx[fi];
+      f.life -= dt;
+      if (f.t === 'paw') f.y -= (f.vy || 24) * dt;
+      if (f.t === 'meteor' && f.life <= 0 && !f.hitDone) {
+        f.hitDone = true;
+        var mr = Math.max(38, sim.W * 0.15);
+        sanRing(f.tx, f.ty, f.col, mr, .4, 2);
+        sanSparkBurst(f.tx, f.ty, f.col, 5, 84);
+        var md = sanDmg() * 1.5;
+        for (var me = 0; me < sim.enemies.length; me++) {
+          var men = sim.enemies[me];
+          var mdx = men.x - f.tx, mdy = men.y - f.ty;
+          if (mdx * mdx + mdy * mdy <= mr * mr) { men.hp -= md; men.hit = 1; }
+        }
+        sim.shake = Math.min(6, sim.shake + 1.5);
+      }
+      if (f.life <= 0) sim.fx.splice(fi, 1);
+    }
+    sanFxCaps();
 
     // 경험치 · 시간 누적 저장 (1초 간격)
     sim._save = (sim._save || 0) + dt;
@@ -5317,6 +5538,109 @@
       g.fillText('Lv.' + lv, 0, r * 1.8);
     }
     g.restore();
+  }
+
+  // ✦ 스킬 이펙트 렌더 — 링 · 유성 · 번개 · 발바닥
+  function sanDrawFx(g) {
+    var sim = sanSim;
+    if (!sim.fx || !sim.fx.length) return;
+    var W = sim.W, H = sim.H;
+    for (var i = 0; i < sim.fx.length; i++) {
+      var f = sim.fx[i];
+      var lifePct = Math.max(0, f.life / f.max);
+
+      if (f.t === 'ring') {
+        var k = 1 - lifePct;
+        var r = f.R * (1 - Math.pow(1 - k, 2.2));
+        if (r < 1) continue;
+        g.save();
+        g.globalAlpha = Math.pow(1 - k, 2) * 0.95;
+        g.strokeStyle = f.col;
+        g.lineWidth = Math.max(0.6, f.w * (1 - k) + 0.4);
+        g.beginPath(); g.arc(f.x, f.y, r, 0, 6.2832); g.stroke();
+        // 안쪽 잔상 링
+        g.globalAlpha *= 0.45;
+        g.lineWidth = Math.max(0.5, f.w * 0.5 * (1 - k));
+        g.beginPath(); g.arc(f.x, f.y, r * 0.78, 0, 6.2832); g.stroke();
+        g.restore();
+
+      } else if (f.t === 'meteor') {
+        var p = 1 - lifePct;
+        var x = f.sx + (f.tx - f.sx) * p;
+        var y = f.sy + (f.ty - f.sy) * p;
+        var p0 = Math.max(0, p - 0.22);
+        var tx0 = f.sx + (f.tx - f.sx) * p0;
+        var ty0 = f.sy + (f.ty - f.sy) * p0;
+        g.save();
+        g.lineCap = 'round';
+        g.globalAlpha = 0.6;
+        g.strokeStyle = f.col;
+        g.lineWidth = f.r * 2.4;
+        g.beginPath(); g.moveTo(tx0, ty0); g.lineTo(x, y); g.stroke();
+        g.globalAlpha = 0.95;
+        g.strokeStyle = 'rgba(255,255,255,.92)';
+        g.lineWidth = Math.max(1, f.r * 0.8);
+        g.beginPath();
+        g.moveTo(tx0 + (x - tx0) * 0.45, ty0 + (y - ty0) * 0.45);
+        g.lineTo(x, y); g.stroke();
+        g.fillStyle = '#FFFFFF';
+        g.beginPath(); g.arc(x, y, f.r * 0.95, 0, 6.2832); g.fill();
+        g.restore();
+
+      } else if (f.t === 'chain') {
+        var pts = f.pts, jit = 3 + Math.abs(Math.sin(sim.t * 38 + f.seed)) * 4;
+        g.save();
+        g.globalAlpha = lifePct;
+        g.beginPath();
+        g.moveTo(pts[0].x, pts[0].y);
+        for (var s = 1; s < pts.length; s++) {
+          var x1 = pts[s - 1].x, y1 = pts[s - 1].y, x2 = pts[s].x, y2 = pts[s].y;
+          var nx = -(y2 - y1), ny = (x2 - x1);
+          var nl = Math.sqrt(nx * nx + ny * ny) || 1;
+          for (var q = 1; q <= 4; q++) {
+            var tq = q / 4;
+            var qx = x1 + (x2 - x1) * tq, qy = y1 + (y2 - y1) * tq;
+            if (q < 4) {
+              var amp = (Math.random() - .5) * jit * 2;
+              qx += (nx / nl) * amp; qy += (ny / nl) * amp;
+            }
+            g.lineTo(qx, qy);
+          }
+        }
+        g.strokeStyle = f.col;
+        g.lineWidth = 4.4;
+        g.globalAlpha = lifePct * 0.35;
+        g.stroke();
+        g.strokeStyle = 'rgba(238,251,255,.95)';
+        g.lineWidth = 1.3;
+        g.globalAlpha = lifePct * 0.95;
+        g.stroke();
+        for (var sp2 = 0; sp2 < pts.length; sp2++) {
+          g.fillStyle = f.col;
+          g.globalAlpha = lifePct * 0.55;
+          g.beginPath(); g.arc(pts[sp2].x, pts[sp2].y, 5.5, 0, 6.2832); g.fill();
+        }
+        g.restore();
+
+      } else if (f.t === 'paw') {
+        g.save();
+        g.globalAlpha = lifePct * 0.95;
+        g.translate(f.x, f.y);
+        g.rotate(f.rot);
+        g.fillStyle = SAN_SKY;
+        g.beginPath();
+        g.ellipse(0, f.r * 0.36, f.r * 0.72, f.r * 0.58, 0, 0, 6.2832);
+        g.fill();
+        for (var t3 = 0; t3 < 3; t3++) {
+          var ang = -Math.PI / 2 + (t3 - 1) * 0.72;
+          g.beginPath();
+          g.arc(Math.cos(ang) * f.r * 0.92, Math.sin(ang) * f.r * 0.92, f.r * 0.26, 0, 6.2832);
+          g.fill();
+        }
+        g.restore();
+      }
+    }
+    g.globalAlpha = 1;
   }
 
   function sanDraw() {
@@ -5376,15 +5700,29 @@
       g.fillRect(en.x - en.r, en.y - en.r - 5, en.r * 2 * hpPct, 2);
     }
 
+    // 스킬 이펙트 (링 · 유성 · 번개 · 발바닥)
+    sanDrawFx(g);
+
     // 탄환
     for (var b = 0; b < sim.bullets.length; b++) {
       var bu = sim.bullets[b];
       g.save();
-      g.shadowColor = bu.color;
-      g.shadowBlur = 8;
-      g.fillStyle = '#FFFFFF';
+      if (typeof bu.px === 'number') {
+        g.globalAlpha = 0.5;
+        g.strokeStyle = bu.color || '#FFFFFF';
+        g.lineWidth = 1.9;
+        g.lineCap = 'round';
+        g.beginPath(); g.moveTo(bu.px, bu.py); g.lineTo(bu.x, bu.y); g.stroke();
+        g.globalAlpha = 0.3;
+        g.strokeStyle = '#FFFFFF';
+        g.lineWidth = 0.9;
+        g.beginPath(); g.moveTo(bu.px, bu.py); g.lineTo(bu.x, bu.y); g.stroke();
+        g.lineCap = 'butt';
+      }
+      g.globalAlpha = 1;
+      g.fillStyle = bu.crit ? '#FFE7B4' : '#FFFFFF';
       g.beginPath();
-      g.arc(bu.x, bu.y, 1.8, 0, 6.2832);
+      g.arc(bu.x, bu.y, bu.crit ? 2.4 : 1.8, 0, 6.2832);
       g.fill();
       g.restore();
     }
@@ -5427,18 +5765,29 @@
       var pa = sim.parts[pp];
       if (pa.ring) continue;
       g.globalAlpha = Math.max(0, pa.life / pa.max);
-      g.fillStyle = pa.star ? '#FFFFFF' : 'rgba(255,255,255,.8)';
-      g.beginPath();
-      g.arc(pa.x, pa.y, pa.r, 0, 6.2832);
-      g.fill();
+      g.fillStyle = pa.col || (pa.star ? '#FFFFFF' : 'rgba(255,255,255,.8)');
+      if (pa.star) {
+        g.beginPath();
+        g.moveTo(pa.x, pa.y - pa.r * 2.1);
+        g.lineTo(pa.x + pa.r * 0.62, pa.y);
+        g.lineTo(pa.x, pa.y + pa.r * 2.1);
+        g.lineTo(pa.x - pa.r * 0.62, pa.y);
+        g.closePath();
+        g.fill();
+      } else {
+        g.beginPath();
+        g.arc(pa.x, pa.y, pa.r, 0, 6.2832);
+        g.fill();
+      }
     }
     g.globalAlpha = 1;
 
     for (var po = 0; po < sim.pops.length; po++) {
       var pop = sim.pops[po];
-      g.globalAlpha = Math.max(0, pop.life / pop.max);
-      g.fillStyle = 'rgba(200,240,255,.95)';
-      g.font = '800 ' + Math.round(W * 0.03) + 'px -apple-system,sans-serif';
+      var pl = Math.max(0, pop.life / pop.max);
+      g.globalAlpha = Math.min(1, pl * 1.7);
+      g.fillStyle = pop.col || 'rgba(200,240,255,.95)';
+      g.font = '800 ' + (pop.size || Math.round(W * 0.028)) + 'px -apple-system,sans-serif';
       g.textAlign = 'center';
       g.fillText(pop.text, pop.x, pop.y);
     }
@@ -5670,12 +6019,28 @@
           if (sanTapBuilding(spots[i].k)) return;
         }
       }
-      // 빈 곳 탭 — 반짝임
-      for (var j = 0; j < 6; j++) {
-        var a = Math.random() * 6.2832, sp = 24 + Math.random() * 50;
-        sanSim.parts.push({ x: p.x, y: p.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: .45, max: .45, r: 1 + Math.random(), star: true });
+      // 별 탭 — 그 별의 스킬을 즉시 발동 (별당 0.9초)
+      var starR = Math.max(18, W * 0.055);
+      for (var si = 0; si < sanSim.stars.length; si++) {
+        var st = sanSim.stars[si];
+        var sdx = p.x - st.x, sdy = p.y - st.y;
+        if (sdx * sdx + sdy * sdy <= starR * starR) {
+          if (sanSim.t - (st.tap || -9) > 0.9) {
+            st.tap = sanSim.t;
+            sanCast(st);
+            sanSim.flash = Math.max(sanSim.flash, 0.3);
+            SFX.skill();
+          }
+          return;
+        }
       }
-      tone({ f: 900, f2: 1300, dur: .08, type: 'sine', gain: .03 });
+      // 빈 곳 탭 — 파동 + 파티클 폭발
+      sanRing(p.x, p.y, '#BFE9FF', Math.max(66, W * 0.3), .55, 2.4);
+      sanRing(p.x, p.y, '#BFE9FF', Math.max(40, W * 0.17), .38, 1.2);
+      sanSparkBurst(p.x, p.y, '#CFEFFF', 12, 95);
+      sanSim.flash = Math.max(sanSim.flash, 0.16);
+      sanFxCaps();
+      tone({ f: 900, f2: 1400, dur: .09, type: 'sine', gain: .03 });
     });
   }
 
