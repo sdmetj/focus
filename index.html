@@ -48,11 +48,26 @@
   body::before{
     content:"";
     position:fixed;
-    top:-200px;left:50%;transform:translateX(-50%);
-    width:520px;height:420px;
-    background:radial-gradient(circle, rgba(255,255,255,.055), rgba(255,255,255,0) 68%);
+    inset:-160px -40px -40px;
+    background:
+      radial-gradient(74% 46% at 50% -6%, var(--theme-1, rgba(255,255,255,.055)), rgba(255,255,255,0) 70%),
+      radial-gradient(56% 40% at 104% 6%, var(--theme-2, rgba(255,255,255,.03)), rgba(255,255,255,0) 72%),
+      radial-gradient(64% 44% at -8% 46%, var(--theme-3, rgba(255,255,255,.02)), rgba(255,255,255,0) 74%);
     pointer-events:none;
     z-index:0;
+    transition:background .5s ease;
+  }
+  body::after{
+    content:"";
+    position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+    background-image:
+      radial-gradient(circle 1px at 14% 22%, rgba(255,255,255,.5) 0 55%, transparent 56%),
+      radial-gradient(circle .8px at 72% 12%, rgba(255,255,255,.38) 0 55%, transparent 56%),
+      radial-gradient(circle .9px at 38% 74%, rgba(255,255,255,.30) 0 55%, transparent 56%),
+      radial-gradient(circle .7px at 86% 62%, rgba(255,255,255,.26) 0 55%, transparent 56%),
+      radial-gradient(circle .6px at 56% 42%, rgba(255,255,255,.24) 0 55%, transparent 56%);
+    background-size:320px 320px;
+    transition:opacity .4s ease;
   }
   .app{position:relative;z-index:1;max-width:460px;margin:0 auto}
   button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit;user-select:none}
@@ -69,9 +84,9 @@
   }
   .brand:active{opacity:.7}
   .brand svg{width:15px;height:15px;display:block;filter:drop-shadow(0 0 6px var(--star-glow));transition:filter .3s ease}
-  .brand svg path{fill:var(--star);transition:fill .3s ease}
+  .brand svg path{fill:var(--star-fill, var(--star));transition:fill .3s ease}
   .tag svg{filter:drop-shadow(0 0 4px var(--tag-glow));transition:filter .3s ease}
-  .tag svg path{fill:var(--tag-star);transition:fill .3s ease}
+  .tag svg path{fill:var(--star-fill, var(--tag-star));transition:fill .3s ease}
   .brand-dot{
     position:absolute;left:12px;top:3px;width:6px;height:6px;border-radius:50%;
     background:#FFFFFF;box-shadow:0 0 8px rgba(255,255,255,.8);
@@ -201,16 +216,7 @@
   }
   @keyframes beamGlow{0%,100%{opacity:.18}50%{opacity:.85}}
 
-  /* midnight — 장착 시 앱 상단·FOCUS 카드에 밤하늘 무드 */
-  html[data-skin="midnight"]{background:#070A12}
-  body[data-skin="midnight"]{background:#080C16;transition:background .45s ease}
-  body[data-skin="midnight"]::before{background:radial-gradient(circle, rgba(84,118,220,.18), rgba(30,50,120,0) 68%)}
-  body[data-skin="midnight"] .focus-card{
-    border-color:#2C3E68;
-    background:linear-gradient(162deg,#131C30 0%,#0A1020 100%);
-    box-shadow:0 20px 48px rgba(0,0,0,.7), inset 0 1px 0 rgba(150,180,255,.10);
-  }
-  body[data-skin="midnight"] .focus-card::after{background:radial-gradient(circle, rgba(120,160,255,.13), rgba(255,255,255,0) 70%)}
+  /* 장착 스킨 테마는 applyTheme()가 body 인라인 변수로 주입한다 (모든 500종 공통) */
   .head-right{display:flex;align-items:center;gap:13px}
   .lang{display:flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;letter-spacing:.1em}
   .lang-btn{color:var(--faint);padding:5px 1px;transition:color .16s ease}
@@ -227,7 +233,7 @@
 
   /* section head */
   .eyebrow-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:13px}
-  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+  .eyebrow{font-size:11.5px;font-weight:650;letter-spacing:.2em;color:#B4B4B4;text-transform:uppercase}
   .today-count{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
 
   /* empty compose */
@@ -258,30 +264,34 @@
   /* focus card */
   .focus-card{
     position:relative;overflow:hidden;
-    background:linear-gradient(162deg,#1C1C1C 0%,#121212 100%);
-    border:1px solid #2E2E2E;border-radius:20px;
-    padding:20px 20px 18px;
-    box-shadow:0 20px 48px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.06);
-    transition:transform .22s ease, opacity .22s ease;
+    background:
+      linear-gradient(162deg, rgba(255,255,255,.045) 0%, rgba(255,255,255,0) 46%),
+      linear-gradient(162deg,#1C1C1C 0%,#121212 100%);
+    border:1px solid var(--skin-line, #2E2E2E);border-radius:20px;
+    padding:21px 21px 19px;
+    box-shadow:0 22px 52px rgba(0,0,0,.68), inset 0 1px 0 rgba(255,255,255,.07);
+    transition:transform .22s ease, opacity .22s ease, border-color .4s ease;
   }
   .focus-card::after{
-    content:"";position:absolute;top:-90px;right:-80px;width:200px;height:200px;
-    background:radial-gradient(circle, rgba(255,255,255,.07), rgba(255,255,255,0) 70%);
+    content:"";position:absolute;top:-90px;right:-80px;width:220px;height:220px;
+    background:radial-gradient(circle, var(--theme-1, rgba(255,255,255,.07)), rgba(255,255,255,0) 70%);
     pointer-events:none;
   }
   .focus-card.leaving{transform:translateY(-8px) scale(.97);opacity:0}
   .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
   .tag{
     display:flex;align-items:center;gap:6px;
-    font-size:10px;font-weight:700;letter-spacing:.22em;color:var(--muted);
-    border:1px solid #333333;background:#1E1E1E;
+    font-size:10px;font-weight:700;letter-spacing:.22em;color:#B8B8B8;
+    border:1px solid var(--skin-line, #333333);background:var(--skin-soft, #1E1E1E);
     border-radius:999px;padding:4px 10px;
+    transition:border-color .4s ease, background .4s ease;
   }
   .tag svg{width:9px;height:9px;display:block}
   .elapsed{font-size:11.5px;color:var(--dim);font-variant-numeric:tabular-nums;letter-spacing:.03em}
   .goal-text{
-    margin:0 0 20px;font-size:23px;line-height:1.45;font-weight:600;letter-spacing:-.015em;
-    color:#FAFAFA;word-break:keep-all;overflow-wrap:anywhere;
+    margin:0 0 21px;font-size:26px;line-height:1.5;font-weight:650;letter-spacing:-.022em;
+    color:#FCFCFC;word-break:keep-all;overflow-wrap:anywhere;
+    text-shadow:0 1px 0 rgba(0,0,0,.35);
   }
   .actions{display:flex;gap:8px;align-items:center}
   .actions .btn-primary{flex:1 1 auto;min-height:50px}
@@ -333,7 +343,7 @@
   /* routines */
   .routines{margin-top:40px}
   .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
-  .sec-head h2{margin:0;font-size:15px;font-weight:600;letter-spacing:.01em}
+  .sec-head h2{margin:0;font-size:16px;font-weight:650;letter-spacing:-.005em}
   .sec-head .right{display:flex;align-items:center;gap:10px}
   .prog{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.02em}
   .prog.full{color:#FFFFFF}
@@ -342,9 +352,9 @@
   .bar{height:2px;border-radius:999px;background:#1E1E1E;overflow:hidden;margin-bottom:14px}
   .bar-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#8A8A8A,#FFFFFF);transition:width .35s cubic-bezier(.4,0,.2,1)}
   .r-list{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid #202020;border-radius:16px;overflow:hidden}
-  .r-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:15px 16px;border-bottom:1px solid #1C1C1C;font-size:14.5px;line-height:1.4;color:var(--text);background:none;transition:background .15s ease}
+  .r-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:16px 17px;border-bottom:1px solid #1E1E1E;font-size:15px;line-height:1.45;color:var(--text);background:none;transition:background .15s ease}
   .r-item:last-child{border-bottom:0}
-  .r-item:active{background:#181818}
+  .r-item:active{background:var(--skin-soft, #181818)}
   .check{
     flex:0 0 auto;width:22px;height:22px;border-radius:50%;border:1.5px solid #3D3D3D;
     display:flex;align-items:center;justify-content:center;transition:all .18s ease;
@@ -720,7 +730,7 @@
   /* ---------- update notice ---------- */
   .upd-overlay{align-items:center;z-index:58;padding:0 18px calc(env(safe-area-inset-bottom) + 18px)}
   .upd-card{
-    width:100%;max-width:400px;
+    width:100%;max-width:400px;max-height:86dvh;overflow-y:auto;overscroll-behavior:contain;
     background:linear-gradient(180deg,#161616 0%,#101010 100%);
     border:1px solid #2C2C2C;border-radius:20px;padding:20px 18px 16px;
     box-shadow:0 24px 64px rgba(0,0,0,.78), inset 0 1px 0 rgba(255,255,255,.05);
@@ -734,6 +744,261 @@
   .upd-list li{position:relative;padding-left:15px;font-size:12.5px;line-height:1.6;color:#D2D2D2;word-break:keep-all;overflow-wrap:anywhere}
   .upd-list li::before{content:"✦";position:absolute;left:0;top:0;font-size:8.5px;line-height:2.1;color:#6E6E6E}
   .upd-ok{width:100%;margin-top:16px;min-height:46px;font-size:14px;border-radius:13px}
+
+  /* ================= v2.0 ✦ 별의 세계 ================= */
+
+  /* 오른쪽 가장자리 리퀴드 글라스 진입 */
+  .glass-entry{
+    position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:44;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    width:44px;padding:16px 0 15px;border-radius:22px 0 0 22px;
+    color:var(--star,#FFFFFF);
+    background:
+      linear-gradient(150deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,.06) 36%, rgba(255,255,255,.02) 62%, rgba(255,255,255,.14) 100%);
+    -webkit-backdrop-filter:blur(18px) saturate(170%);
+    backdrop-filter:blur(18px) saturate(170%);
+    border:1px solid rgba(255,255,255,.22);border-right:0;
+    box-shadow:
+      0 12px 32px rgba(0,0,0,.55),
+      inset 0 1px 0 rgba(255,255,255,.55),
+      inset 0 -1px 0 rgba(255,255,255,.12),
+      inset -6px 0 16px rgba(255,255,255,.05);
+    overflow:hidden;
+    transition:transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s ease, opacity .2s ease;
+  }
+  .glass-entry::before{
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(105deg, transparent 26%, rgba(255,255,255,.42) 46%, transparent 62%);
+    opacity:.5;transform:translateX(-130%);
+    animation:glassSheen 7s ease-in-out infinite;
+  }
+  @keyframes glassSheen{0%,58%{transform:translateX(-135%)}84%,100%{transform:translateX(135%)}}
+  .glass-entry:active{transform:translateY(-50%) scale(.93)}
+  .glass-entry .ge-star{line-height:0;display:block}
+  .glass-entry .ge-star svg{width:15px;height:15px;display:block;filter:drop-shadow(0 0 8px var(--star-glow,rgba(255,255,255,.5)))}
+  .ge-text{
+    writing-mode:vertical-rl;text-orientation:mixed;
+    font-size:10px;font-weight:800;letter-spacing:.24em;
+    color:rgba(255,255,255,.88);
+  }
+  @media (min-width:520px){ .glass-entry{right:calc(50% - 240px)} }
+
+  /* 3 카테고리 탭 */
+  .cat-tabs{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:5px;
+    background:#0E0E0E;border:1px solid #232323;border-radius:16px;
+    padding:5px;margin:0 2px 14px;
+  }
+  .cat-tab{
+    position:relative;min-height:44px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;gap:5px;
+    font-size:12px;font-weight:700;letter-spacing:-.01em;color:#7C7C7C;white-space:nowrap;
+    transition:background .16s ease,color .16s ease,box-shadow .16s ease;
+  }
+  .cat-tab > span[data-i18n]{overflow:hidden;text-overflow:ellipsis}
+  .cat-tab .hub-dot{width:4px;height:4px;border-radius:50%;background:#FFFFFF;opacity:0;transition:opacity .2s ease}
+  .cat-tab.has .hub-dot{opacity:.9}
+  .cat-tab.on{
+    color:#0A0A0A;background:linear-gradient(180deg,#FFFFFF,#E6E6E6);
+    box-shadow:0 6px 18px rgba(255,255,255,.16);
+  }
+  .cat-tab.on .hub-dot{background:#0A0A0A}
+  .cat-tab:active{opacity:.85}
+  .sub-tabs{display:flex;gap:5px;margin:0 2px 13px}
+  .sub-tab{
+    flex:1 1 0;min-height:38px;border-radius:11px;
+    border:1px solid #272727;background:#141414;color:#8E8E8E;
+    font-size:11.5px;font-weight:700;letter-spacing:-.01em;
+    transition:background .16s ease,color .16s ease,border-color .16s ease;
+  }
+  .sub-tab.on{background:#242424;color:#F6F6F6;border-color:#3C3C3C;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+
+  /* 도감 검색 · 더 보기 */
+  .g-search{position:relative;margin:0 2px 8px}
+  .g-search input{
+    width:100%;background:#131313;border:1px solid #262626;border-radius:11px;
+    padding:10px 36px 10px 12px;font-size:13px;color:#F2F2F2;
+  }
+  .g-search input::placeholder{color:#5E5E5E}
+  .g-search input:focus{outline:none;border-color:#4A4A4A}
+  .g-search-x{
+    position:absolute;right:5px;top:50%;transform:translateY(-50%);
+    width:27px;height:27px;border-radius:8px;color:#6E6E6E;font-size:11px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .g-search-x:active{color:#FFFFFF}
+  .g-more{
+    width:100%;margin-top:8px;min-height:40px;border-radius:11px;
+    border:1px dashed #333333;background:#141414;color:#B4B4B4;
+    font-size:11.5px;font-weight:600;letter-spacing:.02em;
+  }
+  .g-more:active{border-color:#555555;color:#EDEDED}
+
+  /* 별조각 교환 */
+  .g-ex-wrap{display:flex;gap:6px;margin-top:7px}
+  .g-ex-wrap .g-exchange{margin-top:0;flex:1 1 auto}
+  .g-ex-wrap .g-exchange.ten{flex:0 0 auto;width:auto;padding-left:12px;padding-right:12px}
+
+  /* 도감 시너지 */
+  .syn-wrap{margin-top:10px;border:1px solid #242424;border-radius:13px;background:#121212;overflow:hidden}
+  .syn-wrap summary{
+    display:flex;align-items:center;gap:8px;list-style:none;cursor:pointer;
+    padding:11px 13px;font-size:11px;font-weight:700;letter-spacing:.05em;color:#B8B8B8;
+  }
+  .syn-wrap summary::-webkit-details-marker{display:none}
+  .syn-wrap summary b{margin-left:auto;font-size:10px;font-weight:700;color:#8CE3FF;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+  .syn-wrap[open] .chev{transform:rotate(90deg)}
+  .syn-body{padding:2px 13px 13px;display:flex;flex-direction:column;gap:8px}
+  .syn-row{font-size:10.5px;color:#9C9C9C;line-height:1.5}
+  .syn-row .k{display:flex;align-items:center;gap:6px;justify-content:space-between}
+  .syn-row .v{font-weight:800;color:#EDEDED;font-variant-numeric:tabular-nums}
+  .syn-row .v.on{color:#8CE3FF}
+  .syn-bar{height:3px;border-radius:999px;background:#1E1E1E;overflow:hidden;margin-top:5px}
+  .syn-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#3A8FB0,#9BE4FF);transition:width .45s cubic-bezier(.4,0,.2,1)}
+  .syn-note{font-size:9.5px;line-height:1.6;color:#5E5E5E;margin-top:1px}
+
+  /* 린 님 전용 배너 */
+  .rin-banner{
+    position:relative;overflow:hidden;margin-top:10px;border-radius:16px;padding:13px 14px;
+    background:
+      linear-gradient(135deg, rgba(125,211,252,.18) 0%, rgba(125,211,252,.03) 52%, rgba(196,181,253,.12) 100%);
+    border:1px solid rgba(125,211,252,.34);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 8px 22px rgba(0,0,0,.35);
+  }
+  .rin-banner::after{
+    content:"";position:absolute;right:-30px;top:-40px;width:120px;height:120px;
+    background:radial-gradient(circle, rgba(125,211,252,.35), rgba(125,211,252,0) 70%);pointer-events:none;
+  }
+  .rin-top{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+  .rin-cat{width:36px;height:36px;flex:0 0 auto;line-height:0;filter:drop-shadow(0 0 10px rgba(125,211,252,.65))}
+  .rin-cat svg{width:36px;height:36px;display:block}
+  .rin-title{font-size:12.5px;font-weight:800;color:#EAF9FF;letter-spacing:-.01em}
+  .rin-sub{font-size:10px;color:#9BD8F2;margin-top:3px;line-height:1.5}
+  .rin-btn{
+    margin-left:auto;flex:0 0 auto;font-size:10.5px;font-weight:800;letter-spacing:.01em;
+    color:#06202B;background:#9BE4FF;border-radius:9px;padding:8px 11px;white-space:nowrap;
+  }
+  .rin-btn:active{transform:scale(.96)}
+  .rin-btn.done{background:rgba(255,255,255,.14);color:#CDEFFF;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+  .rin-form{display:flex;gap:7px;margin-top:11px;position:relative;z-index:1}
+  .rin-form input{
+    flex:1 1 auto;min-width:0;background:rgba(6,20,28,.6);border:1px solid rgba(125,211,252,.36);
+    border-radius:10px;padding:10px 11px;font-size:13px;color:#F2FCFF;
+  }
+  .rin-form input::placeholder{color:#5E8A9C}
+  .rin-form input:focus{outline:none;border-color:rgba(125,211,252,.75)}
+  .rin-form button{
+    flex:0 0 auto;padding:0 14px;border-radius:10px;background:#9BE4FF;color:#06202B;
+    font-size:12px;font-weight:800;
+  }
+  .rin-form button:active{transform:scale(.97)}
+
+  /* ================= 방치형 성역 ================= */
+  .san-wrap{display:flex;flex-direction:column;gap:9px}
+  .san-top{display:flex;align-items:baseline;justify-content:space-between;margin:0 2px}
+  .san-name{font-size:13px;font-weight:800;letter-spacing:.01em;color:#F0F0F0}
+  .san-rate{font-size:9.5px;color:#7E7E7E;letter-spacing:.04em}
+  .san-rate b{font-size:15px;font-weight:800;color:#9BE4FF;font-variant-numeric:tabular-nums;margin-right:2px}
+  .san-stage{
+    position:relative;border-radius:16px;overflow:hidden;border:1px solid #242424;
+    background:radial-gradient(130% 80% at 50% 0%, #13151B 0%, #08090C 78%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+  }
+  #sanCanvas{display:block;width:100%;touch-action:none;-webkit-user-select:none;user-select:none}
+  .san-badge{
+    position:absolute;left:10px;top:9px;font-size:9.5px;font-weight:800;letter-spacing:.04em;
+    color:#C9F2FF;text-shadow:0 0 12px rgba(120,220,255,.75);opacity:0;
+    transition:opacity .25s ease;pointer-events:none;
+  }
+  .san-badge.show{opacity:1}
+  .san-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .san-stats div{background:#131313;border:1px solid #222222;border-radius:12px;padding:9px 3px;text-align:center}
+  .san-stats b{display:block;font-size:14px;font-weight:800;color:#F2F2F2;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .san-stats span{display:block;margin-top:3px;font-size:8px;letter-spacing:.02em;color:#6A6A6A;line-height:1.3}
+  .san-actions{display:flex;gap:7px}
+  .san-actions .btn-ghost{flex:1 1 0;min-height:41px;font-size:11.5px;padding:0 8px}
+  .san-actions .btn-ghost:disabled{opacity:.45}
+  .san-line{display:flex;gap:5px;flex-wrap:wrap}
+  .san-chip{
+    display:flex;align-items:center;gap:5px;font-size:9.5px;color:#DADADA;
+    background:#161616;border:1px solid #282828;border-radius:999px;padding:4px 9px 4px 6px;
+  }
+  .san-chip svg{width:11px;height:11px;display:block}
+  .san-chip b{color:#8CE3FF;font-weight:800;font-size:9px}
+  .san-builds{display:flex;flex-direction:column;gap:6px}
+  .san-b{display:flex;align-items:center;gap:10px;background:#131313;border:1px solid #242424;border-radius:13px;padding:10px 11px}
+  .san-b.locked{opacity:.62}
+  .san-b-ico{width:27px;height:27px;flex:0 0 auto;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;background:#1B1B1B;border:1px solid #2E2E2E}
+  .san-b-body{flex:1 1 auto;min-width:0}
+  .san-b-name{font-size:11.5px;font-weight:700;color:#ECECEC}
+  .san-b-lv{font-size:9px;font-weight:800;color:#8CE3FF;margin-left:5px}
+  .san-b-desc{font-size:9px;color:#767676;margin-top:3px;line-height:1.45;word-break:keep-all}
+  .san-b-btn{flex:0 0 auto;font-size:10px;font-weight:800;color:#0A0A0A;background:#EDEDED;border-radius:9px;padding:7px 10px;white-space:nowrap}
+  .san-b-btn:disabled{background:#242424;color:#5C5C5C}
+  .san-tip{font-size:9.5px;color:#575757;line-height:1.7;text-align:center;margin:2px 2px 0}
+  .san-picker{border:1px solid #262626;border-radius:14px;background:#101010;padding:10px}
+  .san-picker h4{margin:0 0 3px;font-size:11px;color:#E4E4E4}
+  .san-picker p{margin:0 0 8px;font-size:9.5px;color:#6E6E6E}
+  .san-pick-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;max-height:196px;overflow-y:auto;overscroll-behavior:contain}
+  .san-pick{
+    display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;
+    border-radius:10px;border:1px solid #232323;background:#151515;
+  }
+  .san-pick svg{width:17px;height:17px;display:block}
+  .san-pick span{font-size:7.5px;color:#8E8E8E;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .san-pick.on{border-color:#7CD6FF;background:#122430;box-shadow:inset 0 0 0 1px rgba(124,214,255,.35)}
+
+  /* ================= 미니게임 4종 ================= */
+  .mg-pick{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:0 2px 12px}
+  .mg-btn{
+    min-height:38px;border-radius:11px;border:1px solid #272727;background:#141414;
+    color:#8E8E8E;font-size:10.5px;font-weight:700;letter-spacing:-.01em;padding:0 6px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    transition:background .16s ease,color .16s ease,border-color .16s ease;
+  }
+  .mg-btn.on{background:#242424;color:#F6F6F6;border-color:#3C3C3C}
+  .mg{display:flex;flex-direction:column;gap:8px}
+  .mg-head{display:flex;align-items:baseline;gap:10px;margin:0 2px}
+  .mg-hud{display:flex;align-items:baseline;gap:4px;font-size:9px;color:#6E6E6E;letter-spacing:.04em}
+  .mg-hud b{font-size:14px;font-weight:800;color:#F2F2F2;font-variant-numeric:tabular-nums}
+  .mg-hud.mid{color:#FFC7DD;font-size:12px;letter-spacing:.12em;font-weight:800}
+  .mg-hud.right{margin-left:auto;font-variant-numeric:tabular-nums;font-size:9px;color:#5E5E5E}
+  .mg-stage{
+    position:relative;border-radius:16px;overflow:hidden;border:1px solid #242424;
+    background:radial-gradient(130% 80% at 50% 0%, #16171D 0%, #08090C 78%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+  }
+  .mg-stage canvas{display:block;width:100%;touch-action:none;-webkit-user-select:none;user-select:none}
+  .mg-over{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+    padding:18px;text-align:center;background:rgba(6,6,6,.9);
+    animation:gPop .34s cubic-bezier(.2,.9,.25,1) both;
+  }
+  .mg-over-title{font-size:16px;font-weight:800;color:#FFFFFF;letter-spacing:-.01em}
+  .mg-over-sub{font-size:11px;line-height:1.7;color:#B4B4B4;font-variant-numeric:tabular-nums}
+  .mg-over-sub b{color:#FFFFFF}
+  .mg-over-btn{margin-top:6px;min-height:44px;border-radius:12px;font-size:13px;min-width:150px;padding:0 18px}
+  .mg-tip{margin:1px 2px 0;font-size:9.5px;line-height:1.7;color:#575757;text-align:center}
+  .mg-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px;font-size:9.5px;color:#6A6A6A;min-height:14px}
+  .ob-hit{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.6);
+    font-size:13px;font-weight:800;letter-spacing:.06em;color:#EAF8FF;
+    text-shadow:0 0 18px rgba(140,227,255,.9);opacity:0;pointer-events:none;
+    transition:opacity .16s ease,transform .16s ease;
+  }
+  .ob-hit.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+  /* ================= 업데이트 내역 ================= */
+  .foot-btns{display:flex;align-items:center;gap:6px}
+  .pn-overlay{z-index:57}
+  .pn-body{display:flex;flex-direction:column;gap:16px;padding-bottom:4px}
+  .pn-sec{border-left:1px solid #262626;padding-left:12px}
+  .pn-ver{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+  .pn-ver b{font-size:13px;font-weight:800;color:#F4F4F4;letter-spacing:.02em}
+  .pn-tag{font-size:8.5px;font-weight:800;letter-spacing:.1em;color:#0A0A0A;background:#9BE4FF;border-radius:999px;padding:2px 7px}
+  .pn-sec ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+  .pn-sec li{position:relative;padding-left:13px;font-size:11.5px;line-height:1.66;color:#C6C6C6;word-break:keep-all;overflow-wrap:anywhere}
+  .pn-sec li::before{content:"·";position:absolute;left:2px;top:0;color:#6A6A6A}
 </style>
 </head>
 <body>
@@ -789,7 +1054,7 @@
 </svg>
 <main class="app">
   <header class="top">
-    <button class="brand" id="brandBtn" type="button" data-i18n-aria="gachaOpen" aria-label="별 스킨 뽑기">
+    <button class="brand" id="brandBtn" type="button" data-i18n-aria="worldOpen" aria-label="별의 세계 열기">
       <span class="brand-mark fx" id="brandMark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="#FFFFFF"/></svg></span>
       FOCUS
       <span class="brand-dot" id="brandDot" aria-hidden="true" hidden></span>
@@ -853,9 +1118,18 @@
 
   <div class="foot-row">
     <p class="foot" data-i18n="foot">날짜가 바뀌면 루틴 체크만 새로 시작됩니다 · 이 기기에만 저장</p>
-    <button class="refresh-btn" id="refreshBtn" type="button" data-i18n-aria="refreshAria" aria-label="최신 버전으로 새로고침">↻ <span data-i18n="refresh">새로고침</span></button>
+    <div class="foot-btns">
+      <button class="refresh-btn" id="refreshBtn" type="button" data-i18n-aria="refreshAria" aria-label="최신 버전으로 새로고침">↻ <span data-i18n="refresh">새로고침</span></button>
+      <button class="refresh-btn pn-open" id="patchBtn" type="button" data-i18n-aria="pnOpen" aria-label="업데이트 내역">✎ <span data-i18n="pnOpen">업데이트 내역</span></button>
+    </div>
   </div>
 </main>
+
+<button class="glass-entry" id="glassEntry" type="button" data-i18n-aria="worldOpen" aria-label="별의 세계 열기">
+  <span class="ge-gloss" aria-hidden="true"></span>
+  <span class="ge-star" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 1.6C12.55 7.25 16.75 11.45 22.4 12C16.75 12.55 12.55 16.75 12 22.4C11.45 16.75 7.25 12.55 1.6 12C7.25 11.45 11.45 7.25 12 1.6Z" fill="currentColor"/></svg></span>
+  <span class="ge-text" data-i18n="worldTitle">별의 세계</span>
+</button>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -884,15 +1158,15 @@
         <button class="gacha-close" id="gachaClose" type="button" data-i18n-aria="gClose" aria-label="닫기">✕</button>
       </div>
     </div>
-    <div class="hub-tabs" role="tablist">
-      <button class="hub-tab on" id="tabBtnGacha" type="button" role="tab" aria-selected="true" data-tab="gacha">
-        <span data-i18n="tabGacha">뽑기 · 도감</span><span class="hub-dot" id="tabDotGacha" aria-hidden="true"></span>
+    <div class="cat-tabs" role="tablist">
+      <button class="cat-tab on" id="tabBtnGacha" type="button" role="tab" aria-selected="true" data-tab="gacha">
+        <span data-i18n="catGacha">뽑기 · 도감</span><span class="hub-dot" id="tabDotGacha" aria-hidden="true"></span>
       </button>
-      <button class="hub-tab" id="tabBtnRpg" type="button" role="tab" aria-selected="false" data-tab="rpg">
-        <span data-i18n="tabRpg">성좌 토벌</span><span class="hub-dot" id="tabDotRpg" aria-hidden="true"></span>
+      <button class="cat-tab" id="tabBtnRpg" type="button" role="tab" aria-selected="false" data-tab="rpg">
+        <span data-i18n="catRpg">RPG</span><span class="hub-dot" id="tabDotRpg" aria-hidden="true"></span>
       </button>
-      <button class="hub-tab" id="tabBtnBreak" type="button" role="tab" aria-selected="false" data-tab="break">
-        <span data-i18n="tabBreak">벽돌 깨기</span><span class="hub-dot" id="tabDotBreak" aria-hidden="true"></span>
+      <button class="cat-tab" id="tabBtnMini" type="button" role="tab" aria-selected="false" data-tab="mini">
+        <span data-i18n="catMini">미니게임</span><span class="hub-dot" id="tabDotMini" aria-hidden="true"></span>
       </button>
     </div>
 
@@ -904,9 +1178,17 @@
         <div class="g-w-item"><span class="g-w-num" id="gShards">0</span><span class="g-w-label" data-i18n="gShards">별조각</span></div>
         <span class="g-w-owned" id="gOwned"></span>
       </div>
+      <div class="rin-banner" id="gRin"></div>
       <div class="g-stage" id="gStage"></div>
       <button class="btn-primary g-draw" id="gDraw" type="button">✦ 뽑기 (1장)</button>
-      <button class="g-exchange" id="gExchange" type="button">별조각 3개 → 뽑기권 1장</button>
+      <div class="g-ex-wrap">
+        <button class="g-exchange" id="gExchange" type="button">별조각 20개 → 뽑기권 1장</button>
+        <button class="g-exchange ten" id="gExchange10" type="button">200개 → 10장</button>
+      </div>
+      <details class="syn-wrap" id="synWrap">
+        <summary><span data-i18n="synTitle">도감 시너지</span><b id="synSum"></b><span class="chev">›</span></summary>
+        <div class="syn-body" id="synBody"></div>
+      </details>
       <div class="g-sec">
         <h3 data-i18n="gCollection">도감</h3>
         <span id="gCount"></span>
@@ -915,6 +1197,7 @@
         <span class="g-ptext"><b id="gRate">0%</b> <span data-i18n="gRate">수집률</span></span>
         <span class="g-pbar"><i id="gPbar"></i></span>
       </div>
+      <div class="g-search"><input id="gSearch" type="search" data-i18n-ph="gSearchPh" placeholder="이름 · 시리즈 검색" autocomplete="off" enterkeyhint="search"><button class="g-search-x" id="gSearchClear" type="button" aria-label="clear">✕</button></div>
       <div class="g-filters" id="gFilters" role="group">
         <button class="g-chip on" type="button" data-f="all" data-i18n="fAll">전체</button>
         <button class="g-chip" type="button" data-f="owned" data-i18n="fOwned">보유</button>
@@ -923,13 +1206,48 @@
         <button class="g-chip" type="button" data-f="rare" data-i18n="fRare">레어</button>
         <button class="g-chip" type="button" data-f="epic" data-i18n="fEpic">에픽</button>
         <button class="g-chip" type="button" data-f="legendary" data-i18n="fLegendary">레전더리</button>
+        <button class="g-chip" type="button" data-f="special" data-i18n="fSpecial">스페셜</button>
       </div>
       <div class="g-grid" id="gGrid"></div>
+      <button class="g-more" id="gMore" type="button" hidden>더 보기</button>
       <p class="g-hint" data-i18n="gHint">보유한 스킨을 탭하면 바로 장착됩니다</p>
       <p class="g-earn" data-i18n="gEarn">지금의 FOCUS 완료 +1장 (하루 최대 3장) · 루틴 100% +1장 · 3일 연속 +2장 · 7일 연속 +5장</p>
     </div>
 
     <div id="tabRpg" hidden>
+      <div class="sub-tabs" role="tablist">
+        <button class="sub-tab on" id="subBtnSan" type="button" role="tab" aria-selected="true" data-sub="san"><span data-i18n="subSan">방치형 성역</span></button>
+        <button class="sub-tab" id="subBtnRaid" type="button" role="tab" aria-selected="false" data-sub="raid"><span data-i18n="subRaid">성좌 토벌</span></button>
+      </div>
+
+      <div id="sanPanel">
+        <div class="san-wrap">
+          <div class="san-top">
+            <div class="san-name">✦ <span data-i18n="sanTitle">방치형 성역</span></div>
+            <div class="san-rate"><b id="sanRate">0.0</b><span>/h</span></div>
+          </div>
+          <div class="san-stage" id="sanStage">
+            <canvas id="sanCanvas" aria-label="방치형 성역"></canvas>
+            <div class="san-badge" id="sanBadge" aria-live="polite"></div>
+          </div>
+          <div class="san-stats">
+            <div><b id="sanSlots">3</b><span data-i18n="sanSlots">출전 슬롯</span></div>
+            <div><b id="sanRate2">0.0</b><span data-i18n="sanRate">시간당 별조각</span></div>
+            <div><b id="sanLvSum">0</b><span data-i18n="sanDeployedLv">편성 레벨 합</span></div>
+            <div><b id="sanKills">0</b><span data-i18n="sanKills">사냥한 적</span></div>
+          </div>
+          <div class="san-actions">
+            <button class="btn-ghost" id="sanDeployBtn" type="button" data-i18n="sanDeployBtn">편성</button>
+            <button class="btn-ghost" id="sanSlotBtn" type="button"></button>
+          </div>
+          <div class="san-line" id="sanDeployed"></div>
+          <div class="san-builds" id="sanBuilds"></div>
+          <p class="san-tip" data-i18n="sanTapTip">성역을 탭하면 건물이 반응합니다</p>
+          <div class="san-picker" id="sanPicker" hidden></div>
+        </div>
+      </div>
+
+      <div id="raidPanel" hidden>
       <div class="rpg-wrap" id="rpgHome">
         <div class="rpg-hero">
           <div class="rpg-star fx" id="rpgStar"></div>
@@ -956,9 +1274,18 @@
         <div class="boss-list" id="rpgBossList"></div>
       </div>
       <div id="rpgBattle" hidden></div>
+      </div>
     </div>
 
-    <div id="tabBreak" hidden>
+    <div id="tabMini" hidden>
+      <div class="mg-pick" role="tablist">
+        <button class="mg-btn on" type="button" data-mg="break"><span data-i18n="mgBreak">별빛 벽돌깨기</span></button>
+        <button class="mg-btn" type="button" data-mg="meteor"><span data-i18n="mgMeteor">메테오 닷지</span></button>
+        <button class="mg-btn" type="button" data-mg="orbit"><span data-i18n="mgOrbit">오빗 타이밍</span></button>
+        <button class="mg-btn" type="button" data-mg="memory"><span data-i18n="mgMemory">별자리 기억</span></button>
+      </div>
+
+      <div class="mg-panel" id="mgBreak">
       <div class="brk">
         <div class="brk-head">
           <span class="brk-wave"><b id="brkWave">WAVE 01</b><span class="brk-best" id="brkBest"></span><span class="brk-balls" id="brkBalls">공 ×1</span></span>
@@ -977,7 +1304,67 @@
         </div>
         <p class="brk-tip" data-i18n="brkTip">화면을 드래그해 각도를 조준하고 손을 떼면 별 공이 발사됩니다 · +1 오브를 부수면 다음 턴 공이 늘어요</p>
       </div>
+      </div>
+
+      <div class="mg-panel" id="mgMeteor" hidden>
+        <div class="mg">
+          <div class="mg-head">
+            <span class="mg-hud"><b id="mtScore">0</b><span data-i18n="mgScore">점수</span></span>
+            <span class="mg-hud mid" id="mtLives">♥♥♥</span>
+            <span class="mg-hud right" id="mtBest"></span>
+          </div>
+          <div class="mg-stage">
+            <canvas id="mtCanvas" data-i18n-aria="mgMeteor" aria-label="메테오 닷지"></canvas>
+            <div class="mg-over" id="mtOver" hidden></div>
+          </div>
+          <p class="mg-tip" data-i18n="mgMeteorTip">드래그로 내 별을 움직여 운석을 피하고 별조각을 모으세요</p>
+          <div class="mg-foot"><span id="mtSkin"></span><span id="mtRew"></span></div>
+        </div>
+      </div>
+
+      <div class="mg-panel" id="mgOrbit" hidden>
+        <div class="mg">
+          <div class="mg-head">
+            <span class="mg-hud"><b id="obScore">0</b><span data-i18n="mgScore">점수</span></span>
+            <span class="mg-hud mid" id="obCombo">×0</span>
+            <span class="mg-hud right" id="obBest"></span>
+          </div>
+          <div class="mg-stage">
+            <canvas id="obCanvas" data-i18n-aria="mgOrbit" aria-label="오빗 타이밍"></canvas>
+            <div class="ob-hit" id="obHit"></div>
+          </div>
+          <p class="mg-tip" data-i18n="mgOrbitTip">빛점이 중앙 ✦와 겹칠 때 탭</p>
+          <div class="mg-foot"><span id="obSkin"></span><span id="obRew"></span></div>
+        </div>
+      </div>
+
+      <div class="mg-panel" id="mgMemory" hidden>
+        <div class="mg">
+          <div class="mg-head">
+            <span class="mg-hud"><b id="mmRound">0</b><span data-i18n="mgRound">라운드</span></span>
+            <span class="mg-hud mid" id="mmBest"></span>
+            <span class="mg-hud right" id="mmRew"></span>
+          </div>
+          <div class="mg-stage">
+            <canvas id="mmCanvas" data-i18n-aria="mgMemory" aria-label="별자리 기억"></canvas>
+            <div class="mg-over" id="mmOver" hidden></div>
+          </div>
+          <p class="mg-tip" data-i18n="mgMemoryTip">반짝이는 별의 순서를 기억해 차례로 탭하세요</p>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="cal-overlay pn-overlay" id="patchOverlay" hidden>
+  <div class="cal-sheet pn-sheet" role="dialog" aria-modal="true" aria-labelledby="pnTitle">
+    <div class="cal-head">
+      <div class="cal-month" id="pnTitle">✎ 업데이트 내역</div>
+      <div class="cal-nav">
+        <button type="button" class="cal-close" id="pnClose" data-i18n-aria="pnClose" aria-label="닫기">✕</button>
+      </div>
+    </div>
+    <div class="pn-body" id="pnBody"></div>
   </div>
 </div>
 
@@ -1004,8 +1391,38 @@
   var SEEN_VERSION_KEY = 'focus.seenVersion';
 
   // 업데이트 안내 — 버전과 변경사항만 고치면 새 소식 팝업이 자동으로 뜬다
-  var APP_VERSION = '1.6.0';
+  var APP_VERSION = '2.0.0';
   var CHANGELOG = {
+    '2.0.0': {
+      ko: [
+        '반가운 소식 — ✦ 별의 세계가 세 갈래로 열렸어요: 뽑기 · 도감 / RPG(방치형 성역 · 성좌 토벌) / 미니게임',
+        '화면 오른쪽 가장자리에 리퀴드 글라스 버튼 — 탭하거나 꾹 누르면 유리 너머로 별의 세계가 열립니다 (상단 FOCUS 로고도 같은 곳)',
+        '메인 화면 다듬기 — 타이포그래피·대비·카드 디테일·여백을 한 단계 올려 오래 봐도 편하게',
+        '장착한 스킨이 화면 전체의 무드가 됩니다 — 배경 그라데이션·카드 테두리·은은한 글로우까지 스킨의 색과 등급에 맞춰 바뀝니다',
+        '★ 별 스킨 500종 — 기존 100종은 그대로, 시리즈와 테마로 엮은 400종을 더했습니다 (한·일 이름과 저마다의 배경 테마)',
+        '도감 시너지 — 보유 스킨 수·등급 수집·스킨 레벨 합산이 장착과 무관하게 계정 전체에 영구 버프로 붙습니다',
+        '린을 위한 선물, 하늘색 고양이 스킨 — 도감 탭의 특별 배너에서 작은 퀴즈를 풀면 해금됩니다',
+        '방치형 성역 — 편성한 별들이 캔버스 안을 스스로 누비며 적을 사냥합니다. 슬롯은 3 → 최대 10, 건물 4종, 스킨 개별 레벨, 최대 24시간 오프라인 정산',
+        '별조각 교환비 조정 — 20개 → 뽑기권 1장 (200개 → 10장), 중복 스킨은 별조각 7개로 상향 (기존 보유 별조각은 ×7로 보정)',
+        '새 미니게임 3종 — ✦ 메테오 닷지 · ✦ 오빗 타이밍 · ✦ 별자리 기억',
+        '하단 업데이트 내역 버튼 — v1.4.0부터 지금까지의 기록을 언제든 누적해서 볼 수 있어요',
+        '업데이트 선물로 뽑기권 10장을 드렸어요'
+      ],
+      ja: [
+        'うれしいお知らせ — ✦ 星の世界が3つの入口に分かれました：ガチャ・図鑑 / RPG（放置聖域・星座討伐）/ ミニゲーム',
+        '画面右端にリキッドグラスボタン — タップまたは長押しで、ガラスの向こうに星の世界が開きます（上部のFOCUSロゴも同じ）',
+        'メイン画面を調整 — タイポグラフィ・コントラスト・カードの細部・余白を一段上げて、長く見ても疲れにくく',
+        '装着したスキンが画面全体のムードに — 背景グラデーション・カードの縁・ほのかなグロウまで、スキンの色とレア度に合わせて変わります',
+        '★ 星スキン500種 — 既存の100種はそのまま、シリーズとテーマでまとめた400種を追加（韓日名とそれぞれの背景テーマ）',
+        '図鑑シナジー — 所持数・レア度収集・スキンレベルの合計が、装着に関係なくアカウント全体に永続バフとして付きます',
+        '鈴音のための贈り物、水色の猫スキン — 図鑑タブの特設バナーで小さなクイズに答えると解放されます',
+        '放置聖域 — 編成した星たちがキャンバスの中を自ら駆け回り敵を狩ります。スロットは3→最大10、建物4種、スキン個別レベル、最大24時間のオフライン精算',
+        '星のかけらの交換比率を調整 — 20個→ガチャ券1枚（200個→10枚）、重複スキンは星のかけら7個に増加（既存の所持分は×7で補正）',
+        '新ミニゲーム3種 — ✦ メテオドッジ・✦ オービットタイミング・✦ 星座記憶',
+        '下部にアップデート履歴ボタン — v1.4.0から今までの記録をいつでもまとめて見られます',
+        'アップデート記念でガチャ券10枚をプレゼントしました'
+      ]
+    },
     '1.6.0': {
       ko: [
         '✦ 별빛 벽돌깨기 — 손가락으로 각도를 조준해 벽돌을 부수는 미니게임 (장착 스킨의 색·광채와 레전더리 능력이 그대로 반영)',
@@ -1088,7 +1505,8 @@
     common:    { ko: '커먼',      ja: 'コモン' },
     rare:      { ko: '레어',      ja: 'レア' },
     epic:      { ko: '에픽',      ja: 'エピック' },
-    legendary: { ko: '레전더리',  ja: 'レジェンダリー' }
+    legendary: { ko: '레전더리',  ja: 'レジェンダリー' },
+    special:   { ko: '스페셜',    ja: 'スペシャル' }
   };
   // 등급별 뽑기 확률(%) — 등급 안에서 균등 분배
   var TIER_CHANCE = { common: 45, rare: 35, epic: 15, legendary: 5 };
@@ -1231,12 +1649,131 @@
     };
   }
 
+  /* ✦ v2.0 — 시리즈·테마로 엮은 400종 추가 (기존 100종 그대로 + 신규 400종 = 500종) */
+  // [key, ko, ja, hue, sat, light, fx, kind]
+  var SERIES = [
+    ['sakura',   '벚꽃', '桜',   335, 70, 78, 'fx-spark',    'burst'],
+    ['rose',     '장미', '薔薇', 348, 62, 60, 'fx-spark',    'drain'],
+    ['ocean',    '바다', '海',   200, 70, 52, 'fx-pulse',    'pierce'],
+    ['sky',      '하늘', '空',   210, 75, 72, 'fx-halo',     'shield'],
+    ['forest',   '숲',   '森',   140, 40, 42, 'fx-aura',     'heal'],
+    ['winter',   '겨울', '冬',   195, 45, 82, 'fx-snow',     'shield'],
+    ['city',     '도시', '都市', 220, 18, 58, 'fx-beam',     'burst'],
+    ['night',    '밤',   '夜',   235, 50, 38, 'fx-stardust', 'weaken'],
+    ['dawn',     '새벽', '暁',   25,  85, 68, 'fx-comet',    'burst'],
+    ['music',    '음악', '音楽', 280, 55, 62, 'fx-orbit',    'double'],
+    ['coffee',   '커피', '珈琲', 28,  40, 40, 'fx-aura',     'heal'],
+    ['candy',    '사탕', '飴',   330, 85, 72, 'fx-spark',    'bonus'],
+    ['star',     '별',   '星',   50,  95, 70, 'fx-cross',    'bonus'],
+    ['moon',     '달',   '月',   230, 40, 78, 'fx-crescent', 'heal'],
+    ['rain',     '비',   '雨',   205, 55, 60, 'fx-beam',     'pierce'],
+    ['ember',    '불꽃', '火華', 18,  90, 55, 'fx-spark',    'recoil'],
+    ['frost',    '서리', '霜',   185, 65, 82, 'fx-snow',     'weaken'],
+    ['desert',   '사막', '砂漠', 38,  60, 62, 'fx-orbit',    'burst'],
+    ['garden',   '정원', '庭園', 110, 45, 55, 'fx-halo',     'heal'],
+    ['lantern',  '등불', '灯',   42,  80, 66, 'fx-aura',     'heal'],
+    ['snowfield','눈',   '雪',   200, 25, 92, 'fx-stardust', 'shield']
+  ];
+
+  // 19가지 무드 — 시리즈 이름과 만나 '벚꽃 미스트 / 桜のミスト'처럼 엮인다
+  var SERIES_ITEMS = [
+    ['mist', '미스트', 'ミスト'],
+    ['glow', '글로우', 'グロウ'],
+    ['serenade', '세레나데', 'セレナーデ'],
+    ['crystal', '크리스탈', 'クリスタル'],
+    ['ripple', '리플', 'リップル'],
+    ['breeze', '브리즈', 'ブリーズ'],
+    ['dusk', '노을', '夕焼け'],
+    ['dawn', '새벽', '夜明け'],
+    ['wave', '물결', '波紋'],
+    ['stardust', '별가루', '星屑'],
+    ['aura', '오라', 'オーラ'],
+    ['prism', '프리즘', 'プリズム'],
+    ['bloom', '블룸', 'ブルーム'],
+    ['spark', '스파크', 'スパーク'],
+    ['silhouette', '실루엣', 'シルエット'],
+    ['waltz', '왈츠', 'ワルツ'],
+    ['rhapsody', '랩소디', 'ラプソディ'],
+    ['mirage', '미라주', 'ミラージュ'],
+    ['reverie', '리버리', 'リヴェリー']
+  ];
+
+  // 시리즈 무드 → 필살기 / 패시브 (신규 레전더리·에픽용)
+  var SKILL_KIND = {
+    burst:  { ko: '폭발', ja: '爆発', dko: '공격력 260%', dja: '攻撃力260%', qko: '터져 나오는 빛은 멈추지 않는다.', qja: '弾け出す光は止まらない。', power: 2.6 },
+    drain:  { ko: '흡혈', ja: '吸魔', dko: '공격력 240% · 준 피해 30% 회복', dja: '攻撃力240% · 与ダメの30%回復', qko: '빼앗는 것이 곧 살아남는 일이다.', qja: '奪うことが生き延びることだ。', power: 2.4 },
+    pierce: { ko: '관통', ja: '貫通', dko: '공격력 280% · 방어 무시', dja: '攻撃力280% · 防御無視', qko: '막는 것도, 피하는 것도 늦었다.', qja: '防ぐのも、避けるのも遅かった。', power: 2.8 },
+    shield: { ko: '수호', ja: '守護', dko: '공격력 140% · 다음 피해 무효', dja: '攻撃力140% · 次のダメージ無効', qko: '지키겠다고 정한 것은 쉽게 꺾이지 않는다.', qja: '守ると決めたものは簡単には折れない。', power: 1.4 },
+    heal:   { ko: '가호', ja: '加護', dko: '공격력 180% · 최대 체력 40% 회복', dja: '攻撃力180% · 最大HP40%回復', qko: '다시 일어서는 데는 이유가 필요 없다.', qja: '立ち上がるのに理由はいらない。', power: 1.8 },
+    weaken: { ko: '봉인', ja: '封印', dko: '공격력 220% · 보스 공격 -25% (2턴)', dja: '攻撃力220% · ボス攻撃 -25%（2ターン）', qko: '숨을 죽여라. 오늘은 내가 이긴다.', qja: '息を潜めろ。今日は私が勝つ。', power: 2.2 },
+    double: { ko: '연격', ja: '連撃', dko: '2연격 · 각 160%', dja: '2連撃 · 各160%', qko: '한 번으로 끝나지 않는다고 배웠다.', qja: '一度で終わらないと学んだ。', power: 1.6 },
+    bonus:  { ko: '축복', ja: '祝福', dko: '공격력 200% · 별조각 +1 확정', dja: '攻撃力200% · 星のかけら+1確定', qko: '좋은 일은 끝나고 나서도 남는다.', qja: '良いことは終わってからも残る。', power: 2.0 },
+    recoil: { ko: '개방', ja: '開放', dko: '공격력 340% · 내 체력 6% 소모', dja: '攻撃力340% · 自身HP6%消費', qko: '태워야 얻는 빛도 있다.', qja: '焼いてこそ得る光もある。', power: 3.4 }
+  };
+  var PASSIVE_KIND = {
+    burst:  { ko: '숨결', ja: '息吹', dko: '공격력 +6%', dja: '攻撃力 +6%', type: 'atk', v: 0.06 },
+    drain:  { ko: '이슬', ja: '雫', dko: '방어 시 체력 +4%', dja: '防御時にHP +4%', type: 'guardheal', v: 0.04 },
+    pierce: { ko: '침묵', ja: '沈黙', dko: '치명타 확률 +6%', dja: 'クリティカル率 +6%', type: 'crit', v: 0.06 },
+    shield: { ko: '울타리', ja: '囲い', dko: '최대 체력 +8%', dja: '最大HP +8%', type: 'hp', v: 0.08 },
+    heal:   { ko: '온기', ja: '温もり', dko: '매 턴 체력 +2%', dja: '毎ターンHP +2%', type: 'regen', v: 0.02 },
+    weaken: { ko: '무게', ja: '重み', dko: '받는 피해 -8%', dja: '被ダメージ -8%', type: 'dr', v: 0.08 },
+    double: { ko: '박자', ja: '拍子', dko: '치명타 피해 +30%', dja: 'クリティカルダメージ +30%', type: 'critd', v: 0.3 },
+    bonus:  { ko: '노래', ja: '歌', dko: '승리 시 별조각 +1', dja: '勝利時に星のかけら +1', type: 'shard', v: 1 },
+    recoil: { ko: '불씨', ja: '火種', dko: '공격력 +8%', dja: '攻撃力 +8%', type: 'atk', v: 0.08 }
+  };
+
+  function seriesSkin(se, it, ii, rarity) {
+    var hue = (se[3] + (ii - 9) * 5 + 360) % 360;
+    var sat = se[4], lit = se[5], fx = '', anim = '';
+    if (rarity === 'rare') { sat += 2; lit += 1; }
+    else if (rarity === 'epic') { sat += 4; lit += 3; }
+    else if (rarity === 'legendary') { sat += 8; lit += 7; }
+    else { sat = Math.max(12, sat - 8); lit = Math.max(26, lit - 5); }
+    if (rarity === 'legendary') fx = (se[6] === 'fx-spark') ? 'fx-aura' : se[6];
+    else if (rarity === 'epic') fx = se[6];
+    else if (rarity === 'rare') fx = (ii % 3 === 0) ? se[6] : '';
+    else if (ii % 5 === 0) fx = 'fx-spark';
+    if (rarity === 'legendary') anim = (ii % 2) ? 'aurora' : 'flare';
+    else if (rarity === 'epic') anim = 'pulse';
+    else if (rarity === 'rare') anim = 'breathe';
+    else anim = (ii % 4 === 0) ? 'float' : (ii % 4 === 1) ? 'twinkle' : '';
+    var a = rarity === 'legendary' ? .62 : rarity === 'epic' ? .56 : rarity === 'rare' ? .50 : .42;
+    return {
+      id: 'x_' + se[0] + '_' + it[0],
+      rarity: rarity,
+      ko: se[1] + ' ' + it[1],
+      ja: se[2] + 'の' + it[2],
+      color: 'hsl(' + hue + ', ' + sat + '%, ' + lit + '%)',
+      glow: 'hsla(' + hue + ', ' + sat + '%, ' + Math.min(96, lit + 12) + '%, ' + a + ')',
+      glow2: 'hsla(' + hue + ', ' + sat + '%, ' + Math.min(96, lit + 12) + '%, ' + (a * .8).toFixed(2) + ')',
+      h: hue, s: sat, l: lit, fx: fx, anim: anim, fill: null, v2: true, kind: se[7],
+      series: { key: se[0], ko: se[1], ja: se[2] }
+    };
+  }
+
+  // 린 님 전용 — 하늘색 고양이 픽셀 아트 (퀴즈로만 해금, 일반 뽑기 제외)
+  var RIN_CAT = {
+    id: 'rin_cat', rarity: 'special',
+    ko: '린 캣', ja: '鈴音キャット',
+    color: '#7DD3FC', glow: 'rgba(125,211,252,.66)', glow2: 'rgba(125,211,252,.5)',
+    h: 199, s: 92, l: 74, fx: 'fx-spark', anim: 'float', fill: null, cat: true,
+    series: { key: 'gift', ko: '선물', ja: '贈り物' },
+    descKo: '린을 위한 그의 선물', descJa: '鈴音のための彼の贈り物'
+  };
+
   var SKINS = (function () {
     var out = [];
     ['base', 'common', 'rare', 'epic', 'legendary'].forEach(function (r) {
       LEGACY_SKINS.forEach(function (s) { if (s.rarity === r) out.push(s); });
       (NEW_SKINS[r] || []).forEach(function (row) { out.push(makeSkin(row, r)); });
     });
+    SERIES.forEach(function (se) {
+      SERIES_ITEMS.forEach(function (it, ii) {
+        var r = ii < 9 ? 'common' : (ii < 14 ? 'rare' : (ii < 17 ? 'epic' : 'legendary'));
+        out.push(seriesSkin(se, it, ii, r));
+      });
+    });
+    out.push(RIN_CAT);
     return out;
   })();
 
@@ -1275,6 +1812,24 @@
     seraph:    { ko: '세라핌 윙', ja: 'セラフィムウィング', dko: '2연격 · 각 160%', dja: '2連撃 · 各160%', qko: '날개를 펼치면 남는 것은 침묵뿐.', qja: '翼を広げれば、残るのは沈黙だけ。', power: 1.6, kind: 'double' },
     genesis:   { ko: '창세의 빛', ja: '創世の光', dko: '공격력 200% · 별조각 +1 확정', dja: '攻撃力200% · 星のかけら+1確定', qko: '처음의 빛으로, 끝을 다시 쓴다.', qja: '始まりの光で、終わりを書き直す。', power: 2.0, kind: 'bonus' }
   };
+
+  /* 신규 500종 연동 — 시리즈 레전더리에 필살기, 에픽에 패시브를 붙인다 */
+  SKINS.forEach(function (s) {
+    if (!s.v2) return;
+    var k = SKILL_KIND[s.kind] || SKILL_KIND.burst;
+    if (s.rarity === 'legendary') {
+      SKILLS[s.id] = {
+        ko: s.series.ko + ' ' + k.ko, ja: s.series.ja + 'の' + k.ja,
+        dko: k.dko, dja: k.dja, qko: k.qko, qja: k.qja, power: k.power, kind: s.kind
+      };
+    } else if (s.rarity === 'epic') {
+      var p = PASSIVE_KIND[s.kind] || PASSIVE_KIND.burst;
+      PASSIVES[s.id] = {
+        ko: s.series.ko + '의 ' + p.ko, ja: s.series.ja + 'の' + p.ja,
+        dko: p.dko, dja: p.dja, type: p.type, v: p.v
+      };
+    }
+  });
 
   /* ✦ 성좌 토벌 보스 */
   var BOSSES = [
@@ -1583,6 +2138,217 @@
   };
   Object.keys(STR_EXT2).forEach(function (l) {
     Object.keys(STR_EXT2[l]).forEach(function (k) { STR[l][k] = STR_EXT2[l][k]; });
+  });
+
+  /* v2.0 — 별의 세계 · 500종 도감 · 방치형 성역 · 미니게임 3종 */
+  var STR_V2 = {
+    ko: {
+      worldTitle: '별의 세계',
+      worldOpen: '별의 세계 열기',
+      catGacha: '뽑기 · 도감',
+      catRpg: 'RPG',
+      catMini: '미니게임',
+      subSan: '방치형 성역',
+      subRaid: '성좌 토벌',
+      fSpecial: '스페셜',
+      gSearchPh: '이름 · 시리즈 검색',
+      gMore: '더 보기',
+      gShown: '{n} / {t}',
+      gDup: '중복 · 별조각 +7',
+      gExchange1: '별조각 20개 → 뽑기권 1장',
+      gExchange10: '200개 → 10장',
+      gExchanged: '별조각 {c}개로 뽑기권 {n}장을 바꿨어요',
+      gNeedShard: '별조각이 모자라요',
+      gSeriesAll: '전체 시리즈',
+      synTitle: '도감 시너지',
+      synNote: '장착과 무관하게 계정 전체에 영구 적용',
+      synOwned: '보유 스킨',
+      synTier: '등급 수집',
+      synLevel: '스킨 레벨 합산',
+      synAtk: '공격력',
+      synCrit: '치명타',
+      synIdle: '방치 별조각',
+      synRaid: '토벌 피해',
+      synNone: '아직 없음',
+      rinBanner: '린을 위한 선물',
+      rinDesc: '하늘색 고양이 스킨 · 작은 퀴즈를 풀면 해금됩니다',
+      rinQuizBtn: '퀴즈 풀기',
+      rinQ: '그의 생일은 언제일까요?',
+      rinPh: '예: 10월 9일',
+      rinSubmit: '확인',
+      rinWrong: '조금 달라요 — 생일을 다시 떠올려 보세요',
+      rinRight: '해금! 린 캣을 장착했어요',
+      rinOwned: '해금됨',
+      rinEquip: '장착하기',
+      rinTries: '도전 {n}회',
+      sanTitle: '방치형 성역',
+      sanIntro: '편성한 별들이 성역을 스스로 누비며 사냥합니다',
+      sanSlots: '출전 슬롯',
+      sanRate: '시간당 별조각',
+      sanDeployedLv: '편성 레벨 합',
+      sanDeployBtn: '편성',
+      sanSlotBtn: '슬롯 +1 · {n}',
+      sanSlotMax: '슬롯 최대',
+      sanBuilding: '건물 · 효과',
+      sanOffline: '자리를 비운 동안 별조각 +{n}',
+      sanNoShard: '별조각이 부족해요',
+      sanMax: '최대',
+      sanBuildBtn: '해금 {n}',
+      sanBuildUp: '강화 {n}',
+      sanDeployed: '출전 중',
+      sanPickTitle: '출전할 별 선택',
+      sanPickSub: '슬롯 {n}개 · 탭해서 편성 / 해제',
+      sanTapTip: '성역을 탭하면 건물이 반응합니다 · 등대 폭발 · 제단 축복 · 포탑 일제사격 · 정원 수확',
+      sanSkinLv: 'Lv.{n}',
+      sanLvBonus: 'Lv.5 공격력 +3% · Lv.10 치명타 +2% · Lv.20 별조각 +5%',
+      sanKills: '사냥한 적',
+      sanClose: '닫기',
+      sanFull: '슬롯이 가득 찼어요',
+      sanBuilt: '건물을 세웠어요',
+      sanUpgraded: '건물을 강화했어요',
+      sanSlotOpened: '출전 슬롯 +1',
+      sanShardGain: '별조각 +{n}',
+      sanXpGain: '스킨 경험치 +{n}',
+      bBeacon: '별빛 등대',
+      bBeaconD: '별조각 수급 +12% · 탭하면 성역을 밝혀 적을 쓸어버립니다',
+      bAltar: '에테르 제단',
+      bAltarD: '스킨 경험치 +15% · 탭하면 편성 별을 축복합니다',
+      bTurret: '유성 포탑',
+      bTurretD: '공격력 +14% · 탭하면 일제사격을 퍼붓습니다',
+      bGarden: '성운 정원',
+      bGardenD: '별조각 수급 +9% · 탭하면 익은 별조각을 수확합니다',
+      mgBreak: '별빛 벽돌깨기',
+      mgMeteor: '메테오 닷지',
+      mgOrbit: '오빗 타이밍',
+      mgMemory: '별자리 기억',
+      mgStart: '시작',
+      mgAgain: '다시 도전',
+      mgScore: '점수',
+      mgBest: '최고',
+      mgLives: '생명',
+      mgCombo: '콤보',
+      mgRound: '라운드',
+      mgPerfect: '퍼펙트',
+      mgMiss: '놓쳤어요',
+      mgMeteorTip: '드래그로 내 별을 움직여 운석을 피하고 별조각을 모으세요 · 3번 맞으면 종료',
+      mgOrbitTip: '빛점이 중앙 ✦와 겹칠 때 탭 — 콤보를 이어가세요 · 3번 놓치면 종료',
+      mgMemoryTip: '반짝이는 별의 순서를 기억했다가 차례로 탭하세요 · 틀리면 종료',
+      mgOverTitle: '기록 {n}',
+      mgReward: '✦ 기록 달성! 뽑기권 +1 · 별조각 +{n}',
+      mgNoReward: '오늘 보상은 여기까지 · 내일 다시',
+      mgRewardInfo: '오늘 보상 {a}/{b}',
+      mgGoTitle: '준비됐나요?',
+      pnOpen: '업데이트 내역',
+      pnTitle: '업데이트 내역',
+      pnClose: '닫기',
+      pnLatest: '최신',
+      raidSynergy: '시너지 · 스킨 Lv.{n}'
+    },
+    ja: {
+      worldTitle: '星の世界',
+      worldOpen: '星の世界を開く',
+      catGacha: 'ガチャ・図鑑',
+      catRpg: 'RPG',
+      catMini: 'ミニゲーム',
+      subSan: '放置聖域',
+      subRaid: '星座討伐',
+      fSpecial: 'スペシャル',
+      gSearchPh: '名前・シリーズ検索',
+      gMore: 'もっと見る',
+      gShown: '{n} / {t}',
+      gDup: '重複 · 星のかけら +7',
+      gExchange1: '星のかけら20個 → ガチャ券1枚',
+      gExchange10: '200個 → 10枚',
+      gExchanged: '星のかけら{c}個でガチャ券{n}枚と交換しました',
+      gNeedShard: '星のかけらが足りません',
+      gSeriesAll: '全シリーズ',
+      synTitle: '図鑑シナジー',
+      synNote: '装着に関係なくアカウント全体に永続適用',
+      synOwned: '所持スキン',
+      synTier: 'レア度収集',
+      synLevel: 'スキンレベル合計',
+      synAtk: '攻撃力',
+      synCrit: 'クリティカル',
+      synIdle: '放置のかけら',
+      synRaid: '討伐ダメージ',
+      synNone: 'まだなし',
+      rinBanner: '鈴音のための贈り物',
+      rinDesc: '水色の猫スキン · 小さなクイズに答えると解放されます',
+      rinQuizBtn: 'クイズに答える',
+      rinQ: '彼の誕生日はいつでしょう？',
+      rinPh: '例：10月9日',
+      rinSubmit: '確認',
+      rinWrong: '少し違います — 誕生日をもう一度思い出してみてください',
+      rinRight: '解放！鈴音キャットを装着しました',
+      rinOwned: '解放済み',
+      rinEquip: '装着する',
+      rinTries: '挑戦 {n}回',
+      sanTitle: '放置聖域',
+      sanIntro: '編成した星たちが聖域を自ら駆け回り狩りをします',
+      sanSlots: '出撃スロット',
+      sanRate: '1時間あたりのかけら',
+      sanDeployedLv: '編成レベル合計',
+      sanDeployBtn: '編成',
+      sanSlotBtn: 'スロット+1 · {n}',
+      sanSlotMax: 'スロット最大',
+      sanBuilding: '建物・効果',
+      sanOffline: '離れていた間に星のかけら +{n}',
+      sanNoShard: '星のかけらが足りません',
+      sanMax: '最大',
+      sanBuildBtn: '解放 {n}',
+      sanBuildUp: '強化 {n}',
+      sanDeployed: '出撃中',
+      sanPickTitle: '出撃する星を選択',
+      sanPickSub: 'スロット{n}個 · タップで編成 / 解除',
+      sanTapTip: '聖域をタップすると建物が反応します · 灯台爆発 · 祭壇の祝福 · 砲塔一斉射撃 · 庭園の収穫',
+      sanSkinLv: 'Lv.{n}',
+      sanLvBonus: 'Lv.5 攻撃力+3% · Lv.10 クリティカル+2% · Lv.20 かけら+5%',
+      sanKills: '狩った敵',
+      sanClose: '閉じる',
+      sanFull: 'スロットがいっぱいです',
+      sanBuilt: '建物を建てました',
+      sanUpgraded: '建物を強化しました',
+      sanSlotOpened: '出撃スロット +1',
+      sanShardGain: '星のかけら +{n}',
+      sanXpGain: 'スキン経験値 +{n}',
+      bBeacon: '星明かりの灯台',
+      bBeaconD: 'かけら収入 +12% · タップで聖域を照らし敵を薙ぎ払う',
+      bAltar: 'エーテルの祭壇',
+      bAltarD: 'スキン経験値 +15% · タップで編成の星を祝福',
+      bTurret: '流星砲塔',
+      bTurretD: '攻撃力 +14% · タップで一斉射撃',
+      bGarden: '星雲の庭園',
+      bGardenD: 'かけら収入 +9% · タップで熟したかけらを収穫',
+      mgBreak: '星明かりブロック崩し',
+      mgMeteor: 'メテオドッジ',
+      mgOrbit: 'オービットタイミング',
+      mgMemory: '星座記憶',
+      mgStart: 'スタート',
+      mgAgain: 'もう一度',
+      mgScore: 'スコア',
+      mgBest: 'ベスト',
+      mgLives: 'ライフ',
+      mgCombo: 'コンボ',
+      mgRound: 'ラウンド',
+      mgPerfect: 'パーフェクト',
+      mgMiss: 'ミス',
+      mgMeteorTip: 'ドラッグで自分の星を動かし、隕石を避けて星のかけらを集めます · 3回当たると終了',
+      mgOrbitTip: '光の点が中央の✦と重なった瞬間にタップ — コンボを繋ぎます · 3回ミスで終了',
+      mgMemoryTip: '光る星の順番を覚えて順番にタップ · 間違えると終了',
+      mgOverTitle: '記録 {n}',
+      mgReward: '✦ 記録達成！ガチャ券 +1 · 星のかけら +{n}',
+      mgNoReward: '今日の報酬はここまで · 明日また',
+      mgRewardInfo: '今日の報酬 {a}/{b}',
+      mgGoTitle: '準備はいいですか？',
+      pnOpen: 'アップデート履歴',
+      pnTitle: 'アップデート履歴',
+      pnClose: '閉じる',
+      pnLatest: '最新',
+      raidSynergy: 'シナジー · スキンLv.{n}'
+    }
+  };
+  Object.keys(STR_V2).forEach(function (l) {
+    Object.keys(STR_V2[l]).forEach(function (k) { STR[l][k] = STR_V2[l][k]; });
   });
 
   function fmt(key, vars) {
@@ -2147,6 +2913,98 @@
     return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + STAR_PATH + '" fill="' + fill + '"/></svg>';
   }
 
+  /* 린 님 전용 — 하늘색 고양이 픽셀 아트 (16×16) */
+  var CAT_PIXELS = [
+    '................',
+    '.##..........##.',
+    '.###........###.',
+    '.####......####.',
+    '.####......####.',
+    '.##############.',
+    '.##############.',
+    '.##o########o##.',
+    '.##o########o##.',
+    '.##############.',
+    '.###p##ww##p###.',
+    '.###p##ww##p###.',
+    '.##############.',
+    '..############..',
+    '...##########...',
+    '................'
+  ];
+
+  function catMark(color) {
+    var fill = color || '#7DD3FC';
+    var out = '<svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges">';
+    for (var y = 0; y < CAT_PIXELS.length; y++) {
+      var row = CAT_PIXELS[y];
+      for (var x = 0; x < row.length; x++) {
+        var ch = row.charAt(x);
+        if (ch === '.') continue;
+        var c = ch === 'o' ? '#08131C' : ch === 'w' ? '#F7FDFF' : ch === 'p' ? '#FFB7D5' : fill;
+        out += '<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="' + c + '"/>';
+      }
+    }
+    return out + '</svg>';
+  }
+
+  function skinMark(s) {
+    if (!s) return starMark('#FFFFFF');
+    if (s.cat) return catMark(s.color);
+    return starMark(skinFill(s));
+  }
+
+  /* ---------- 스킨 테마 (배경·카드·글로우) ---------- */
+  var THEME_ALPHA = { base: .05, common: .09, rare: .12, epic: .15, legendary: .18, special: .20 };
+
+  function hexToHsl(hex) {
+    var m = /^#?([0-9a-f]{6})$/i.exec(String(hex || ''));
+    if (!m) return { h: 210, s: 40, l: 80 };
+    var n = parseInt(m[1], 16);
+    var r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+    var mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    var l = (mx + mn) / 2, h = 0, s = 0;
+    if (mx !== mn) {
+      var d = mx - mn;
+      s = l > .5 ? d / (2 - mx - mn) : d / (mx + mn);
+      if (mx === r) h = (g - b) / d + (g < b ? 6 : 0);
+      else if (mx === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h /= 6;
+    }
+    return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+  }
+
+  function skinHSL(s) {
+    if (s && typeof s.h === 'number') return { h: s.h, s: (typeof s.s === 'number' ? s.s : 50), l: (typeof s.l === 'number' ? s.l : 70) };
+    return hexToHsl(s ? s.color : '#FFFFFF');
+  }
+
+  function skinSeriesName(s) {
+    if (!s || !s.series) return '';
+    return lang === 'ja' ? s.series.ja : s.series.ko;
+  }
+
+  function applyTheme(s) {
+    var c = skinHSL(s);
+    var a = THEME_ALPHA[s && s.rarity] || .10;
+    var sat = Math.min(100, Math.max(0, c.s));
+    var lit = Math.min(92, Math.max(24, c.l));
+    var st = document.body.style;
+    st.setProperty('--star', (s && s.color) || '#FFFFFF');
+    if (s && s.fill) st.setProperty('--star-fill', s.fill);
+    else st.removeProperty('--star-fill');
+    st.setProperty('--tag-star', (s && s.color) || '#BFBFBF');
+    st.setProperty('--star-glow', (s && s.glow) || 'rgba(255,255,255,.25)');
+    st.setProperty('--tag-glow', (s && s.glow2) || 'rgba(255,255,255,0)');
+    st.setProperty('--theme-1', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + a + ')');
+    st.setProperty('--theme-2', 'hsla(' + ((c.h + 42) % 360) + ', ' + sat + '%, ' + lit + '%, ' + (a * .72).toFixed(3) + ')');
+    st.setProperty('--theme-3', 'hsla(' + ((c.h + 320) % 360) + ', ' + sat + '%, ' + lit + '%, ' + (a * .55).toFixed(3) + ')');
+    st.setProperty('--skin-line', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + Math.min(.6, a + .12).toFixed(3) + ')');
+    st.setProperty('--skin-soft', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + (a * .7).toFixed(3) + ')');
+    st.setProperty('--skin-accent', (s && (s.fill || s.color)) || '#FFFFFF');
+  }
+
   function gachaDefaults() {
     // 첫 접속: 웰컴 뽑기권 10장 + 기본 스킨 '모노 화이트' 장착
     return {
@@ -2154,7 +3012,8 @@
       lastTicketDate: null,
       focusTicketDate: null, focusTicketCount: 0,
       streakLast: null, ticketStreak: 0,
-      giftVersion: null
+      giftVersion: null,
+      v2: true, rin: false, rinTries: 0
     };
   }
 
@@ -2181,6 +3040,15 @@
     if (typeof s.streakLast === 'string') g.streakLast = s.streakLast;
     if (typeof s.ticketStreak === 'number' && s.ticketStreak >= 0) g.ticketStreak = Math.floor(s.ticketStreak);
     if (typeof s.giftVersion === 'string') g.giftVersion = s.giftVersion;
+    // v2.0 — 별조각 가치 조정: 교환비 3→20, 중복 1→7. 기존 보유분은 ×7로 손실 없이 보정
+    if (!s.v2) {
+      g.shards = Math.floor(g.shards * 7);
+      g.v2 = true;
+      try { localStorage.setItem(GACHA_KEY, JSON.stringify(g)); } catch (e) {}
+    }
+    g.rin = !!s.rin;
+    if (typeof s.rinTries === 'number' && s.rinTries >= 0) g.rinTries = Math.floor(s.rinTries);
+    if (g.rin && g.owned.indexOf('rin_cat') < 0) g.owned.push('rin_cat');
     return g;
   }
 
@@ -2205,10 +3073,16 @@
 
   function applySkin() {
     var id = gacha.equipped || 'mono';
+    var s = skinById(id);
     document.documentElement.setAttribute('data-skin', id);
     document.body.setAttribute('data-skin', id);
+    applyTheme(s);
     var mark = $('brandMark');
-    if (mark) mark.className = 'brand-mark fx' + fxClass(skinById(id));
+    if (mark) {
+      mark.className = 'brand-mark fx' + fxClass(s);
+      mark.style.animation = (s && s.anim && SKIN_ANIM[s.anim]) ? SKIN_ANIM[s.anim] : '';
+      mark.innerHTML = skinMark(s);
+    }
   }
 
   function updateBrandBadge() {
@@ -2230,7 +3104,7 @@
     var label = owned ? skinName(s) : '???';
     var tappable = owned || gachaTest === 'unlock';
     return '<button class="' + cls + '" type="button" data-gs="' + s.id + '" data-r="' + s.rarity + '"' + (tappable ? '' : ' disabled') + ' aria-label="' + esc(label + ' · ' + rarityName(s.rarity)) + '">' +
-      '<span class="g-star fx' + (owned ? fxClass(s) : '') + '"' + (owned ? ' style="filter:drop-shadow(0 0 7px ' + s.glow + ')"' : '') + '>' + starMark(fill) + '</span>' +
+      '<span class="g-star fx' + (owned ? fxClass(s) : '') + '"' + (owned ? ' style="filter:drop-shadow(0 0 7px ' + s.glow + ')"' : '') + '>' + (owned && s.cat ? catMark(s.color) : starMark(fill)) + '</span>' +
       '<span class="g-name">' + esc(label) + '</span>' +
       '<span class="g-rarity">' + esc(rarityName(s.rarity)) + '</span>' +
     '</button>';
@@ -2238,29 +3112,161 @@
 
   function renderGachaResult(res) {
     var s = res.skin;
+    var series = skinSeriesName(s);
     $('gStage').innerHTML =
       '<div class="g-res">' +
-        '<div class="g-res-star fx' + fxClass(s) + '" style="filter:drop-shadow(0 0 16px ' + s.glow + ')">' + starMark(skinFill(s)) + '</div>' +
+        '<div class="g-res-star fx' + fxClass(s) + '" style="filter:drop-shadow(0 0 16px ' + s.glow + ')">' + skinMark(s) + '</div>' +
         '<div class="g-res-name">' + esc(skinName(s)) + '</div>' +
-        '<div class="g-res-meta">' + esc(rarityName(s.rarity)) + '</div>' +
+        '<div class="g-res-meta">' + esc(rarityName(s.rarity) + (series ? ' · ' + series : '')) + '</div>' +
         '<div class="g-res-tag' + (res.isNew ? '' : ' dup') + '">' + esc(t(res.isNew ? 'gNew' : 'gDup')) + '</div>' +
       '</div>';
   }
 
   var gFilter = 'all';
+  var gSearch = '';
+  var gPage = 1;
+  var G_PAGE = 60;
 
   function skinMatches(s, f) {
     var owned = gacha.owned.indexOf(s.id) >= 0;
     if (f === 'owned') return owned;
     if (f === 'locked') return !owned;
-    if (f === 'common' || f === 'rare' || f === 'epic' || f === 'legendary') return s.rarity === f;
+    if (f === 'common' || f === 'rare' || f === 'epic' || f === 'legendary' || f === 'special') return s.rarity === f;
     return true;
+  }
+
+  function skinHit(s, q) {
+    if (!q) return true;
+    var hay = (s.ko + ' ' + s.ja + ' ' + rarityName(s.rarity) + ' ' +
+      (s.series ? s.series.ko + ' ' + s.series.ja + ' ' + s.series.key : '')).toLowerCase();
+    return hay.indexOf(q) >= 0;
+  }
+
+  function countRarity(r) {
+    var n = 0;
+    SKINS.forEach(function (s) { if (s.rarity === r && gacha.owned.indexOf(s.id) >= 0) n++; });
+    return n;
+  }
+
+  function tierTotal(r) {
+    var n = 0;
+    SKINS.forEach(function (s) { if (s.rarity === r) n++; });
+    return n;
+  }
+
+  function sanLevelOf(id) {
+    if (!san || !san.levels) return 0;
+    var e = san.levels[id];
+    return e ? (e.lv || 0) : 0;
+  }
+
+  function skinLevelSum() {
+    if (!san || !san.levels) return 0;
+    var n = 0;
+    Object.keys(san.levels).forEach(function (k) { n += (san.levels[k].lv || 0); });
+    return n;
+  }
+
+  // 도감 시너지 — 보유 수 · 등급 수집 · 스킨 레벨 합산이 장착과 무관하게 계정 전체에 붙는다
+  function synergy() {
+    var owned = gacha.owned.length;
+    var total = SKINS.length || 1;
+    var lvSum = skinLevelSum();
+    var atkOwned = Math.floor(owned / 25) * 0.015;
+    var atkLevel = Math.floor(lvSum / 50) * 0.01;
+    var crit = 0;
+    ['common', 'rare', 'epic', 'legendary'].forEach(function (r) {
+      var tot = tierTotal(r) || 1;
+      var ratio = countRarity(r) / tot;
+      if (ratio >= 1) crit += 0.02;
+      else if (ratio >= 0.6) crit += 0.012;
+      else if (ratio >= 0.3) crit += 0.006;
+    });
+    var idle = Math.min(1.5, Math.floor(owned / 40) * 0.04 + Math.floor(lvSum / 100) * 0.05);
+    var raid = Math.min(0.6, Math.floor(owned / 50) * 0.02 + Math.floor(lvSum / 80) * 0.02);
+    return {
+      owned: owned, total: total, lvSum: lvSum,
+      atkOwned: atkOwned, atkLevel: atkLevel, atk: atkOwned + atkLevel,
+      crit: crit, idle: idle, raid: raid
+    };
+  }
+
+  function pctText(v) { return '+' + (Math.round(v * 1000) / 10) + '%'; }
+
+  function renderSynergy() {
+    var body = $('synBody');
+    if (!body) return;
+    var sy = synergy();
+    var sum = $('synSum');
+    if (sum) sum.textContent = pctText(sy.atk) + ' · ' + pctText(sy.crit);
+    var rows = [
+      { k: t('synOwned'), v: sy.owned + ' / ' + sy.total, p: sy.owned / sy.total, out: pctText(sy.atkOwned) },
+      { k: t('synTier'), v: (countRarity('common') + countRarity('rare') + countRarity('epic') + countRarity('legendary')) + ' / ' + (tierTotal('common') + tierTotal('rare') + tierTotal('epic') + tierTotal('legendary')), p: (sy.owned / sy.total), out: pctText(sy.crit) },
+      { k: t('synLevel'), v: sy.lvSum, p: Math.min(1, sy.lvSum / 400), out: pctText(sy.atkLevel) }
+    ];
+    var html = rows.map(function (r) {
+      return '<div class="syn-row"><div class="k"><span>' + esc(r.k) + '</span><span class="v' + (r.out && r.out !== '+0%' ? ' on' : '') + '">' + esc(r.out || '') + ' · ' + esc(String(r.v)) + '</span></div>' +
+        '<div class="syn-bar"><i style="width:' + Math.round(Math.max(0, Math.min(1, r.p)) * 100) + '%"></i></div></div>';
+    }).join('');
+    html += '<div class="syn-row"><div class="k"><span>' + esc(t('synAtk')) + '</span><span class="v' + (sy.atk > 0 ? ' on' : '') + '">' + esc(pctText(sy.atk)) + '</span></div></div>';
+    html += '<div class="syn-row"><div class="k"><span>' + esc(t('synIdle')) + '</span><span class="v' + (sy.idle > 0 ? ' on' : '') + '">' + esc(pctText(sy.idle)) + '</span></div></div>';
+    html += '<div class="syn-row"><div class="k"><span>' + esc(t('synRaid')) + '</span><span class="v' + (sy.raid > 0 ? ' on' : '') + '">' + esc(pctText(sy.raid)) + '</span></div></div>';
+    html += '<p class="syn-note">' + esc(t('synNote')) + '</p>';
+    body.innerHTML = html;
+  }
+
+  function renderRinBanner() {
+    var host = $('gRin');
+    if (!host) return;
+    var owned = gacha.owned.indexOf('rin_cat') >= 0;
+    var title = owned ? (lang === 'ja' ? '鈴音のための彼の贈り物' : '린을 위한 그의 선물') : t('rinBanner');
+    var sub = owned ? (lang === 'ja' ? '水色の猫スキン · 解放済み' : '하늘색 고양이 스킨 · 해금됨') : t('rinDesc');
+    var btn = '';
+    if (owned) {
+      btn = (gacha.equipped === 'rin_cat')
+        ? '<button class="rin-btn done" type="button" disabled>' + esc(t('rinOwned')) + '</button>'
+        : '<button class="rin-btn" type="button" data-rin="equip">' + esc(t('rinEquip')) + '</button>';
+    } else if (!rinFormOpen) {
+      btn = '<button class="rin-btn" type="button" data-rin="quiz">' + esc(t('rinQuizBtn')) + '</button>';
+    }
+    var html = '<div class="rin-top">' +
+      '<span class="rin-cat">' + catMark('#7DD3FC') + '</span>' +
+      '<div style="min-width:0;flex:1 1 auto">' +
+        '<div class="rin-title">' + esc(title) + '</div>' +
+        '<div class="rin-sub">' + esc(sub) + '</div>' +
+      '</div>' + btn + '</div>';
+    if (!owned && rinFormOpen) {
+      html += '<form class="rin-form" id="rinForm" autocomplete="off">' +
+        '<input id="rinInput" type="text" inputmode="text" maxlength="24" autocomplete="off" placeholder="' + esc(t('rinPh')) + '" aria-label="' + esc(t('rinQ')) + '">' +
+        '<button type="submit">' + esc(t('rinSubmit')) + '</button></form>';
+    }
+    host.innerHTML = html;
+  }
+
+  // 생일 표기 유연 인정 — 10월 9일 / 10/9 / 10.9 / 1009 / 10月9日 / 9/10 …
+  function rinQuizAnswer(raw) {
+    var d = String(raw || '').replace(/[^0-9]/g, '');
+    if (!d) return false;
+    return d === '109' || d === '1009' || d === '910' || d.slice(-4) === '1009';
+  }
+
+  function unlockRin() {
+    if (gacha.owned.indexOf('rin_cat') < 0) gacha.owned.push('rin_cat');
+    gacha.rin = true;
+    gacha.equipped = 'rin_cat';
+    saveGacha();
+    applySkin();
+    rinFormOpen = false;
+    renderGacha();
+    SFX.result('legendary');
+    if (navigator.vibrate) { try { navigator.vibrate([12, 40, 16]); } catch (e) {} }
+    toastKey('rinRight');
   }
 
   function renderGacha() {
     var total = SKINS.length;
     var ownedCount = gacha.owned.length;
-    var pct = Math.round(ownedCount / total * 100);
+    var pct = total ? Math.round(ownedCount / total * 100) : 0;
 
     $('gTickets').textContent = String(gacha.tickets);
     $('gShards').textContent = String(gacha.shards);
@@ -2273,19 +3279,36 @@
     for (var ci = 0; ci < chips.length; ci++) {
       chips[ci].classList.toggle('on', chips[ci].getAttribute('data-f') === gFilter);
     }
+    var sInput = $('gSearch');
+    if (sInput && sInput.value !== gSearch && document.activeElement !== sInput) sInput.value = gSearch;
 
     var db = $('gDraw');
     db.textContent = drawing ? t('gDrawBusy') : t('gDraw');
     db.disabled = drawing || gacha.tickets < 1;
 
     var ex = $('gExchange');
-    ex.disabled = gacha.shards < 3;
-    ex.textContent = t('gExchange') + (gacha.shards < 3 ? ' · ' + gacha.shards + '/3' : '');
+    ex.disabled = drawing || gacha.shards < SHARD_PER_TICKET;
+    ex.textContent = t('gExchange1') + (gacha.shards < SHARD_PER_TICKET ? ' · ' + gacha.shards + '/' + SHARD_PER_TICKET : '');
+    var ex10 = $('gExchange10');
+    if (ex10) {
+      ex10.disabled = drawing || gacha.shards < SHARD_PER_TICKET * 10;
+      ex10.textContent = t('gExchange10');
+    }
 
-    var list = SKINS.filter(function (s) { return skinMatches(s, gFilter); });
-    $('gGrid').innerHTML = list.length
-      ? list.map(gachaCardHTML).join('')
+    renderSynergy();
+    renderRinBanner();
+
+    var q = (gSearch || '').trim().toLowerCase();
+    var list = SKINS.filter(function (s) { return skinMatches(s, gFilter) && skinHit(s, q); });
+    var shown = list.slice(0, gPage * G_PAGE);
+    $('gGrid').innerHTML = shown.length
+      ? shown.map(gachaCardHTML).join('')
       : '<div class="g-empty">' + esc(t('gEmpty')) + '</div>';
+    var more = $('gMore');
+    if (more) {
+      more.hidden = shown.length >= list.length;
+      more.textContent = t('gMore') + ' · ' + shown.length + ' / ' + list.length;
+    }
 
     var tb = $('gTest');
     if (gachaTest) {
@@ -2313,27 +3336,22 @@
     gachaOpen = true;
     lastResult = null;
     drawing = false;
-    if (bt) {
-      bt = null;
-      $('rpgBattle').hidden = true;
-      $('rpgBattle').innerHTML = '';
-      $('rpgHome').hidden = false;
-    }
     var ov = $('gachaOverlay');
     ov.hidden = false;
-    setHubTab('gacha');
+    setHubTab(hubTab);
     if (window.requestAnimationFrame) {
       requestAnimationFrame(function () { ov.classList.add('open'); });
     } else {
       ov.classList.add('open');
     }
     document.body.style.overflow = 'hidden';
+    sanAccrue(Date.now(), false);
   }
 
   function closeGacha() {
     if (!gachaOpen) return;
     gachaOpen = false;
-    brkLeave();
+    brkLeave(); mtLeave(); obLeave(); mmLeave(); sanLeave();
     if (bt) {
       bt = null;
       $('rpgBattle').hidden = true;
@@ -2378,7 +3396,7 @@
         gacha.owned.push(skin.id);
         gacha.equipped = skin.id;   // 새 스킨은 바로 장착
       } else {
-        gacha.shards += 1;
+        gacha.shards += 7;
       }
       saveGacha();
       applySkin();
@@ -2402,14 +3420,20 @@
     toast(skinName(s) + ' · ' + t('gEquipDone'));
   }
 
-  function exchangeShards() {
-    if (gacha.shards < 3) return;
-    gacha.shards -= 3;
-    gacha.tickets += 1;
+  // 별조각 → 뽑기권 (20개 → 1장 / 200개 → 10장)
+  var SHARD_PER_TICKET = 20;
+
+  function exchangeShards(batch) {
+    var n = (batch === 10) ? 10 : 1;
+    var cost = n * SHARD_PER_TICKET;
+    if (gacha.shards < cost) return;
+    gacha.shards -= cost;
+    gacha.tickets += n;
     saveGacha();
     renderGacha();
     updateBrandBadge();
-    toastKey('gExchanged');
+    SFX.result('rare');
+    toast(fmt('gExchanged', { c: cost, n: n }));
   }
 
   /* 테스트 모드 — 루틴 추가 입력창에 ★ 또는 ★- 를 넣고 추가를 누르면 켜진다 (성윤 님 전용 치트) */
@@ -2614,21 +3638,32 @@
     return 0;
   }
 
+  function skinLevelBonus(id) {
+    var lv = sanLevelOf(id);
+    return {
+      atk: lv >= 20 ? 0.08 : (lv >= 5 ? 0.03 : 0),
+      crit: lv >= 10 ? 0.02 : 0,
+      shard: lv >= 20 ? 0.05 : 0
+    };
+  }
+
   function playerStats() {
     var info = expInfo(rpg.exp);
     var skin = equippedSkin();
     var p = passiveOf(skin);
-    var atk = (BASE_ATK + (info.lv - 1) * 2.4) * (1 + rarityAtkBonus(skin));
+    var sy = synergy();
+    var lb = skinLevelBonus(skin ? skin.id : '');
+    var atk = (BASE_ATK + (info.lv - 1) * 2.4) * (1 + rarityAtkBonus(skin) + sy.atk + lb.atk);
     var hp = BASE_HP + (info.lv - 1) * 12;
     if (p && p.type === 'atk') atk *= 1 + p.v;
     if (p && p.type === 'hp') hp *= 1 + p.v;
     return {
       lv: info.lv, cur: info.cur, need: info.need,
-      atk: Math.round(atk), hp: Math.round(hp),
-      crit: 0.08 + (p && p.type === 'crit' ? p.v : 0),
+      atk: Math.round(atk * (1 + sy.raid)), hp: Math.round(hp),
+      crit: 0.08 + (p && p.type === 'crit' ? p.v : 0) + sy.crit + lb.crit,
       critd: 1.8 + (p && p.type === 'critd' ? p.v : 0),
       dr: (p && p.type === 'dr') ? p.v : 0,
-      shard: (p && p.type === 'shard') ? p.v : 0,
+      shard: ((p && p.type === 'shard') ? p.v : 0) + lb.shard,
       regen: (p && p.type === 'regen') ? p.v : 0,
       guardHeal: (p && p.type === 'guardheal') ? p.v : 0
     };
@@ -2746,6 +3781,7 @@
     var hpPct = Math.max(0, bt.php / bt.hpMax * 100);
     var bhpPct = Math.max(0, bt.bhp / bt.bhpMax * 100);
     var chips = '<span class="bt-chip">' + esc(skinName(skin)) + '</span>';
+    chips += '<span class="bt-chip">' + esc(fmt('raidSynergy', { n: sanLevelOf(skin ? skin.id : '') })) + '</span>';
     if (p) chips += '<span class="bt-chip">' + esc(t('rpgPassive') + ' · ' + (lang === 'ja' ? p.dja : p.dko)) + '</span>';
     if (sk) chips += '<span class="bt-chip sk">' + esc(t('rpgSkillLabel') + ' · ' + (lang === 'ja' ? sk.ja : sk.ko)) + '</span>';
 
@@ -3711,21 +4747,1680 @@
     if (rc) rc.addEventListener('click', brkRecallBalls);
   }
 
+  var rpgSub = 'san';
+  var miniGame = 'break';
+
+  function hubTitle() {
+    if (hubTab === 'rpg') return t(rpgSub === 'san' ? 'sanTitle' : 'rpgTitle');
+    if (hubTab === 'mini') {
+      return t(miniGame === 'meteor' ? 'mgMeteor' : miniGame === 'orbit' ? 'mgOrbit' : miniGame === 'memory' ? 'mgMemory' : 'mgBreak');
+    }
+    return t('gTitle');
+  }
+
+  function setRpgSub(sub) {
+    rpgSub = (sub === 'raid') ? 'raid' : 'san';
+    $('sanPanel').hidden = rpgSub !== 'san';
+    $('raidPanel').hidden = rpgSub !== 'raid';
+    $('subBtnSan').classList.toggle('on', rpgSub === 'san');
+    $('subBtnRaid').classList.toggle('on', rpgSub === 'raid');
+    $('subBtnSan').setAttribute('aria-selected', rpgSub === 'san' ? 'true' : 'false');
+    $('subBtnRaid').setAttribute('aria-selected', rpgSub === 'raid' ? 'true' : 'false');
+    if (rpgSub === 'san') {
+      sanOpen();
+      setTimeout(function () { if (sanActive) sanResize(); }, 280);
+    } else {
+      sanLeave();
+      if (!bt) renderRpg();
+    }
+    $('hubTitleText').textContent = hubTitle();
+  }
+
+  function setMiniGame(key) {
+    miniGame = (key === 'meteor' || key === 'orbit' || key === 'memory') ? key : 'break';
+    var map = { break: 'mgBreak', meteor: 'mgMeteor', orbit: 'mgOrbit', memory: 'mgMemory' };
+    Object.keys(map).forEach(function (k) {
+      var el = $(map[k]);
+      if (el) el.hidden = k !== miniGame;
+    });
+    var btns = document.querySelectorAll('.mg-btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle('on', btns[i].getAttribute('data-mg') === miniGame);
+    }
+    brkLeave(); mtLeave(); obLeave(); mmLeave();
+    if (miniGame === 'break') brkOpen();
+    else if (miniGame === 'meteor') mtOpen();
+    else if (miniGame === 'orbit') obOpen();
+    else mmOpen();
+    $('hubTitleText').textContent = hubTitle();
+  }
+
   function setHubTab(tab) {
-    hubTab = (tab === 'rpg' || tab === 'break') ? tab : 'gacha';
+    hubTab = (tab === 'rpg' || tab === 'mini') ? tab : 'gacha';
     $('tabGacha').hidden = hubTab !== 'gacha';
     $('tabRpg').hidden = hubTab !== 'rpg';
-    $('tabBreak').hidden = hubTab !== 'break';
-    $('tabBtnGacha').classList.toggle('on', hubTab === 'gacha');
-    $('tabBtnRpg').classList.toggle('on', hubTab === 'rpg');
-    $('tabBtnBreak').classList.toggle('on', hubTab === 'break');
-    $('tabBtnGacha').setAttribute('aria-selected', hubTab === 'gacha' ? 'true' : 'false');
-    $('tabBtnRpg').setAttribute('aria-selected', hubTab === 'rpg' ? 'true' : 'false');
-    $('tabBtnBreak').setAttribute('aria-selected', hubTab === 'break' ? 'true' : 'false');
-    $('hubTitleText').textContent = t(hubTab === 'rpg' ? 'rpgTitle' : hubTab === 'break' ? 'brkTitle' : 'gTitle');
-    if (hubTab === 'rpg') { brkLeave(); renderRpg(); }
-    else if (hubTab === 'break') { brkOpen(); }
-    else { brkLeave(); renderGacha(); }
+    $('tabMini').hidden = hubTab !== 'mini';
+    var tbl = { gacha: 'tabBtnGacha', rpg: 'tabBtnRpg', mini: 'tabBtnMini' };
+    Object.keys(tbl).forEach(function (k) {
+      var b = $(tbl[k]);
+      if (!b) return;
+      b.classList.toggle('on', hubTab === k);
+      b.setAttribute('aria-selected', hubTab === k ? 'true' : 'false');
+    });
+    if (hubTab === 'gacha') {
+      brkLeave(); mtLeave(); obLeave(); mmLeave(); sanLeave();
+      $('hubTitleText').textContent = hubTitle();
+      renderGacha();
+    } else if (hubTab === 'rpg') {
+      brkLeave(); mtLeave(); obLeave(); mmLeave();
+      setRpgSub(rpgSub);
+    } else {
+      sanLeave();
+      setMiniGame(miniGame);
+    }
+  }
+
+  /* ---------- ✦ 방치형 성역 (idle sanctuary) ---------- */
+
+  var rinFormOpen = false;
+
+  var SAN_KEY = 'focus.sanctuary.v1';
+  var SAN_BASE_RATE = 2.2;            // 시간당 별조각 (초반 소량)
+  var SAN_MAX_OFFLINE = 24 * 3600 * 1000;
+  var SAN_MAX_LV = 40;
+  var SAN_SLOT_COST = { 3: 40, 4: 80, 5: 140, 6: 220, 7: 320, 8: 450, 9: 600 };
+  var SAN_BUILD = {
+    beacon: { icon: '✧', unlock: 30,  max: 10, cost: function (l) { return 28 + l * 22; } },
+    altar:  { icon: '◈', unlock: 60,  max: 10, cost: function (l) { return 52 + l * 30; } },
+    turret: { icon: '✹', unlock: 90,  max: 10, cost: function (l) { return 78 + l * 38; } },
+    garden: { icon: '❀', unlock: 120, max: 10, cost: function (l) { return 104 + l * 46; } }
+  };
+  var SAN_BUILD_ORDER = ['beacon', 'altar', 'turret', 'garden'];
+  var SAN_FX_CD = { beacon: 25000, altar: 30000, turret: 15000, garden: 45000 };
+
+  function sanDefaults() {
+    return {
+      slots: 3, deploy: [],
+      buildings: { beacon: 0, altar: 0, turret: 0, garden: 0 },
+      levels: {},
+      lastTick: Date.now(),
+      day: { date: todayKey(), shards: 0 },
+      kills: 0,
+      frac: 0
+    };
+  }
+
+  function loadSanctuary() {
+    var base = sanDefaults();
+    var raw = null;
+    try { raw = localStorage.getItem(SAN_KEY); } catch (e) { return base; }
+    if (!raw) return base;
+    var s = null;
+    try { s = JSON.parse(raw); } catch (e) { return base; }
+    if (!s || typeof s !== 'object') return base;
+    var d = base;
+    if (typeof s.slots === 'number') d.slots = Math.max(3, Math.min(10, Math.floor(s.slots)));
+    if (Array.isArray(s.deploy)) {
+      s.deploy.forEach(function (id) {
+        if (typeof id === 'string' && skinById(id) && gacha.owned.indexOf(id) >= 0 &&
+            d.deploy.indexOf(id) < 0 && d.deploy.length < d.slots) d.deploy.push(id);
+      });
+    }
+    if (s.buildings && typeof s.buildings === 'object') {
+      SAN_BUILD_ORDER.forEach(function (k) {
+        var v = s.buildings[k];
+        if (typeof v === 'number' && v >= 0) d.buildings[k] = Math.min(SAN_BUILD[k].max, Math.floor(v));
+      });
+    }
+    if (s.levels && typeof s.levels === 'object') {
+      Object.keys(s.levels).forEach(function (id) {
+        if (!skinById(id)) return;
+        var e = s.levels[id];
+        if (!e || typeof e !== 'object') return;
+        var lv = typeof e.lv === 'number' ? Math.max(1, Math.min(SAN_MAX_LV, Math.floor(e.lv))) : 1;
+        var xp = (typeof e.xp === 'number' && e.xp >= 0) ? Math.floor(e.xp) : 0;
+        d.levels[id] = { lv: lv, xp: xp };
+      });
+    }
+    if (typeof s.lastTick === 'number' && s.lastTick > 0 && s.lastTick <= Date.now()) d.lastTick = s.lastTick;
+    if (s.day && typeof s.day === 'object') {
+      if (typeof s.day.date === 'string') d.day.date = s.day.date;
+      if (typeof s.day.shards === 'number') d.day.shards = Math.max(0, Math.floor(s.day.shards));
+    }
+    if (d.day.date !== todayKey()) d.day = { date: todayKey(), shards: 0 };
+    if (typeof s.kills === 'number') d.kills = Math.max(0, Math.floor(s.kills));
+    if (typeof s.frac === 'number' && s.frac >= 0 && s.frac < 1) d.frac = s.frac;
+    if (!d.deploy.length) {
+      var seed = [gacha.equipped];
+      gacha.owned.forEach(function (id) { if (seed.indexOf(id) < 0) seed.push(id); });
+      d.deploy = seed.slice(0, d.slots);
+    }
+    d.deploy.forEach(function (id) { if (!d.levels[id]) d.levels[id] = { lv: 1, xp: 0 }; });
+    return d;
+  }
+
+  var san = loadSanctuary();
+
+  function saveSan() {
+    try { localStorage.setItem(SAN_KEY, JSON.stringify(san)); } catch (e) {}
+  }
+
+  function sanLevelUpNeed(lv) { return 40 + lv * 30; }
+
+  function sanAddXp(id, n) {
+    if (!id || !n) return;
+    var e = san.levels[id];
+    if (!e) e = san.levels[id] = { lv: 1, xp: 0 };
+    e.xp += n;
+    while (e.lv < SAN_MAX_LV && e.xp >= sanLevelUpNeed(e.lv)) {
+      e.xp -= sanLevelUpNeed(e.lv);
+      e.lv += 1;
+    }
+  }
+
+  function sanDeployLevelSum() {
+    var n = 0;
+    san.deploy.forEach(function (id) { n += sanLevelOf(id); });
+    return n;
+  }
+
+  // 시간당 별조각 — 슬롯 · 등대 · 정원 · 편성 레벨 · 도감 시너지가 모두 곱해진다
+  function sanRate() {
+    var slotF = 1 + 0.10 * Math.max(0, san.slots - 3);
+    var beaconF = 1 + 0.12 * (san.buildings.beacon || 0);
+    var gardenF = 1 + 0.09 * (san.buildings.garden || 0);
+    var lvF = Math.min(3, 1 + 0.012 * sanDeployLevelSum());
+    var synF = 1 + synergy().idle;
+    return SAN_BASE_RATE * slotF * beaconF * gardenF * lvF * synF;
+  }
+
+  function syncWallet() {
+    var t1 = $('gTickets');
+    var t2 = $('gShards');
+    if (t1) t1.textContent = String(gacha.tickets);
+    if (t2) t2.textContent = String(gacha.shards);
+    var owned = $('gOwned');
+    if (owned) owned.textContent = t('gOwned') + ' ' + gacha.owned.length + '/' + SKINS.length;
+    updateBrandBadge();
+  }
+
+  // 오프라인 정산 — 최대 24시간까지 쌓인 별조각을 한 번에 지급
+  function sanAccrue(now, quiet) {
+    if (!san.lastTick) { san.lastTick = now; return 0; }
+    var dt = now - san.lastTick;
+    san.lastTick = now;
+    if (dt <= 0) return 0;
+    if (dt > SAN_MAX_OFFLINE) dt = SAN_MAX_OFFLINE;
+    var gain = sanRate() * (dt / 3600000);
+    if (gain <= 0) return 0;
+    san.frac += gain;
+    var whole = Math.floor(san.frac);
+    if (whole > 0) {
+      san.frac -= whole;
+      gacha.shards += whole;
+      if (san.day.date !== todayKey()) san.day = { date: todayKey(), shards: 0 };
+      san.day.shards += whole;
+      saveGacha();
+      syncWallet();
+      if (!quiet) toast(fmt('sanOffline', { n: whole }));
+    }
+    saveSan();
+    return whole;
+  }
+
+  function sanBadge(text) {
+    var b = $('sanBadge');
+    if (!b) return;
+    b.textContent = text;
+    b.classList.add('show');
+    clearTimeout(sanBadge.t);
+    sanBadge.t = setTimeout(function () { b.classList.remove('show'); }, 1600);
+  }
+
+  /* --- 캔버스 시뮬레이션 --- */
+  var sanCanvas = null, sanCtx = null, sanRaf = 0, sanLast = 0, sanActive = false, sanSim = null;
+  var sanFx = { beacon: 0, altar: 0, turret: 0, garden: 0 };
+
+  function sanInitEls() {
+    if (sanCanvas) return !!sanCtx;
+    sanCanvas = $('sanCanvas');
+    if (!sanCanvas) return false;
+    try { sanCtx = sanCanvas.getContext('2d'); } catch (e) { sanCtx = null; }
+    return !!sanCtx;
+  }
+
+  function sanStarPath(g, x, y, r) {
+    g.beginPath();
+    g.moveTo(x, y - r);
+    g.quadraticCurveTo(x + r * 0.18, y - r * 0.18, x + r, y);
+    g.quadraticCurveTo(x + r * 0.18, y + r * 0.18, x, y + r);
+    g.quadraticCurveTo(x - r * 0.18, y + r * 0.18, x - r, y);
+    g.quadraticCurveTo(x - r * 0.18, y - r * 0.18, x, y - r);
+    g.closePath();
+  }
+
+  function sanNewSim() {
+    return { W: 0, H: 0, pad: 0, stars: [], enemies: [], bullets: [], parts: [], pops: [], beams: [], t: 0, spawn: 1.1, flash: 0, shake: 0 };
+  }
+
+  function sanResize() {
+    if (!sanCanvas || !sanSim) return;
+    var w = Math.round(sanCanvas.clientWidth || 0) || 320;
+    var h = Math.round(w * 0.92);
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    sanCanvas.width = Math.round(w * dpr);
+    sanCanvas.height = Math.round(h * dpr);
+    sanCanvas.style.height = h + 'px';
+    if (sanCtx.setTransform) sanCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    sanSim.W = w; sanSim.H = h;
+    sanSim.pad = Math.round(w * 0.055);
+    sanRebuildStars();
+  }
+
+  function sanRebuildStars() {
+    if (!sanSim) return;
+    var W = sanSim.W || 320, H = sanSim.H || 300;
+    var prev = {};
+    sanSim.stars.forEach(function (s) { prev[s.id] = s; });
+    sanSim.stars = san.deploy.map(function (id, i) {
+      var p = prev[id];
+      var a = (i / Math.max(1, san.deploy.length)) * 6.2832;
+      return {
+        id: id,
+        x: p ? p.x : W / 2 + Math.cos(a) * W * 0.22,
+        y: p ? p.y : H * 0.64 + Math.sin(a) * W * 0.14,
+        cool: p ? p.cool : 0.3 + Math.random() * 0.8,
+        t: Math.random() * 6.28,
+        lv: Math.max(1, sanLevelOf(id))
+      };
+    });
+  }
+
+  function sanStarColor(id) {
+    var s = skinById(id);
+    return s ? (s.color || '#FFFFFF') : '#FFFFFF';
+  }
+
+  function sanSpawnEnemy() {
+    var W = sanSim.W, H = sanSim.H, pad = sanSim.pad;
+    var maxHp = 4 + Math.min(60, san.kills * 0.06);
+    sanSim.enemies.push({
+      x: pad + Math.random() * (W - pad * 2),
+      y: -12,
+      r: Math.max(5, W * 0.018),
+      hp: maxHp, max: maxHp,
+      vy: (18 + Math.random() * 16) * (1 + Math.min(1.2, san.kills * 0.0015)),
+      sway: Math.random() * 6.28,
+      hit: 0
+    });
+  }
+
+  function sanSpawnEnemyAt(x, y) {
+    var maxHp = 4 + Math.min(60, san.kills * 0.06);
+    sanSim.enemies.push({ x: x, y: y, r: Math.max(5, sanSim.W * 0.018), hp: maxHp, max: maxHp, vy: 16, sway: Math.random() * 6.28, hit: 0 });
+  }
+
+  function sanDmg() {
+    var base = 1.1 + Math.min(6, san.buildings.turret || 0) * 0.35;
+    var lvB = 1 + sanDeployLevelSum() * 0.004;
+    return base * lvB;
+  }
+
+  function sanKill(e) {
+    san.kills += 1;
+    var xp = (1 + 0.15 * (san.buildings.altar || 0)) * san.deploy.length;
+    san.deploy.forEach(function (id, i) { sanAddXp(id, xp); });
+    sanSim.parts.push({ x: e.x, y: e.y, vx: 0, vy: -6, life: .7, max: .7, r: 2, star: true });
+    for (var i = 0; i < 4; i++) {
+      var a = Math.random() * 6.2832, sp = 20 + Math.random() * 40;
+      sanSim.parts.push({ x: e.x, y: e.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: .4 + Math.random() * .3, max: .7, r: 1 + Math.random() * 1.4 });
+    }
+    if (san.kills % 10 === 0) sanSim.pops.push({ x: e.x, y: e.y, text: '+' + Math.round(xp), life: .8, max: .8 });
+  }
+
+  function sanUpdate(dt) {
+    var sim = sanSim;
+    sim.t += dt;
+    if (sim.flash > 0) sim.flash = Math.max(0, sim.flash - dt * 2);
+    if (sim.shake > 0) sim.shake = Math.max(0, sim.shake - dt * 30);
+
+    var W = sim.W, H = sim.H, pad = sim.pad;
+
+    sim.spawn -= dt;
+    if (sim.spawn <= 0) {
+      if (sim.enemies.length < 14) sanSpawnEnemy();
+      sim.spawn = Math.max(0.5, 1.9 - san.kills * 0.003) * (0.75 + Math.random() * 0.6);
+    }
+
+    // 적 이동
+    for (var i = sim.enemies.length - 1; i >= 0; i--) {
+      var e = sim.enemies[i];
+      e.y += e.vy * dt;
+      e.x += Math.sin(sim.t * 1.4 + e.sway) * 10 * dt;
+      if (e.hit > 0) e.hit = Math.max(0, e.hit - dt * 4);
+      if (e.y > H + 20) { sim.enemies.splice(i, 1); sim.shake = Math.min(6, sim.shake + 1.2); }
+    }
+
+    // 별 — 가장 가까운 적을 향해 다가가며 사격
+    var speed = 26 + Math.min(18, (san.buildings.beacon || 0) * 1.6);
+    for (var s = 0; s < sim.stars.length; s++) {
+      var st = sim.stars[s];
+      st.t += dt;
+      var tgt = null, bestD = 1e9;
+      for (var j = 0; j < sim.enemies.length; j++) {
+        var en = sim.enemies[j];
+        var dx0 = en.x - st.x, dy0 = en.y - st.y;
+        var d0 = dx0 * dx0 + dy0 * dy0;
+        if (d0 < bestD) { bestD = d0; tgt = en; }
+      }
+      if (tgt) {
+        var dx = tgt.x - st.x, dy = tgt.y - st.y;
+        var d = Math.sqrt(dx * dx + dy * dy) || 1;
+        var want = Math.max(0, d - sim.W * 0.16);
+        var step = Math.min(want, speed * dt);
+        st.x += (dx / d) * step;
+        st.y += (dy / d) * step;
+        st.x = Math.max(pad, Math.min(W - pad, st.x));
+        st.y = Math.max(pad + 30, Math.min(H - pad - 26, st.y));
+        st.cool -= dt;
+        if (st.cool <= 0) {
+          st.cool = Math.max(0.35, 0.95 - st.lv * 0.012);
+          sim.bullets.push({ x: st.x, y: st.y, vx: (dx / d) * 200, vy: (dy / d) * 200, dmg: sanDmg() * (1 + st.lv * 0.01), life: 1.6, color: sanStarColor(st.id) });
+          tone({ f: 620 + Math.min(400, st.lv * 8), dur: .05, type: 'sine', gain: .02 });
+        }
+      } else {
+        var ax = W / 2 + Math.cos(st.t * 0.5 + s) * W * 0.22;
+        var ay = H * 0.62 + Math.sin(st.t * 0.42 + s) * W * 0.12;
+        st.x += (ax - st.x) * Math.min(1, dt * 0.8);
+        st.y += (ay - st.y) * Math.min(1, dt * 0.8);
+      }
+    }
+
+    // 포탑 자동 사격
+    var tl = san.buildings.turret || 0;
+    if (tl > 0) {
+      sim._turret = (sim._turret || 0) - dt;
+      if (sim._turret <= 0 && sim.enemies.length) {
+        sim._turret = Math.max(0.8, 3.4 - tl * 0.22);
+        var te = sim.enemies[0];
+        sim.beams.push({ x1: W - pad - 10, y1: pad + 12, x2: te.x, y2: te.y, life: .26, max: .26 });
+        te.hp -= 2 + tl * 0.9;
+        te.hit = 1;
+      }
+    }
+
+    // 탄환
+    for (var b = sim.bullets.length - 1; b >= 0; b--) {
+      var bu = sim.bullets[b];
+      bu.x += bu.vx * dt;
+      bu.y += bu.vy * dt;
+      bu.life -= dt;
+      var hit = false;
+      for (var k = 0; k < sim.enemies.length; k++) {
+        var en2 = sim.enemies[k];
+        var bx = en2.x - bu.x, by = en2.y - bu.y;
+        if (bx * bx + by * by <= (en2.r + 4) * (en2.r + 4)) {
+          en2.hp -= bu.dmg;
+          en2.hit = 1;
+          hit = true;
+          break;
+        }
+      }
+      if (hit || bu.life <= 0 || bu.x < -20 || bu.x > W + 20 || bu.y < -20 || bu.y > H + 20) {
+        if (hit) { tone({ f: 880, dur: .04, type: 'triangle', gain: .02 }); }
+        sim.bullets.splice(b, 1);
+      }
+    }
+
+    // 적 사망
+    for (var m = sim.enemies.length - 1; m >= 0; m--) {
+      if (sim.enemies[m].hp <= 0) {
+        sanKill(sim.enemies[m]);
+        sim.enemies.splice(m, 1);
+      }
+    }
+
+    // 제단 오라
+    if ((san.buildings.altar || 0) > 0 && Math.random() < dt * 0.6) {
+      sim.parts.push({ x: W / 2, y: H * 0.5, vx: 0, vy: 0, life: .9, max: .9, r: 14, ring: true });
+    }
+
+    for (var p = sim.parts.length - 1; p >= 0; p--) {
+      var pt = sim.parts[p];
+      pt.x += (pt.vx || 0) * dt;
+      pt.y += (pt.vy || 0) * dt;
+      if (!pt.ring) { pt.vx *= 0.97; pt.vy *= 0.97; }
+      pt.life -= dt;
+      if (pt.life <= 0) sim.parts.splice(p, 1);
+    }
+    for (var q = sim.pops.length - 1; q >= 0; q--) {
+      var pop = sim.pops[q];
+      pop.y -= 22 * dt;
+      pop.life -= dt;
+      if (pop.life <= 0) sim.pops.splice(q, 1);
+    }
+    for (var bm = sim.beams.length - 1; bm >= 0; bm--) {
+      sim.beams[bm].life -= dt;
+      if (sim.beams[bm].life <= 0) sim.beams.splice(bm, 1);
+    }
+
+    // 경험치 · 시간 누적 저장 (1초 간격)
+    sim._save = (sim._save || 0) + dt;
+    if (sim._save > 2) {
+      sim._save = 0;
+      saveSan();
+      var rateEl = $('sanRate');
+      if (rateEl) rateEl.textContent = sanRate().toFixed(1);
+      var kEl = $('sanKills');
+      if (kEl) kEl.textContent = String(san.kills);
+      var lvEl = $('sanLvSum');
+      if (lvEl) lvEl.textContent = String(sanDeployLevelSum());
+    }
+  }
+
+  function sanDrawBuilding(g, key, x, y, lv, active) {
+    var W = sanSim.W;
+    var r = Math.max(12, W * 0.032);
+    g.save();
+    g.globalAlpha = lv > 0 ? 1 : 0.28;
+    g.translate(x, y);
+    g.strokeStyle = 'rgba(160,225,255,' + (active ? 0.9 : 0.5) + ')';
+    g.fillStyle = 'rgba(120,200,255,.12)';
+    g.lineWidth = 1.2;
+    if (key === 'beacon') {
+      g.beginPath(); g.moveTo(0, -r); g.lineTo(r * .8, r * .7); g.lineTo(-r * .8, r * .7); g.closePath();
+      g.fill(); g.stroke();
+      g.beginPath(); g.moveTo(0, -r * .5); g.lineTo(0, r * .3); g.stroke();
+    } else if (key === 'altar') {
+      g.beginPath(); g.ellipse(0, 0, r, r * .55, 0, 0, 6.2832); g.fill(); g.stroke();
+      g.beginPath(); g.ellipse(0, 0, r * .55, r * .3, 0, 0, 6.2832); g.stroke();
+    } else if (key === 'turret') {
+      g.beginPath(); g.arc(0, 0, r * .6, 0, 6.2832); g.fill(); g.stroke();
+      g.beginPath(); g.moveTo(0, 0); g.lineTo(-r * 1.1, -r * .5); g.stroke();
+    } else {
+      g.beginPath();
+      for (var i = 0; i < 5; i++) {
+        var a = -Math.PI / 2 + i * 1.2566;
+        var px = Math.cos(a) * r * .9, py = Math.sin(a) * r * .9;
+        if (i === 0) g.moveTo(px, py); else g.lineTo(px, py);
+      }
+      g.closePath(); g.fill(); g.stroke();
+    }
+    if (lv > 0) {
+      g.fillStyle = 'rgba(200,240,255,.85)';
+      g.font = '700 ' + Math.max(7, Math.round(W * 0.019)) + 'px -apple-system,sans-serif';
+      g.textAlign = 'center';
+      g.fillText('Lv.' + lv, 0, r * 1.8);
+    }
+    g.restore();
+  }
+
+  function sanDraw() {
+    if (!sanSim || !sanCtx) return;
+    var g = sanCtx, sim = sanSim, W = sim.W, H = sim.H, pad = sim.pad;
+    g.clearRect(0, 0, W, H);
+    g.save();
+    if (sim.shake > 0) g.translate((Math.random() - .5) * sim.shake, (Math.random() - .5) * sim.shake);
+
+    // 배경 별
+    g.fillStyle = 'rgba(255,255,255,.55)';
+    for (var i = 0; i < 26; i++) {
+      var sx = (i * 73 + 19) % W;
+      var sy = (i * 47 + 31) % Math.round(H * 0.9);
+      g.globalAlpha = 0.15 + 0.35 * Math.abs(Math.sin(sim.t * 0.7 + i));
+      g.fillRect(sx, sy, 1.2, 1.2);
+    }
+    g.globalAlpha = 1;
+
+    // 건물
+    sanDrawBuilding(g, 'beacon', pad + 6, pad + 8, san.buildings.beacon || 0, false);
+    sanDrawBuilding(g, 'turret', W - pad - 6, pad + 8, san.buildings.turret || 0, false);
+    sanDrawBuilding(g, 'altar', W / 2, H * 0.5, san.buildings.altar || 0, false);
+    sanDrawBuilding(g, 'garden', W / 2, H - pad - 4, san.buildings.garden || 0, false);
+
+    // 제단 오라 링
+    for (var p = 0; p < sim.parts.length; p++) {
+      var pt = sim.parts[p];
+      if (!pt.ring) continue;
+      var k = 1 - pt.life / pt.max;
+      g.beginPath();
+      g.arc(pt.x, pt.y, 16 + k * Math.min(W, H) * 0.42, 0, 6.2832);
+      g.strokeStyle = 'rgba(150,225,255,' + (0.35 * (1 - k)).toFixed(3) + ')';
+      g.lineWidth = 1.2;
+      g.stroke();
+    }
+
+    // 적
+    for (var e = 0; e < sim.enemies.length; e++) {
+      var en = sim.enemies[e];
+      g.save();
+      g.translate(en.x, en.y);
+      g.rotate(sim.t * 0.6 + en.sway);
+      g.beginPath();
+      g.moveTo(0, -en.r); g.lineTo(en.r, 0); g.lineTo(0, en.r); g.lineTo(-en.r, 0);
+      g.closePath();
+      g.fillStyle = en.hit > 0 ? 'rgba(255,255,255,.9)' : 'rgba(255,150,150,.55)';
+      g.fill();
+      g.strokeStyle = 'rgba(255,190,190,.7)';
+      g.lineWidth = 1;
+      g.stroke();
+      g.restore();
+      var hpPct = Math.max(0, en.hp / en.max);
+      g.fillStyle = 'rgba(255,120,120,.18)';
+      g.fillRect(en.x - en.r, en.y - en.r - 5, en.r * 2, 2);
+      g.fillStyle = 'rgba(255,150,150,.8)';
+      g.fillRect(en.x - en.r, en.y - en.r - 5, en.r * 2 * hpPct, 2);
+    }
+
+    // 탄환
+    for (var b = 0; b < sim.bullets.length; b++) {
+      var bu = sim.bullets[b];
+      g.save();
+      g.shadowColor = bu.color;
+      g.shadowBlur = 8;
+      g.fillStyle = '#FFFFFF';
+      g.beginPath();
+      g.arc(bu.x, bu.y, 1.8, 0, 6.2832);
+      g.fill();
+      g.restore();
+    }
+
+    // 포탑 광선
+    for (var bm = 0; bm < sim.beams.length; bm++) {
+      var beam = sim.beams[bm];
+      g.save();
+      g.globalAlpha = Math.max(0, beam.life / beam.max);
+      g.strokeStyle = 'rgba(190,240,255,.9)';
+      g.lineWidth = 1.6;
+      g.beginPath();
+      g.moveTo(beam.x1, beam.y1);
+      g.lineTo(beam.x2, beam.y2);
+      g.stroke();
+      g.restore();
+    }
+
+    // 편성 별
+    for (var s = 0; s < sim.stars.length; s++) {
+      var st = sim.stars[s];
+      var col = sanStarColor(st.id);
+      g.save();
+      g.shadowColor = col;
+      g.shadowBlur = 12;
+      g.fillStyle = col;
+      sanStarPath(g, st.x, st.y, Math.max(5, W * 0.019) * (1 + 0.06 * Math.sin(st.t * 2)));
+      g.fill();
+      g.restore();
+    }
+
+    // 파티클
+    for (var pp = 0; pp < sim.parts.length; pp++) {
+      var pa = sim.parts[pp];
+      if (pa.ring) continue;
+      g.globalAlpha = Math.max(0, pa.life / pa.max);
+      g.fillStyle = pa.star ? '#FFFFFF' : 'rgba(255,255,255,.8)';
+      g.beginPath();
+      g.arc(pa.x, pa.y, pa.r, 0, 6.2832);
+      g.fill();
+    }
+    g.globalAlpha = 1;
+
+    for (var po = 0; po < sim.pops.length; po++) {
+      var pop = sim.pops[po];
+      g.globalAlpha = Math.max(0, pop.life / pop.max);
+      g.fillStyle = 'rgba(200,240,255,.95)';
+      g.font = '800 ' + Math.round(W * 0.03) + 'px -apple-system,sans-serif';
+      g.textAlign = 'center';
+      g.fillText(pop.text, pop.x, pop.y);
+    }
+    g.globalAlpha = 1;
+
+    if (sim.flash > 0) {
+      g.save();
+      g.globalAlpha = Math.min(1, sim.flash);
+      g.fillStyle = 'rgba(180,235,255,.35)';
+      g.fillRect(0, 0, W, H);
+      g.restore();
+    }
+    g.restore();
+  }
+
+  function sanLoop(ts) {
+    if (!sanActive) { sanRaf = 0; return; }
+    sanRaf = window.requestAnimationFrame ? requestAnimationFrame(sanLoop) : 0;
+    if (!sanLast) sanLast = ts;
+    var dt = (ts - sanLast) / 1000;
+    sanLast = ts;
+    if (dt > 0.1) dt = 0.1;
+    if (dt < 0) dt = 0;
+    sanUpdate(dt);
+    sanDraw();
+  }
+
+  function sanOpen() {
+    if (!sanInitEls()) return;
+    if (!sanSim) sanSim = sanNewSim();
+    sanActive = true;
+    sanResize();
+    sanAccrue(Date.now(), false);
+    renderSanctuary();
+    if (!sanRaf && window.requestAnimationFrame) {
+      sanLast = 0;
+      sanRaf = requestAnimationFrame(sanLoop);
+    }
+  }
+
+  function sanLeave() {
+    sanActive = false;
+    if (sanRaf && window.cancelAnimationFrame) cancelAnimationFrame(sanRaf);
+    sanRaf = 0;
+  }
+
+  function renderSanctuary() {
+    var rateEl = $('sanRate');
+    if (!rateEl) return;
+    var rate = sanRate();
+    rateEl.textContent = rate.toFixed(1);
+    $('sanRate2').textContent = rate.toFixed(1);
+    $('sanSlots').textContent = san.slots + '/10';
+    $('sanLvSum').textContent = String(sanDeployLevelSum());
+    $('sanKills').textContent = String(san.kills);
+    var slotBtn = $('sanSlotBtn');
+    if (san.slots >= 10) {
+      slotBtn.textContent = t('sanSlotMax');
+      slotBtn.disabled = true;
+    } else {
+      var cost = SAN_SLOT_COST[san.slots];
+      slotBtn.textContent = fmt('sanSlotBtn', { n: cost });
+      slotBtn.disabled = gacha.shards < cost;
+    }
+    $('sanDeployed').innerHTML = san.deploy.map(function (id) {
+      var s = skinById(id);
+      return '<span class="san-chip">' + (s && s.cat ? catMark(s.color) : starMark(s ? skinFill(s) : '#FFFFFF')) +
+        esc(skinName(s)) + ' <b>' + sanLevelOf(id) + '</b></span>';
+    }).join('');
+    renderSanBuilds();
+    renderSanPicker();
+  }
+
+  function renderSanBuilds() {
+    var host = $('sanBuilds');
+    if (!host) return;
+    host.innerHTML = SAN_BUILD_ORDER.map(function (key) {
+      var b = SAN_BUILD[key];
+      var lv = san.buildings[key] || 0;
+      var maxed = lv >= b.max;
+      var cost = lv === 0 ? b.unlock : b.cost(lv);
+      var label = maxed ? t('sanMax') : (lv === 0 ? fmt('sanBuildBtn', { n: cost }) : fmt('sanBuildUp', { n: cost }));
+      var cap = key.charAt(0).toUpperCase() + key.slice(1);
+      return '<div class="san-b' + (lv ? '' : ' locked') + '">' +
+        '<span class="san-b-ico">' + b.icon + '</span>' +
+        '<div class="san-b-body"><div class="san-b-name">' + esc(t('b' + cap)) +
+          (lv ? '<span class="san-b-lv">Lv.' + lv + '</span>' : '') + '</div>' +
+          '<div class="san-b-desc">' + esc(t('b' + cap + 'D')) + '</div></div>' +
+        '<button class="san-b-btn" type="button" data-sanb="' + key + '"' + ((maxed || gacha.shards < cost) ? ' disabled' : '') + '>' +
+          esc(label) + '</button></div>';
+    }).join('');
+  }
+
+  function renderSanPicker() {
+    var host = $('sanPicker');
+    if (!host || host.hidden) return;
+    var ids = gacha.owned.slice().sort(function (a, b) {
+      var da = san.deploy.indexOf(a) >= 0 ? 1 : 0;
+      var db = san.deploy.indexOf(b) >= 0 ? 1 : 0;
+      if (da !== db) return db - da;
+      return sanLevelOf(b) - sanLevelOf(a);
+    }).slice(0, 120);
+    host.innerHTML = '<h4>' + esc(t('sanPickTitle')) + '</h4><p>' + esc(fmt('sanPickSub', { n: san.slots })) + '</p>' +
+      '<div class="san-pick-grid">' + ids.map(function (id) {
+        var s = skinById(id);
+        var on = san.deploy.indexOf(id) >= 0;
+        return '<button class="san-pick' + (on ? ' on' : '') + '" type="button" data-sanp="' + id + '">' +
+          (s && s.cat ? catMark(s.color) : starMark(s ? skinFill(s) : '#FFFFFF')) +
+          '<span>' + esc(skinName(s)) + '</span></button>';
+      }).join('') + '</div>';
+  }
+
+  function sanToggleDeploy(id) {
+    if (!skinById(id)) return;
+    var i = san.deploy.indexOf(id);
+    if (i >= 0) {
+      san.deploy.splice(i, 1);
+    } else {
+      if (san.deploy.length >= san.slots) { toastKey('sanFull'); return; }
+      san.deploy.push(id);
+      if (!san.levels[id]) san.levels[id] = { lv: 1, xp: 0 };
+    }
+    if (!san.deploy.length) san.deploy.push('mono');
+    saveSan();
+    sanRebuildStars();
+    renderSanctuary();
+    SFX.check();
+  }
+
+  function sanBuySlot() {
+    if (san.slots >= 10) return;
+    var cost = SAN_SLOT_COST[san.slots];
+    if (gacha.shards < cost) { toastKey('sanNoShard'); return; }
+    gacha.shards -= cost;
+    san.slots += 1;
+    saveGacha(); saveSan();
+    syncWallet();
+    renderSanctuary();
+    SFX.check();
+    toastKey('sanSlotOpened');
+  }
+
+  function sanBuyBuild(key) {
+    var b = SAN_BUILD[key];
+    if (!b) return;
+    var lv = san.buildings[key] || 0;
+    if (lv >= b.max) return;
+    var cost = lv === 0 ? b.unlock : b.cost(lv);
+    if (gacha.shards < cost) { toastKey('sanNoShard'); return; }
+    gacha.shards -= cost;
+    san.buildings[key] = lv + 1;
+    saveGacha(); saveSan();
+    syncWallet();
+    renderSanctuary();
+    renderGacha();
+    SFX.check();
+    toastKey(lv === 0 ? 'sanBuilt' : 'sanUpgraded');
+  }
+
+  // 건물 탭 — 등대 폭발 · 제단 축복 · 포탑 일제사격 · 정원 수확
+  function sanTapBuilding(key) {
+    var lv = san.buildings[key] || 0;
+    if (lv < 1) return false;
+    var now = Date.now();
+    if (now - (sanFx[key] || 0) < SAN_FX_CD[key]) return true;
+    sanFx[key] = now;
+    var sim = sanSim;
+    if (!sim) return true;
+    if (key === 'beacon') {
+      sim.flash = 1;
+      for (var i = 0; i < sim.enemies.length; i++) sim.enemies[i].hp -= 18 + lv * 9;
+      SFX.laser();
+      sanBadge('✦ ' + lv);
+    } else if (key === 'altar') {
+      san.deploy.forEach(function (id) { sanAddXp(id, 18 * lv); });
+      sim.parts.push({ x: sim.W / 2, y: sim.H * 0.5, vx: 0, vy: 0, life: 1, max: 1, r: 14, ring: true });
+      SFX.skill();
+      toast(fmt('sanXpGain', { n: 18 * lv }));
+    } else if (key === 'turret') {
+      for (var e = 0; e < sim.enemies.length; e++) {
+        sim.beams.push({ x1: sim.W - sim.pad - 10, y1: sim.pad + 12, x2: sim.enemies[e].x, y2: sim.enemies[e].y, life: .3, max: .3 });
+        sim.enemies[e].hp -= 6 + lv * 3;
+        sim.enemies[e].hit = 1;
+      }
+      SFX.hit(false);
+      sanBadge('✹ ' + lv);
+    } else if (key === 'garden') {
+      var gain = Math.min(24, 2 + lv * 2);
+      gacha.shards += gain;
+      saveGacha();
+      syncWallet();
+      sim.pops.push({ x: sim.W / 2, y: sim.H - sim.pad - 16, text: '+' + gain, life: 1, max: 1 });
+      SFX.orb();
+      toast(fmt('sanShardGain', { n: gain }));
+    }
+    saveSan();
+    return true;
+  }
+
+  function sanPointAt(e) {
+    var rect = sanCanvas.getBoundingClientRect();
+    var src = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
+    return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+  }
+
+  function bindSanctuary() {
+    if (!sanInitEls()) return;
+    var c = sanCanvas;
+    c.addEventListener('pointerdown', function (e) {
+      if (!sanSim) return;
+      if (e.cancelable) e.preventDefault();
+      unlockSound();
+      var p = sanPointAt(e);
+      var W = sanSim.W, H = sanSim.H, pad = sanSim.pad;
+      var spots = [
+        { k: 'beacon', x: pad + 6, y: pad + 8 },
+        { k: 'turret', x: W - pad - 6, y: pad + 8 },
+        { k: 'altar', x: W / 2, y: H * 0.5 },
+        { k: 'garden', x: W / 2, y: H - pad - 4 }
+      ];
+      var hitR = Math.max(26, W * 0.075);
+      for (var i = 0; i < spots.length; i++) {
+        var dx = p.x - spots[i].x, dy = p.y - spots[i].y;
+        if (dx * dx + dy * dy <= hitR * hitR) {
+          if (sanTapBuilding(spots[i].k)) return;
+        }
+      }
+      // 빈 곳 탭 — 반짝임
+      for (var j = 0; j < 6; j++) {
+        var a = Math.random() * 6.2832, sp = 24 + Math.random() * 50;
+        sanSim.parts.push({ x: p.x, y: p.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: .45, max: .45, r: 1 + Math.random(), star: true });
+      }
+      tone({ f: 900, f2: 1300, dur: .08, type: 'sine', gain: .03 });
+    });
+  }
+
+  /* ---------- ✦ 미니게임 3종 (메테오 닷지 · 오빗 타이밍 · 별자리 기억) ---------- */
+
+  var MINI_KEY = 'focus.mini.v1';
+  var MINI_DAILY = 2;
+
+  function miniDefaults() {
+    return { best: { meteor: 0, orbit: 0, memory: 0 }, day: { date: todayKey(), count: { meteor: 0, orbit: 0, memory: 0 } } };
+  }
+
+  function loadMini() {
+    var base = miniDefaults();
+    var raw = null;
+    try { raw = localStorage.getItem(MINI_KEY); } catch (e) { return base; }
+    if (!raw) return base;
+    var s = null;
+    try { s = JSON.parse(raw); } catch (e) { return base; }
+    if (!s || typeof s !== 'object') return base;
+    var d = base;
+    if (s.best && typeof s.best === 'object') {
+      ['meteor', 'orbit', 'memory'].forEach(function (k) {
+        if (typeof s.best[k] === 'number' && s.best[k] >= 0) d.best[k] = Math.floor(s.best[k]);
+      });
+    }
+    if (s.day && typeof s.day === 'object') {
+      if (typeof s.day.date === 'string') d.day.date = s.day.date;
+      if (s.day.count && typeof s.day.count === 'object') {
+        ['meteor', 'orbit', 'memory'].forEach(function (k) {
+          if (typeof s.day.count[k] === 'number') d.day.count[k] = Math.max(0, Math.floor(s.day.count[k]));
+        });
+      }
+    }
+    return d;
+  }
+
+  var miniSave = loadMini();
+
+  function saveMini() {
+    try { localStorage.setItem(MINI_KEY, JSON.stringify(miniSave)); } catch (e) {}
+  }
+
+  function miniRollDay() {
+    if (miniSave.day.date !== todayKey()) miniSave.day = { date: todayKey(), count: { meteor: 0, orbit: 0, memory: 0 } };
+  }
+
+  function miniLeft(game) {
+    miniRollDay();
+    return Math.max(0, MINI_DAILY - (miniSave.day.count[game] || 0));
+  }
+
+  function miniAward(game, score, ok) {
+    miniRollDay();
+    if (!ok) return null;
+    var c = miniSave.day.count;
+    if ((c[game] || 0) >= MINI_DAILY) return { capped: true };
+    c[game] = (c[game] || 0) + 1;
+    var shards = 3 + (score >= 60 ? 3 : 0);
+    gacha.shards += shards;
+    grantTickets(1);
+    saveMini();
+    saveGacha();
+    return { shards: shards };
+  }
+
+  function miniCanvasSetup(canvas, ctx, hRatio) {
+    var w = Math.round(canvas.clientWidth || 0) || 320;
+    var h = Math.round(w * hRatio);
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.height = h + 'px';
+    if (ctx.setTransform) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { W: w, H: h };
+  }
+
+  /* --- 메테오 닷지 --- */
+  var mtCanvas = null, mtCtx = null, mtRaf = 0, mtLast = 0, mtActive = false, mt = null;
+
+  function mtInit() {
+    if (mtCanvas) return !!mtCtx;
+    mtCanvas = $('mtCanvas');
+    if (!mtCanvas) return false;
+    try { mtCtx = mtCanvas.getContext('2d'); } catch (e) { mtCtx = null; }
+    return !!mtCtx;
+  }
+
+  function mtSync() {
+    if (!mt) return;
+    var sc = $('mtScore');
+    if (sc) sc.textContent = String(Math.floor(mt.score));
+    var lv = $('mtLives');
+    if (lv) lv.textContent = new Array(Math.max(0, mt.hp) + 1).join('♥') || '—';
+    var bs = $('mtBest');
+    if (bs) bs.textContent = t('mgBest') + ' ' + miniSave.best.meteor;
+    var rw = $('mtRew');
+    if (rw) rw.textContent = fmt('mgRewardInfo', { a: miniLeft('meteor'), b: MINI_DAILY });
+    var sk = $('mtSkin');
+    if (sk) sk.textContent = skinName(equippedSkin());
+  }
+
+  function mtStart() {
+    if (!mtInit()) return;
+    var dim = miniCanvasSetup(mtCanvas, mtCtx, 1.02);
+    mt = {
+      W: dim.W, H: dim.H,
+      x: dim.W / 2, y: dim.H * 0.8, tx: dim.W / 2, ty: dim.H * 0.8,
+      r: Math.max(7, dim.W * 0.032), hp: 3, inv: 0, score: 0, t: 0,
+      spawn: 0.5, mote: 0.9, rocks: [], motes: [], bits: [], stars: [],
+      over: false, hitCount: 0, shake: 0
+    };
+    for (var i = 0; i < 24; i++) mt.stars.push({ x: Math.random() * mt.W, y: Math.random() * mt.H, a: Math.random(), p: Math.random() * 6.28 });
+    var ov = $('mtOver');
+    if (ov) { ov.hidden = true; ov.innerHTML = ''; }
+    mtSync();
+    mtActive = true;
+    mtLast = 0;
+    if (!mtRaf && window.requestAnimationFrame) mtRaf = requestAnimationFrame(mtLoop);
+  }
+
+  function mtLeave() {
+    mtActive = false;
+    if (mtRaf && window.cancelAnimationFrame) cancelAnimationFrame(mtRaf);
+    mtRaf = 0;
+  }
+
+  function mtLoop(ts) {
+    if (!mt || !mtActive) { mtRaf = 0; return; }
+    mtRaf = window.requestAnimationFrame ? requestAnimationFrame(mtLoop) : 0;
+    if (!mtLast) mtLast = ts;
+    var dt = (ts - mtLast) / 1000;
+    mtLast = ts;
+    if (dt > 0.08) dt = 0.08;
+    if (dt > 0) { mtUpdate(dt); mtDraw(); }
+  }
+
+  function mtUpdate(dt) {
+    mt.t += dt;
+    mt.score += dt * 5;
+    if (mt.inv > 0) mt.inv -= dt;
+    if (mt.shake > 0) mt.shake = Math.max(0, mt.shake - dt * 40);
+
+    // 조종
+    mt.x += (mt.tx - mt.x) * Math.min(1, dt * 14);
+    mt.y += (mt.ty - mt.y) * Math.min(1, dt * 14);
+    mt.x = Math.max(mt.r, Math.min(mt.W - mt.r, mt.x));
+    mt.y = Math.max(mt.r, Math.min(mt.H - mt.r, mt.y));
+
+    mt.spawn -= dt;
+    if (mt.spawn <= 0) {
+      mt.spawn = Math.max(0.2, 0.72 - mt.t * 0.012) * (0.7 + Math.random() * 0.7);
+      var rr = Math.max(5, mt.W * (0.016 + Math.random() * 0.012));
+      mt.rocks.push({ x: rr + Math.random() * (mt.W - rr * 2), y: -rr * 2, r: rr, vy: 60 + mt.t * 5 + Math.random() * 50, rot: Math.random() * 6.28, spin: (Math.random() - .5) * 2 });
+    }
+    mt.mote -= dt;
+    if (mt.mote <= 0) {
+      mt.mote = 0.75 + Math.random() * 0.7;
+      mt.motes.push({ x: 14 + Math.random() * (mt.W - 28), y: -10, vy: 40 + Math.random() * 35, p: Math.random() * 6.28 });
+    }
+
+    for (var i = mt.rocks.length - 1; i >= 0; i--) {
+      var rk = mt.rocks[i];
+      rk.y += rk.vy * dt;
+      rk.rot += rk.spin * dt;
+      if (rk.y > mt.H + rk.r * 2) { mt.rocks.splice(i, 1); continue; }
+      if (mt.inv <= 0) {
+        var dx = rk.x - mt.x, dy = rk.y - mt.y;
+        if (dx * dx + dy * dy <= (rk.r + mt.r * 0.8) * (rk.r + mt.r * 0.8)) {
+          mt.rocks.splice(i, 1);
+          mt.hp -= 1;
+          mt.inv = 1.3;
+          mt.shake = 8;
+          SFX.hit(true);
+          if (navigator.vibrate) { try { navigator.vibrate(16); } catch (e) {} }
+          mtBurst(rk.x, rk.y, 10);
+          if (mt.hp <= 0) { mtEnd(); return; }
+        }
+      }
+    }
+
+    for (var j = mt.motes.length - 1; j >= 0; j--) {
+      var mo = mt.motes[j];
+      mo.y += mo.vy * dt;
+      if (mo.y > mt.H + 10) { mt.motes.splice(j, 1); continue; }
+      var mx = mo.x - mt.x, my = mo.y - mt.y;
+      if (mx * mx + my * my <= (mt.r + 9) * (mt.r + 9)) {
+        mt.motes.splice(j, 1);
+        mt.score += 12;
+        SFX.check();
+        mtBurst(mo.x, mo.y, 5);
+      }
+    }
+
+    for (var k = mt.bits.length - 1; k >= 0; k--) {
+      var bt = mt.bits[k];
+      bt.x += bt.vx * dt;
+      bt.y += bt.vy * dt;
+      bt.life -= dt;
+      if (bt.life <= 0) mt.bits.splice(k, 1);
+    }
+    var acc = Math.floor(mt.score);
+    if (acc !== mt._acc) { mt._acc = acc; mtSync(); }
+  }
+
+  function mtBurst(x, y, n) {
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * 6.2832, sp = 30 + Math.random() * 70;
+      mt.bits.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 0.35 + Math.random() * 0.3, max: 0.65, r: 1 + Math.random() * 1.6 });
+    }
+  }
+
+  function mtDraw() {
+    if (!mt || !mtCtx) return;
+    var g = mtCtx, W = mt.W, H = mt.H;
+    var skin = equippedSkin();
+    var col = (skin && skin.color) || '#FFFFFF';
+    g.clearRect(0, 0, W, H);
+    g.save();
+    if (mt.shake > 0) g.translate((Math.random() - .5) * mt.shake, (Math.random() - .5) * mt.shake);
+
+    for (var i = 0; i < mt.stars.length; i++) {
+      var st = mt.stars[i];
+      g.globalAlpha = 0.12 + 0.3 * Math.abs(Math.sin(mt.t * 1.2 + st.p));
+      g.fillStyle = '#FFFFFF';
+      g.fillRect(st.x, st.y, 1.2, 1.2);
+    }
+    g.globalAlpha = 1;
+
+    for (var r = 0; r < mt.rocks.length; r++) {
+      var rk = mt.rocks[r];
+      g.save();
+      g.translate(rk.x, rk.y);
+      g.rotate(rk.rot);
+      g.beginPath();
+      g.moveTo(0, -rk.r); g.lineTo(rk.r * 0.85, -rk.r * 0.2); g.lineTo(rk.r * 0.5, rk.r); g.lineTo(-rk.r * 0.6, rk.r * 0.8); g.lineTo(-rk.r, -rk.r * 0.3);
+      g.closePath();
+      g.fillStyle = 'rgba(255,148,120,.55)';
+      g.fill();
+      g.strokeStyle = 'rgba(255,196,170,.8)';
+      g.lineWidth = 1;
+      g.stroke();
+      g.restore();
+    }
+
+    for (var m = 0; m < mt.motes.length; m++) {
+      var mo = mt.motes[m];
+      g.save();
+      g.shadowColor = '#9BE4FF';
+      g.shadowBlur = 10;
+      g.fillStyle = '#EAF9FF';
+      sanStarPath(g, mo.x, mo.y, 5.5);
+      g.fill();
+      g.restore();
+    }
+
+    g.save();
+    var pulse = mt.inv > 0 ? (0.35 + 0.65 * Math.abs(Math.sin(mt.t * 22))) : 1;
+    g.globalAlpha = pulse;
+    g.shadowColor = col;
+    g.shadowBlur = 16;
+    g.fillStyle = col;
+    sanStarPath(g, mt.x, mt.y, mt.r * 1.35);
+    g.fill();
+    g.restore();
+
+    for (var b = 0; b < mt.bits.length; b++) {
+      var bt = mt.bits[b];
+      g.globalAlpha = Math.max(0, bt.life / bt.max);
+      g.fillStyle = '#FFFFFF';
+      g.beginPath();
+      g.arc(bt.x, bt.y, bt.r, 0, 6.2832);
+      g.fill();
+    }
+    g.globalAlpha = 1;
+    g.restore();
+  }
+
+  function mtEnd() {
+    mt.over = true;
+    mtActive = false;
+    SFX.gameOver();
+    var sc = Math.floor(mt.score);
+    if (sc > miniSave.best.meteor) { miniSave.best.meteor = sc; saveMini(); }
+    var res = miniAward('meteor', sc, sc >= 45);
+    var ov = $('mtOver');
+    if (ov) {
+      ov.hidden = false;
+      ov.innerHTML = '<div class="mg-over-title">' + esc(fmt('mgOverTitle', { n: sc })) + '</div>' +
+        '<div class="mg-over-sub">' + esc(t('mgBest')) + ' <b>' + miniSave.best.meteor + '</b></div>' +
+        (res ? (res.capped ? '<div class="mg-over-sub">' + esc(t('mgNoReward')) + '</div>' : '<div class="mg-over-sub">' + esc(fmt('mgReward', { n: res.shards })) + '</div>') : '') +
+        '<button class="btn-primary mg-over-btn" type="button" data-mgagain="meteor">' + esc(t('mgAgain')) + '</button>';
+    }
+    mtSync();
+  }
+
+  function mtOpen() {
+    if (!mtInit()) return;
+    if (!mt || mt.over) { mtStart(); return; }
+    mtSync();
+    mtActive = true;
+    mtLast = 0;
+    if (!mtRaf && window.requestAnimationFrame) mtRaf = requestAnimationFrame(mtLoop);
+  }
+
+  /* --- 오빗 타이밍 --- */
+  var obCanvas = null, obCtx = null, obRaf = 0, obLast = 0, obActive = false, ob = null;
+
+  function obInit() {
+    if (obCanvas) return !!obCtx;
+    obCanvas = $('obCanvas');
+    if (!obCanvas) return false;
+    try { obCtx = obCanvas.getContext('2d'); } catch (e) { obCtx = null; }
+    return !!obCtx;
+  }
+
+  function normAngle(a) {
+    while (a > Math.PI) a -= 6.283185307;
+    while (a < -Math.PI) a += 6.283185307;
+    return a;
+  }
+
+  function obSync() {
+    if (!ob) return;
+    var sc = $('obScore');
+    if (sc) sc.textContent = String(ob.score);
+    var cb = $('obCombo');
+    if (cb) cb.textContent = '×' + ob.combo;
+    var bs = $('obBest');
+    if (bs) bs.textContent = t('mgBest') + ' ' + miniSave.best.orbit;
+    var rw = $('obRew');
+    if (rw) rw.textContent = fmt('mgRewardInfo', { a: miniLeft('orbit'), b: MINI_DAILY });
+    var sk = $('obSkin');
+    if (sk) sk.textContent = skinName(equippedSkin());
+  }
+
+  function obStart() {
+    if (!obInit()) return;
+    var dim = miniCanvasSetup(obCanvas, obCtx, 1.0);
+    ob = {
+      W: dim.W, H: dim.H,
+      a: -Math.PI / 2 + 1.4, sp: 1.5, target: -Math.PI / 2,
+      combo: 0, hits: 0, misses: 0, score: 0, over: false, t: 0,
+      flash: 0, label: '', labelT: 0, best: miniSave.best.orbit
+    };
+    var ov = $('obHit');
+    if (ov) { ov.classList.remove('show'); ov.textContent = ''; }
+    obSync();
+    obActive = true;
+    obLast = 0;
+    if (!obRaf && window.requestAnimationFrame) obRaf = requestAnimationFrame(obLoop);
+  }
+
+  function obLeave() {
+    obActive = false;
+    if (obRaf && window.cancelAnimationFrame) cancelAnimationFrame(obRaf);
+    obRaf = 0;
+  }
+
+  function obOpen() {
+    if (!obInit()) return;
+    if (!ob || ob.over) { obStart(); return; }
+    obSync();
+    obActive = true;
+    obLast = 0;
+    if (!obRaf && window.requestAnimationFrame) obRaf = requestAnimationFrame(obLoop);
+  }
+
+  function obLoop(ts) {
+    if (!ob || !obActive) { obRaf = 0; return; }
+    obRaf = window.requestAnimationFrame ? requestAnimationFrame(obLoop) : 0;
+    if (!obLast) obLast = ts;
+    var dt = (ts - obLast) / 1000;
+    obLast = ts;
+    if (dt > 0.08) dt = 0.08;
+    if (dt <= 0) return;
+    ob.t += dt;
+    ob.a += ob.sp * dt;
+    if (ob.a > Math.PI) ob.a -= 6.283185307;
+    if (ob.flash > 0) ob.flash = Math.max(0, ob.flash - dt * 3);
+    if (ob.labelT > 0) ob.labelT -= dt;
+    obDraw();
+  }
+
+  function obJudge() {
+    if (!ob || ob.over) return;
+    var d = Math.abs(normAngle(ob.a - ob.target));
+    if (d <= 0.2) {
+      ob.combo += 1;
+      ob.hits += 1;
+      ob.score += 10 + ob.combo * 2;
+      ob.flash = 1;
+      ob.label = t('mgPerfect');
+      ob.labelT = 0.6;
+      ob.sp = Math.min(3.4, 1.5 + ob.hits * 0.09);
+      ob.target = normAngle(ob.target + (Math.random() > 0.5 ? 1 : -1) * (1.2 + Math.random() * 2.2));
+      SFX.check();
+      if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
+    } else if (d <= 0.42) {
+      ob.combo = Math.max(1, ob.combo);
+      ob.hits += 1;
+      ob.score += 5;
+      ob.flash = 0.6;
+      ob.label = t('mgScore');
+      ob.labelT = 0.5;
+      ob.sp = Math.min(3.4, 1.5 + ob.hits * 0.06);
+      ob.target = normAngle(ob.target + (Math.random() > 0.5 ? 1 : -1) * (1.4 + Math.random() * 2.2));
+      SFX.check();
+    } else {
+      ob.combo = 0;
+      ob.misses += 1;
+      ob.label = t('mgMiss');
+      ob.labelT = 0.7;
+      SFX.uncheck();
+      if (ob.misses >= 3) { obEnd(); return; }
+    }
+    obSync();
+    var hit = $('obHit');
+    if (hit) {
+      hit.textContent = ob.label;
+      hit.classList.add('show');
+      clearTimeout(obJudge.t);
+      obJudge.t = setTimeout(function () { hit.classList.remove('show'); }, 420);
+    }
+  }
+
+  function obDraw() {
+    if (!ob || !obCtx) return;
+    var g = obCtx, W = ob.W, H = ob.H;
+    var cx = W / 2, cy = H / 2, R = Math.min(W, H) * 0.34;
+    var skin = equippedSkin();
+    var col = (skin && skin.color) || '#FFFFFF';
+    g.clearRect(0, 0, W, H);
+
+    g.strokeStyle = ' rgba(255,255,255,.12)';
+    g.lineWidth = 1;
+    g.beginPath();
+    g.arc(cx, cy, R, 0, 6.2832);
+    g.stroke();
+    g.beginPath();
+    g.arc(cx, cy, R * 0.55, 0, 6.2832);
+    g.strokeStyle = 'rgba(255,255,255,.06)';
+    g.stroke();
+
+    // 목표 지점
+    var tx = cx + Math.cos(ob.target) * R;
+    var ty = cy + Math.sin(ob.target) * R;
+    g.save();
+    g.shadowColor = col;
+    g.shadowBlur = 14;
+    g.strokeStyle = 'rgba(255,255,255,' + (0.5 + 0.4 * Math.sin(ob.t * 4)) + ')';
+    g.lineWidth = 3;
+    g.beginPath();
+    g.arc(cx, cy, R, ob.target - 0.2, ob.target + 0.2);
+    g.stroke();
+    g.fillStyle = col;
+    sanStarPath(g, tx, ty, Math.max(7, W * 0.022));
+    g.fill();
+    g.restore();
+
+    // 궤도 빛점
+    var dx = cx + Math.cos(ob.a) * R;
+    var dy = cy + Math.sin(ob.a) * R;
+    g.save();
+    g.globalAlpha = 0.18;
+    g.strokeStyle = col;
+    g.lineWidth = 1.4;
+    g.beginPath();
+    g.arc(cx, cy, R, ob.a - 0.5, ob.a);
+    g.stroke();
+    g.restore();
+    g.save();
+    g.shadowColor = '#FFFFFF';
+    g.shadowBlur = ob.flash > 0 ? 26 : 12;
+    g.fillStyle = '#FFFFFF';
+    g.beginPath();
+    g.arc(dx, dy, Math.max(4, W * 0.012) * (1 + ob.flash * 0.6), 0, 6.2832);
+    g.fill();
+    g.restore();
+
+    // 중앙 ✦
+    g.save();
+    g.shadowColor = col;
+    g.shadowBlur = 18;
+    g.fillStyle = col;
+    sanStarPath(g, cx, cy, Math.max(12, W * 0.04));
+    g.fill();
+    g.restore();
+
+    if (ob.flash > 0) {
+      g.globalAlpha = ob.flash * 0.5;
+      g.fillStyle = 'rgba(180,235,255,.5)';
+      g.beginPath();
+      g.arc(cx, cy, R * 0.5 + ob.flash * R * 0.5, 0, 6.2832);
+      g.fill();
+      g.globalAlpha = 1;
+    }
+    if (ob.labelT > 0) {
+      g.globalAlpha = Math.min(1, ob.labelT * 2);
+      g.fillStyle = '#EAF9FF';
+      g.font = '800 ' + Math.round(W * 0.038) + 'px -apple-system,sans-serif';
+      g.textAlign = 'center';
+      g.fillText(ob.label, cx, cy - R * 0.55);
+      g.globalAlpha = 1;
+    }
+    // 남은 실패 표시
+    for (var i = 0; i < 3; i++) {
+      g.fillStyle = i < (3 - ob.misses) ? 'rgba(255,199,221,.85)' : 'rgba(255,255,255,.14)';
+      g.beginPath();
+      g.arc(cx - 12 + i * 12, H - 14, 3, 0, 6.2832);
+      g.fill();
+    }
+  }
+
+  function obEnd() {
+    ob.over = true;
+    obActive = false;
+    SFX.gameOver();
+    if (ob.score > miniSave.best.orbit) { miniSave.best.orbit = ob.score; saveMini(); }
+    var res = miniAward('orbit', ob.score, ob.hits >= 12);
+    var hit = $('obHit');
+    if (hit) {
+      hit.innerHTML = '<div style="font-size:13px;font-weight:800">' + esc(fmt('mgOverTitle', { n: ob.score })) + '</div>' +
+        '<div style="font-size:10px;color:#B4B4B4;margin-top:4px">' + esc(t('mgBest')) + ' ' + miniSave.best.orbit + '</div>' +
+        (res ? (res.capped ? '<div style="font-size:10px;color:#B4B4B4;margin-top:2px">' + esc(t('mgNoReward')) + '</div>' : '<div style="font-size:10px;color:#B4B4B4;margin-top:2px">' + esc(fmt('mgReward', { n: res.shards })) + '</div>') : '') +
+        '<button class="btn-primary mg-over-btn" type="button" data-mgagain="orbit" style="display:block;margin-top:8px">' + esc(t('mgAgain')) + '</button>';
+      hit.classList.add('show');
+      hit.style.opacity = '1';
+      hit.style.transform = 'translate(-50%,-50%) scale(1)';
+      hit.style.pointerEvents = 'auto';
+      hit.style.background = 'rgba(6,6,6,.9)';
+      hit.style.width = '100%';
+      hit.style.height = '100%';
+      hit.style.left = '0';
+      hit.style.top = '0';
+      hit.style.borderRadius = '16px';
+      hit.style.display = 'flex';
+      hit.style.flexDirection = 'column';
+      hit.style.alignItems = 'center';
+      hit.style.justifyContent = 'center';
+      hit.style.transform = 'none';
+      hit.style.textAlign = 'center';
+    }
+    obSync();
+  }
+
+  /* --- 별자리 기억 --- */
+  var mmCanvas = null, mmCtx = null, mmRaf = 0, mmLast = 0, mmActive = false, mm = null;
+
+  function mmInit() {
+    if (mmCanvas) return !!mmCtx;
+    mmCanvas = $('mmCanvas');
+    if (!mmCanvas) return false;
+    try { mmCtx = mmCanvas.getContext('2d'); } catch (e) { mmCtx = null; }
+    return !!mmCtx;
+  }
+
+  function mmSync() {
+    if (!mm) return;
+    var rd = $('mmRound');
+    if (rd) rd.textContent = String(Math.max(0, mm.round));
+    var bs = $('mmBest');
+    if (bs) bs.textContent = t('mgBest') + ' ' + miniSave.best.memory;
+    var rw = $('mmRew');
+    if (rw) rw.textContent = fmt('mgRewardInfo', { a: miniLeft('memory'), b: MINI_DAILY });
+  }
+
+  function mmStart() {
+    if (!mmInit()) return;
+    var dim = miniCanvasSetup(mmCanvas, mmCtx, 1.0);
+    var W = dim.W, H = dim.H;
+    mm = { W: W, H: H, cells: [], seq: [], idx: 0, round: 0, phase: 'wait', timer: 0.6, flash: -1, flashT: 0, t: 0, over: false };
+    var size = Math.min(W, H) * 0.24;
+    var gap = size * 0.18;
+    var gw = size * 3 + gap * 2;
+    var gh = gw;
+    var ox = (W - gw) / 2 + size / 2;
+    var oy = (H - gh) / 2 + size / 2;
+    for (var r = 0; r < 3; r++) {
+      for (var c = 0; c < 3; c++) {
+        mm.cells.push({ x: ox + c * (size + gap), y: oy + r * (size + gap), r: size / 2, i: r * 3 + c });
+      }
+    }
+    var ov = $('mmOver');
+    if (ov) { ov.hidden = true; ov.innerHTML = ''; }
+    mmSync();
+    mmActive = true;
+    mmLast = 0;
+    if (!mmRaf && window.requestAnimationFrame) mmRaf = requestAnimationFrame(mmLoop);
+  }
+
+  function mmLeave() {
+    mmActive = false;
+    if (mmRaf && window.cancelAnimationFrame) cancelAnimationFrame(mmRaf);
+    mmRaf = 0;
+  }
+
+  function mmOpen() {
+    if (!mmInit()) return;
+    if (!mm || mm.over) { mmStart(); return; }
+    mmSync();
+    mmActive = true;
+    mmLast = 0;
+    if (!mmRaf && window.requestAnimationFrame) mmRaf = requestAnimationFrame(mmLoop);
+  }
+
+  function mmRoundStart() {
+    mm.round += 1;
+    mm.seq.push(Math.floor(Math.random() * 9));
+    mm.idx = 0;
+    mm.phase = 'show';
+    mm.flash = -1;
+    mm.timer = 0.55;
+    mmSync();
+  }
+
+  function mmLoop(ts) {
+    if (!mm || !mmActive) { mmRaf = 0; return; }
+    mmRaf = window.requestAnimationFrame ? requestAnimationFrame(mmLoop) : 0;
+    if (!mmLast) mmLast = ts;
+    var dt = (ts - mmLast) / 1000;
+    mmLast = ts;
+    if (dt > 0.08) dt = 0.08;
+    if (dt <= 0) return;
+    mm.t += dt;
+    if (mm.phase === 'wait') {
+      mm.timer -= dt;
+      if (mm.timer <= 0) mmRoundStart();
+    } else if (mm.phase === 'show') {
+      if (mm.flash >= 0) {
+        mm.flashT += dt;
+        if (mm.flashT >= 0.42) { mm.flash = -1; mm.flashT = 0; mm.timer = 0.16; }
+      } else {
+        mm.timer -= dt;
+        if (mm.timer <= 0) {
+          if (mm.idx < mm.seq.length) {
+            mm.flash = mm.seq[mm.idx];
+            mm.idx += 1;
+            mm.flashT = 0;
+            tone({ f: 620 + mm.flash * 70, dur: .14, type: 'triangle', gain: .05 });
+          } else {
+            mm.phase = 'input';
+            mm.idx = 0;
+          }
+        }
+      }
+    }
+    mmDraw();
+  }
+
+  function mmDraw() {
+    if (!mm || !mmCtx) return;
+    var g = mmCtx, W = mm.W, H = mm.H;
+    var skin = equippedSkin();
+    var col = (skin && skin.color) || '#FFFFFF';
+    g.clearRect(0, 0, W, H);
+    for (var i = 0; i < mm.cells.length; i++) {
+      var cell = mm.cells[i];
+      var on = mm.flash === i;
+      g.save();
+      if (on) { g.shadowColor = col; g.shadowBlur = 22; }
+      g.globalAlpha = on ? 1 : 0.72;
+      g.fillStyle = on ? col : 'rgba(255,255,255,.10)';
+      sanStarPath(g, cell.x, cell.y, cell.r * (on ? 1.05 : 0.82));
+      g.fill();
+      if (!on) {
+        g.strokeStyle = 'rgba(255,255,255,.16)';
+        g.lineWidth = 1;
+        g.stroke();
+      }
+      g.restore();
+    }
+    if (mm.phase === 'input') {
+      g.fillStyle = 'rgba(200,240,255,.55)';
+      g.font = '700 ' + Math.round(W * 0.03) + 'px -apple-system,sans-serif';
+      g.textAlign = 'center';
+      g.fillText(mm.idx + ' / ' + mm.seq.length, W / 2, H - 14);
+    }
+  }
+
+  function mmTapAt(p) {
+    if (!mm || mm.over || mm.phase !== 'input') return;
+    for (var i = 0; i < mm.cells.length; i++) {
+      var cell = mm.cells[i];
+      var dx = p.x - cell.x, dy = p.y - cell.y;
+      if (dx * dx + dy * dy > (cell.r * 1.15) * (cell.r * 1.15)) continue;
+      if (mm.seq[mm.idx] !== i) { mmEnd(); return; }
+      mm.flash = i;
+      mm.flashT = 0;
+      mm.idx += 1;
+      SFX.check();
+      if (mm.idx >= mm.seq.length) {
+        mm.phase = 'wait';
+        mm.timer = 0.65;
+        mm.flash = -1;
+        setTimeout(function () { if (mm && !mm.over) SFX.result('epic'); }, 120);
+      }
+      return;
+    }
+  }
+
+  function mmEnd() {
+    mm.over = true;
+    mmActive = false;
+    SFX.lose();
+    var done = Math.max(0, mm.round - 1);
+    if (done > miniSave.best.memory) { miniSave.best.memory = done; saveMini(); }
+    var res = miniAward('memory', done, done >= 5);
+    var ov = $('mmOver');
+    if (ov) {
+      ov.hidden = false;
+      ov.innerHTML = '<div class="mg-over-title">' + esc(fmt('mgOverTitle', { n: done })) + '</div>' +
+        '<div class="mg-over-sub">' + esc(t('mgBest')) + ' <b>' + miniSave.best.memory + '</b></div>' +
+        (res ? (res.capped ? '<div class="mg-over-sub">' + esc(t('mgNoReward')) + '</div>' : '<div class="mg-over-sub">' + esc(fmt('mgReward', { n: res.shards })) + '</div>') : '') +
+        '<button class="btn-primary mg-over-btn" type="button" data-mgagain="memory">' + esc(t('mgAgain')) + '</button>';
+    }
+    mmSync();
+  }
+
+  function miniPoint(canvas, e) {
+    var rect = canvas.getBoundingClientRect();
+    var src = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
+    return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+  }
+
+  function bindMiniGames() {
+    if (mtInit()) {
+      mtCanvas.addEventListener('pointerdown', function (e) {
+        if (!mt || mt.over) return;
+        if (e.cancelable) e.preventDefault();
+        unlockSound();
+        var p = miniPoint(mtCanvas, e);
+        mt.tx = p.x; mt.ty = p.y;
+      });
+      mtCanvas.addEventListener('pointermove', function (e) {
+        if (!mt || mt.over) return;
+        if (e.cancelable) e.preventDefault();
+        var p = miniPoint(mtCanvas, e);
+        mt.tx = p.x; mt.ty = p.y;
+      });
+      var mo = $('mtOver');
+      if (mo) mo.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-mgagain]');
+        if (b) mtStart();
+      });
+    }
+    if (obInit()) {
+      obCanvas.addEventListener('pointerdown', function (e) {
+        if (!ob || ob.over) return;
+        if (e.cancelable) e.preventDefault();
+        unlockSound();
+        obJudge();
+      });
+      var oh = $('obHit');
+      if (oh) oh.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-mgagain]');
+        if (!b) return;
+        oh.classList.remove('show');
+        oh.style.cssText = '';
+        obStart();
+      });
+    }
+    if (mmInit()) {
+      mmCanvas.addEventListener('pointerdown', function (e) {
+        if (!mm || mm.over) return;
+        if (e.cancelable) e.preventDefault();
+        unlockSound();
+        mmTapAt(miniPoint(mmCanvas, e));
+      });
+      var mvo = $('mmOver');
+      if (mvo) mvo.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-mgagain]');
+        if (b) mmStart();
+      });
+    }
+  }
+
+  /* ---------- ✦ 업데이트 내역 (누적) ---------- */
+
+  var patchOpen = false;
+  var PATCH_ORDER = ['2.0.0', '1.6.0', '1.5.0', '1.4.0'];
+
+  function renderPatch() {
+    var host = $('pnBody');
+    if (!host) return;
+    var title = $('pnTitle');
+    if (title) title.textContent = '✎ ' + t('pnTitle');
+    host.innerHTML = PATCH_ORDER.map(function (v) {
+      var e = CHANGELOG[v];
+      if (!e) return '';
+      var lines = (lang === 'ja' ? e.ja : e.ko) || [];
+      return '<section class="pn-sec"><div class="pn-ver"><b>v' + v + '</b>' +
+        (v === APP_VERSION ? '<span class="pn-tag">' + esc(t('pnLatest')) + '</span>' : '') +
+        '</div><ul>' + lines.map(function (l) {
+          return '<li>' + esc(String(l).replace(/^✦\s*/, '')) + '</li>';
+        }).join('') + '</ul></section>';
+    }).join('');
+  }
+
+  function openPatch() {
+    patchOpen = true;
+    var ov = $('patchOverlay');
+    ov.hidden = false;
+    renderPatch();
+    if (window.requestAnimationFrame) {
+      requestAnimationFrame(function () { ov.classList.add('open'); });
+    } else {
+      ov.classList.add('open');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePatch() {
+    if (!patchOpen) return;
+    patchOpen = false;
+    var ov = $('patchOverlay');
+    ov.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(function () { if (!patchOpen) ov.hidden = true; }, 240);
   }
 
   /* ---------- refresh ---------- */
@@ -4104,11 +6799,19 @@
     renderRoutines();
     if (cal.isOpen) renderCal();
     if (gachaOpen) {
-      $('hubTitleText').textContent = t(hubTab === 'rpg' ? 'rpgTitle' : hubTab === 'break' ? 'brkTitle' : 'gTitle');
-      if (hubTab === 'rpg') renderRpg();
-      else if (hubTab === 'break') brkSyncHud();
-      else renderGacha();
+      $('hubTitleText').textContent = hubTitle();
+      if (hubTab === 'gacha') renderGacha();
+      else if (hubTab === 'rpg') {
+        if (rpgSub === 'san') renderSanctuary();
+        else if (!bt) renderRpg();
+      } else {
+        if (miniGame === 'break') brkSyncHud();
+        else if (miniGame === 'meteor') mtSync();
+        else if (miniGame === 'orbit') obSync();
+        else mmSync();
+      }
     }
+    if (patchOpen) renderPatch();
     if (updateOpen) renderUpdate();
   }
 
@@ -4137,7 +6840,112 @@
   $('brandBtn').addEventListener('click', openGacha);
   $('tabBtnGacha').addEventListener('click', function () { setHubTab('gacha'); });
   $('tabBtnRpg').addEventListener('click', function () { setHubTab('rpg'); });
-  $('tabBtnBreak').addEventListener('click', function () { setHubTab('break'); });
+  $('tabBtnMini').addEventListener('click', function () { setHubTab('mini'); });
+  $('subBtnSan').addEventListener('click', function () { setRpgSub('san'); });
+  $('subBtnRaid').addEventListener('click', function () { setRpgSub('raid'); });
+
+  // 오른쪽 가장자리 리퀴드 글라스 — 탭 또는 꾹 누르기로 별의 세계
+  var glassTimer = null;
+  (function bindGlass() {
+    var el = $('glassEntry');
+    if (!el) return;
+    el.addEventListener('pointerdown', function () {
+      clearTimeout(glassTimer);
+      glassTimer = setTimeout(function () { unlockSound(); openGacha(); }, 240);
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+      el.addEventListener(ev, function () { clearTimeout(glassTimer); });
+    });
+    el.addEventListener('click', function () {
+      clearTimeout(glassTimer);
+      unlockSound();
+      openGacha();
+    });
+    el.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  })();
+
+  // 미니게임 선택
+  var mgBtns = document.querySelectorAll('.mg-btn');
+  for (var mi = 0; mi < mgBtns.length; mi++) {
+    mgBtns[mi].addEventListener('click', function () {
+      setMiniGame(this.getAttribute('data-mg'));
+    });
+  }
+
+  // 방치형 성역 UI
+  $('sanDeployBtn').addEventListener('click', function () {
+    var p = $('sanPicker');
+    p.hidden = !p.hidden;
+    renderSanPicker();
+    SFX.check();
+  });
+  $('sanSlotBtn').addEventListener('click', sanBuySlot);
+  $('sanBuilds').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-sanb]');
+    if (!b) return;
+    sanBuyBuild(b.getAttribute('data-sanb'));
+  });
+  $('sanPicker').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-sanp]');
+    if (!b) return;
+    sanToggleDeploy(b.getAttribute('data-sanp'));
+  });
+
+  // 도감 검색 · 더 보기 · 교환
+  $('gSearch').addEventListener('input', function () {
+    gSearch = this.value || '';
+    gPage = 1;
+    renderGacha();
+  });
+  $('gSearchClear').addEventListener('click', function () {
+    gSearch = '';
+    gPage = 1;
+    var i = $('gSearch');
+    if (i) i.value = '';
+    renderGacha();
+  });
+  $('gMore').addEventListener('click', function () {
+    gPage += 1;
+    renderGacha();
+  });
+  $('gExchange10').addEventListener('click', function () { exchangeShards(10); });
+
+  // 린 캣 퀴즈
+  $('gRin').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-rin]');
+    if (!b) return;
+    var act = b.getAttribute('data-rin');
+    if (act === 'quiz') {
+      rinFormOpen = true;
+      renderGacha();
+      var inp = $('rinInput');
+      if (inp) inp.focus();
+    } else if (act === 'equip') {
+      equipSkin('rin_cat');
+    }
+  });
+  $('gRin').addEventListener('submit', function (e) {
+    if (!e.target || e.target.id !== 'rinForm') return;
+    e.preventDefault();
+    var inp = $('rinInput');
+    var v = inp ? inp.value : '';
+    if (rinQuizAnswer(v)) {
+      unlockRin();
+    } else {
+      gacha.rinTries = (gacha.rinTries || 0) + 1;
+      saveGacha();
+      SFX.uncheck();
+      toastKey('rinWrong');
+      if (inp) { inp.value = ''; inp.focus(); }
+    }
+  });
+
+  // 업데이트 내역
+  $('patchBtn').addEventListener('click', openPatch);
+  $('pnClose').addEventListener('click', closePatch);
+  $('patchOverlay').addEventListener('click', function (e) {
+    if (e.target === $('patchOverlay')) closePatch();
+  });
   $('gFilters').addEventListener('click', function (e) {
     var b = e.target.closest('[data-f]');
     if (!b) return;
@@ -4162,7 +6970,7 @@
     if (e.target === $('gachaOverlay')) closeGacha();
   });
   $('gDraw').addEventListener('click', drawOnce);
-  $('gExchange').addEventListener('click', exchangeShards);
+  $('gExchange').addEventListener('click', function () { exchangeShards(1); });
   $('gGrid').addEventListener('click', function (e) {
     var btn = e.target.closest('[data-gs]');
     if (!btn) return;
@@ -4195,6 +7003,7 @@
     if (e.key === 'Escape' && cal.isOpen) closeCal();
     if (e.key === 'Escape' && gachaOpen) closeGacha();
     if (e.key === 'Escape' && updateOpen) closeUpdate();
+    if (e.key === 'Escape' && patchOpen) closePatch();
   });
 
   $('focusRegion').addEventListener('submit', function (e) {
@@ -4373,6 +7182,10 @@
   // 사운드 — 첫 사용자 터치에서 iOS AudioContext 잠금 해제
   renderSoundBtn();
   bindBreakGame();
+  bindSanctuary();
+  bindMiniGames();
+  var bootGain = sanAccrue(Date.now(), true);
+  if (bootGain >= 1) setTimeout(function () { toast(fmt('sanOffline', { n: bootGain })); }, 1500);
   $('soundBtn').addEventListener('click', function () { unlockSound(); toggleSound(); });
   $('gachaMute').addEventListener('click', function () { unlockSound(); toggleSound(); });
   ['pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
