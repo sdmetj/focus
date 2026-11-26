@@ -5050,6 +5050,8 @@
         id: id,
         x: p ? p.x : W / 2 + Math.cos(a) * W * 0.22,
         y: p ? p.y : H * 0.64 + Math.sin(a) * W * 0.14,
+        ox: Math.cos(i * 2.399) * W * 0.10,
+        oy: Math.sin(i * 2.399) * W * 0.07,
         cool: p ? p.cool : 0.3 + Math.random() * 0.8,
         t: Math.random() * 6.28,
         lv: Math.max(1, sanLevelOf(id))
@@ -5135,18 +5137,20 @@
         if (d0 < bestD) { bestD = d0; tgt = en; }
       }
       if (tgt) {
-        var dx = tgt.x - st.x, dy = tgt.y - st.y;
-        var d = Math.sqrt(dx * dx + dy * dy) || 1;
-        var want = Math.max(0, d - sim.W * 0.16);
+        var ax = tgt.x - st.x, ay = tgt.y - st.y;
+        var ad = Math.sqrt(ax * ax + ay * ay) || 1;
+        var gx = (tgt.x + st.ox) - st.x, gy = (tgt.y + st.oy) - st.y;
+        var gd = Math.sqrt(gx * gx + gy * gy) || 1;
+        var want = Math.max(0, gd - sim.W * 0.10);
         var step = Math.min(want, speed * dt);
-        st.x += (dx / d) * step;
-        st.y += (dy / d) * step;
+        st.x += (gx / gd) * step;
+        st.y += (gy / gd) * step;
         st.x = Math.max(pad, Math.min(W - pad, st.x));
         st.y = Math.max(pad + 30, Math.min(H - pad - 26, st.y));
         st.cool -= dt;
         if (st.cool <= 0) {
           st.cool = Math.max(0.35, 0.95 - st.lv * 0.012);
-          sim.bullets.push({ x: st.x, y: st.y, vx: (dx / d) * 200, vy: (dy / d) * 200, dmg: sanDmg() * (1 + st.lv * 0.01), life: 1.6, color: sanStarColor(st.id) });
+          sim.bullets.push({ x: st.x, y: st.y, vx: (ax / ad) * 200, vy: (ay / ad) * 200, dmg: sanDmg() * (1 + st.lv * 0.01), life: 1.6, color: sanStarColor(st.id) });
           tone({ f: 620 + Math.min(400, st.lv * 8), dur: .05, type: 'sine', gain: .02 });
         }
       } else {
@@ -5154,6 +5158,23 @@
         var ay = H * 0.62 + Math.sin(st.t * 0.42 + s) * W * 0.12;
         st.x += (ax - st.x) * Math.min(1, dt * 0.8);
         st.y += (ay - st.y) * Math.min(1, dt * 0.8);
+      }
+    }
+
+    // 별끼리 겹치지 않도록 살짝 밀어낸다
+    for (var si = 0; si < sim.stars.length; si++) {
+      for (var sj = si + 1; sj < sim.stars.length; sj++) {
+        var s1 = sim.stars[si], s2 = sim.stars[sj];
+        var ddx = s2.x - s1.x, ddy = s2.y - s1.y;
+        var dd = Math.sqrt(ddx * ddx + ddy * ddy) || 1;
+        var minD = Math.max(20, W * 0.075);
+        if (dd < minD) {
+          var push = (minD - dd) * 0.5;
+          s1.x -= (ddx / dd) * push;
+          s1.y -= (ddy / dd) * push;
+          s2.x += (ddx / dd) * push;
+          s2.y += (ddy / dd) * push;
+        }
       }
     }
 
