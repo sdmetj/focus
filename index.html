@@ -1451,6 +1451,17 @@
     return s;
   }
 
+  // 로그 문구용 — 템플릿의 <b>는 살리고 치환값만 escape한다
+  function fmtHtml(key, vars) {
+    var s = t(key);
+    if (vars) {
+      Object.keys(vars).forEach(function (k) {
+        s = s.split('{' + k + '}').join(esc(String(vars[k])));
+      });
+    }
+    return s;
+  }
+
   function sameRoutineSet(list, target) {
     if (list.length !== target.length) return false;
     var a = list.map(function (r) { return r.text; }).sort();
@@ -2458,7 +2469,7 @@
       var heal = Math.round(bt.hpMax * (0.06 + st.guardHeal));
       if (heal > 0) bt.php = Math.min(bt.hpMax, bt.php + heal);
       btLog('', esc(t('logGuard')));
-      if (heal > 0) btLog('sys', esc(fmt('logHeal', { n: heal })));
+      if (heal > 0) btLog('sys', fmtHtml('logHeal', { n: heal }));
     } else if (kind === 'skill' && sk) {
       btLog('crit', esc(lang === 'ja' ? sk.qja : sk.qko));
       var hits = sk.kind === 'double' ? 2 : 1;
@@ -2469,15 +2480,15 @@
         total += d.n;
       }
       bt.bhp = Math.max(0, bt.bhp - total);
-      btLog(sk.kind === 'burst' ? 'crit' : '', esc(fmt('logSkill', { s: (lang === 'ja' ? sk.ja : sk.ko), n: total })));
+      btLog(sk.kind === 'burst' ? 'crit' : '', fmtHtml('logSkill', { s: (lang === 'ja' ? sk.ja : sk.ko), n: total }));
       if (sk.kind === 'drain') {
         var h1 = Math.round(total * 0.3);
         bt.php = Math.min(bt.hpMax, bt.php + h1);
-        btLog('sys', esc(fmt('logHeal', { n: h1 })));
+        btLog('sys', fmtHtml('logHeal', { n: h1 }));
       } else if (sk.kind === 'heal') {
         var h2 = Math.round(bt.hpMax * (sk.heal || 0));
         bt.php = Math.min(bt.hpMax, bt.php + h2);
-        btLog('sys', esc(fmt('logHeal', { n: h2 })));
+        btLog('sys', fmtHtml('logHeal', { n: h2 }));
       } else if (sk.kind === 'shield') {
         bt.shield = true;
         btLog('sys', esc(t('logShield')));
@@ -2494,7 +2505,7 @@
     } else {
       var dm = rollDamage(st.atk, st, 0);
       bt.bhp = Math.max(0, bt.bhp - dm.n);
-      btLog(dm.crit ? 'crit' : '', esc(fmt(dm.crit ? 'logCrit' : 'logAtk', { n: dm.n })));
+      btLog(dm.crit ? 'crit' : '', fmtHtml(dm.crit ? 'logCrit' : 'logAtk', { n: dm.n }));
     }
 
     renderBattle();
@@ -2513,14 +2524,14 @@
     var raw = Math.round(atk * (0.85 + Math.random() * 0.3));
     if (bt.shield) {
       bt.shield = false;
-      btLog('sys', esc(fmt('logBlock', { name: (lang === 'ja' ? b.ja : b.ko) })));
+      btLog('sys', fmtHtml('logBlock', { name: (lang === 'ja' ? b.ja : b.ko) }));
     } else {
       var dmg = raw;
       if (bt.guard) dmg = Math.round(dmg * 0.35);
       dmg = Math.round(dmg * (1 - st.dr));
       dmg = Math.max(1, dmg);
       bt.php = Math.max(0, bt.php - dmg);
-      btLog('boss', esc(fmt('logBoss', { name: (lang === 'ja' ? b.ja : b.ko), n: dmg })));
+      btLog('boss', fmtHtml('logBoss', { name: (lang === 'ja' ? b.ja : b.ko), n: dmg }));
     }
     bt.guard = false;
     bt.turn += 1;
@@ -2529,7 +2540,7 @@
     if (st.regen > 0 && bt.php > 0) {
       var rh = Math.round(bt.hpMax * st.regen);
       bt.php = Math.min(bt.hpMax, bt.php + rh);
-      btLog('sys', esc(fmt('logHeal', { n: rh })));
+      btLog('sys', fmtHtml('logHeal', { n: rh }));
     }
     if (bt.php <= 0) { bt.php = 0; bt.busy = false; btEnd(false); return; }
     bt.busy = false;
