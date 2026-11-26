@@ -2922,6 +2922,11 @@
   var BRK_KEY = 'focus.break.v1';
   var BRK_COLS = 7;
   var BRK_DAILY = 2;
+  // 게임 루프는 '60fps 1프레임 = 1'인 프레임 단위로 돈다.
+  // 120Hz ProMotion 같은 고주사율 기기에서도 실제 속도가 같도록 dt를 60fps 기준으로 정규화한다.
+  // 초 단위 타이머·애니메이션은 dt / BRK_FPS로 초를 구해 그대로 쓴다.
+  var BRK_FPS = 60;
+  var BRK_MAX_DT = 2.5; // 한 번에 최대 2.5프레임(≈41.7ms)까지만 진행 — 앱 전환·렉 스파이크 방어
 
   // 레전더리 10종의 벽돌깨기 능력 — 스킨마다 테마에 맞는 효과
   var BRK_ABILITY = {
@@ -2999,7 +3004,9 @@
     brk.topY = brk.pad;
     brk.launchY = h - Math.round(w * 0.115);
     brk.ballR = Math.max(4, Math.round(w * 0.0155));
-    brk.baseSpeed = Math.max(210, w * 0.95);
+    // 1x 기본 속도 — 프레임(60fps)당 이동 px. 공 궤적이 눈으로 따라갈 만큼 차분하게 잡는다.
+    // (w*0.0083px/프레임 ≈ w*0.5px/초 → 보드 폭을 약 2초에 걸쳐 지나간다)
+    brk.baseSpeed = Math.max(1.8, w * 0.0083);
     brk.stars = [];
     for (var i = 0; i < 34; i++) {
       brk.stars.push({
@@ -3020,7 +3027,7 @@
     var high = !!(skin && (skin.rarity === 'epic' || skin.rarity === 'legendary'));
     brk = {
       W: 0, H: 0, pad: 0, gap: 0, brickW: 0, brickH: 0, topY: 0,
-      launchY: 0, ballR: 5, baseSpeed: 300, stars: [],
+      launchY: 0, ballR: 5, baseSpeed: 3, stars: [],
       bricks: [], balls: [], parts: [], pops: [],
       count: 1 + (high ? 1 : 0),
       crit: high ? 0.10 : 0,
@@ -3086,52 +3093,57 @@
     brkRaf = window.requestAnimationFrame ? requestAnimationFrame(brkLoop) : 0;
     if (!brk || !brkActive) return;
     if (!brkLast) brkLast = ts;
-    var dt = (ts - brkLast) / 1000;
+    // 경과 시간을 60fps 기준 프레임 수로 정규화 (120Hz에서도 실시간 속도 동일)
+    var dt = (ts - brkLast) / 16.6667;
     brkLast = ts;
-    if (dt > 0.06) dt = 0.06;
+    if (dt > BRK_MAX_DT) dt = BRK_MAX_DT;
     if (dt < 0) dt = 0;
-    dt *= brk.speedMul;
+    dt *= brk.speedMul; // 2x는 프레임당 이동량을 정확히 2배로
     if (!brk.over) brkUpdate(dt);
     brkDraw();
   }
 
   function brkUpdate(dt) {
-    brk.t += dt;
-    if (brk.flash > 0) brk.flash = Math.max(0, brk.flash - dt);
-    if (brk.laser) { brk.laser.t -= dt; if (brk.laser.t <= 0) brk.laser = null; }
+    var sec = dt / BRK_FPS; // 프레임 단위 dt를 초로 환산 (타이머·이펙트용)
+    brk.t += sec;
+    if (brk.flash > 0) brk.flash = Math.max(0, brk.flash - sec);
+    if (brk.laser) { brk.laser.t -= sec; if (brk.laser.t <= 0) brk.laser = null; }
 
     if (brk.queue > 0) {
-      brk.fireTimer -= dt;
+      brk.fireTimer -= sec;
       if (brk.fireTimer <= 0) { brkFireOne(); brk.fireTimer = 0.07; }
     }
 
     var speed = brk.baseSpeed;
     for (var i = brk.balls.length - 1; i >= 0; i--) {
       var b = brk.balls[i];
-      var step = dt / Math.max(1, Math.ceil((speed * dt) / 5));
-      for (var s = 0; s < 64; s++) {
+      // 터널링 방지 — 한 프레임 이동량을 4px 이하 서브스텝으로 쪼갠다.
+      // (서브스텝 수만큼만 돌려야 실제 속도가 speed * dt가 된다. 2x에서는 서브스텝 수만 늘어난다)
+      var subs = Math.max(1, Math.min(64, Math.ceil((speed * dt) / 4)));
+      var step = dt / subs;
+      for (var s = 0; s < subs; s++) {
         if (!b.alive) break;
         brkStepBall(b, step, speed);
         if (b.y > brk.launchY + brk.ballR * 1.2 && b.vy > 0) { b.alive = false; break; }
-        if (b.life > 7) { b.alive = false; break; }
+        if (b.life > 7 * BRK_FPS) { b.alive = false; break; }
       }
       if (!b.alive) brk.balls.splice(i, 1);
     }
 
     for (var p = brk.parts.length - 1; p >= 0; p--) {
       var pt = brk.parts[p];
-      pt.x += pt.vx * dt;
-      pt.y += pt.vy * dt;
+      pt.x += pt.vx * sec;
+      pt.y += pt.vy * sec;
       pt.vx *= 0.985;
       pt.vy *= 0.985;
-      pt.life -= dt;
+      pt.life -= sec;
       if (pt.life <= 0) brk.parts.splice(p, 1);
     }
 
     for (var q = brk.pops.length - 1; q >= 0; q--) {
       var pop = brk.pops[q];
-      pop.y -= 30 * dt;
-      pop.life -= dt;
+      pop.y -= 30 * sec;
+      pop.life -= sec;
       if (pop.life <= 0) brk.pops.splice(q, 1);
     }
 
