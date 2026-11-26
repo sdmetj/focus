@@ -471,6 +471,8 @@
   .g-test b{font-weight:800;color:#FFFFFF;letter-spacing:.06em}
   .g-test:active{border-color:#5A5A5A;color:#EDEDED}
   .gacha-close{width:30px;height:30px;border-radius:9px;border:1px solid transparent;color:var(--dim);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
+  .gacha-tools{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+  .gacha-mute{width:30px;height:30px;border-radius:9px}
   .gacha-close:active{color:var(--text)}
   .g-wallet{display:flex;align-items:center;gap:13px;background:#131313;border:1px solid #242424;border-radius:14px;padding:12px 14px}
   .g-w-item{display:flex;align-items:baseline;gap:6px;min-width:0}
@@ -792,7 +794,7 @@
       <span class="brand-dot" id="brandDot" aria-hidden="true" hidden></span>
     </button>
     <div class="head-right">
-      <button class="sound-btn" id="soundBtn" type="button" aria-label="소리 끄기" aria-pressed="true">🔊</button>
+      <button class="sound-btn" id="soundBtn" data-sound type="button" aria-label="소리 끄기" aria-pressed="true">🔊</button>
       <div class="lang" role="group" aria-label="Language / 言語">
         <button class="lang-btn" type="button" data-lang="ko" aria-pressed="true">KR</button>
         <span class="lang-sep" aria-hidden="true">|</span>
@@ -876,7 +878,10 @@
   <div class="cal-sheet gacha-sheet" role="dialog" aria-modal="true" aria-labelledby="gachaTitle">
     <div class="gacha-head">
       <div class="gacha-title" id="gachaTitle">✦ <span id="hubTitleText" data-i18n="gTitle">별 스킨</span></div>
-      <button class="gacha-close" id="gachaClose" type="button" data-i18n-aria="gClose" aria-label="닫기">✕</button>
+      <div class="gacha-tools">
+        <button class="sound-btn gacha-mute" id="gachaMute" data-sound type="button" aria-label="소리 끄기" aria-pressed="true">🔊</button>
+        <button class="gacha-close" id="gachaClose" type="button" data-i18n-aria="gClose" aria-label="닫기">✕</button>
+      </div>
     </div>
     <div class="hub-tabs" role="tablist">
       <button class="hub-tab on" id="tabBtnGacha" type="button" role="tab" aria-selected="true" data-tab="gacha">
@@ -962,7 +967,7 @@
           </div>
         </div>
         <div class="brk-stage" id="brkStage">
-          <canvas id="brkCanvas" aria-label="별빛 벽돌깨기"></canvas>
+          <canvas id="brkCanvas" data-i18n-aria="brkTitle" aria-label="별빛 벽돌깨기"></canvas>
           <div class="brk-over" id="brkOver" hidden></div>
         </div>
         <div class="brk-foot">
@@ -1852,12 +1857,14 @@
   };
 
   function renderSoundBtn() {
-    var b = $('soundBtn');
-    if (!b) return;
-    b.textContent = soundOn ? '🔊' : '🔇';
-    b.setAttribute('aria-label', t(soundOn ? 'soundOn' : 'soundOff'));
-    b.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
-    b.classList.toggle('off', !soundOn);
+    var btns = document.querySelectorAll('[data-sound]');
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      b.textContent = soundOn ? '🔊' : '🔇';
+      b.setAttribute('aria-label', t(soundOn ? 'soundOn' : 'soundOff'));
+      b.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+      b.classList.toggle('off', !soundOn);
+    }
   }
 
   function toggleSound() {
@@ -3389,7 +3396,7 @@
     var w = $('brkWave');
     if (w) w.textContent = 'WAVE ' + pad2(brk.wave);
     var best = $('brkBest');
-    if (best) best.textContent = t('brkBest') + ' ' + pad2(brkSave.best);
+    if (best) best.textContent = t('brkBest') + ' ' + pad2(Math.max(brkSave.best, brk.wave));
     var skin = equippedSkin();
     var ab = brk.ability ? BRK_ABILITY_INFO[brk.ability] : null;
     var sEl = $('brkSkin');
@@ -4343,6 +4350,7 @@
   renderSoundBtn();
   bindBreakGame();
   $('soundBtn').addEventListener('click', function () { unlockSound(); toggleSound(); });
+  $('gachaMute').addEventListener('click', function () { unlockSound(); toggleSound(); });
   ['pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
     document.addEventListener(ev, unlockSound, { passive: true });
   });
