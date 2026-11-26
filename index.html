@@ -2998,9 +2998,9 @@
     st.setProperty('--tag-star', (s && s.color) || '#BFBFBF');
     st.setProperty('--star-glow', (s && s.glow) || 'rgba(255,255,255,.25)');
     st.setProperty('--tag-glow', (s && s.glow2) || 'rgba(255,255,255,0)');
-    st.setProperty('--theme-1', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + a + ')');
-    st.setProperty('--theme-2', 'hsla(' + ((c.h + 42) % 360) + ', ' + sat + '%, ' + lit + '%, ' + (a * .72).toFixed(3) + ')');
-    st.setProperty('--theme-3', 'hsla(' + ((c.h + 320) % 360) + ', ' + sat + '%, ' + lit + '%, ' + (a * .55).toFixed(3) + ')');
+    st.setProperty('--theme-1', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + Math.min(.42, a * 1.5).toFixed(3) + ')');
+    st.setProperty('--theme-2', 'hsla(' + ((c.h + 26) % 360) + ', ' + sat + '%, ' + lit + '%, ' + (a * .7).toFixed(3) + ')');
+    st.setProperty('--theme-3', 'hsla(' + ((c.h + 336) % 360) + ', ' + sat + '%, ' + lit + '%, ' + (a * .45).toFixed(3) + ')');
     st.setProperty('--skin-line', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + Math.min(.6, a + .16).toFixed(3) + ')');
     st.setProperty('--skin-soft', 'hsla(' + c.h + ', ' + sat + '%, ' + lit + '%, ' + (a * .7).toFixed(3) + ')');
     st.setProperty('--skin-accent', (s && (s.fill || s.color)) || '#FFFFFF');
@@ -5022,7 +5022,7 @@
   function sanResize() {
     if (!sanCanvas || !sanSim) return;
     var w = Math.round(sanCanvas.clientWidth || 0) || 320;
-    var h = Math.round(w * 0.92);
+    var h = Math.round(w * 0.86);
     var dpr = Math.min(2, window.devicePixelRatio || 1);
     sanCanvas.width = Math.round(w * dpr);
     sanCanvas.height = Math.round(h * dpr);
@@ -5438,6 +5438,8 @@
     rateEl.textContent = rate.toFixed(1);
     $('sanRate2').textContent = rate.toFixed(1);
     $('sanSlots').textContent = san.slots + '/10';
+    var sc = $('sanCanvas');
+    if (sc) sc.setAttribute('aria-label', t('sanTitle'));
     $('sanLvSum').textContent = String(sanDeployLevelSum());
     $('sanKills').textContent = String(san.kills);
     var slotBtn = $('sanSlotBtn');
