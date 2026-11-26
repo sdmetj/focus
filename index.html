@@ -937,6 +937,7 @@
   .san-b-btn{flex:0 0 auto;font-size:10px;font-weight:800;color:#0A0A0A;background:#EDEDED;border-radius:9px;padding:7px 10px;white-space:nowrap}
   .san-b-btn:disabled{background:#242424;color:#5C5C5C}
   .san-tip{font-size:9.5px;color:#575757;line-height:1.7;text-align:center;margin:2px 2px 0}
+  .san-lvnote{font-size:9px;color:#5E6E78;line-height:1.6;text-align:center;margin:2px 0 1px;letter-spacing:.01em}
   .san-picker{border:1px solid #262626;border-radius:14px;background:#101010;padding:10px}
   .san-picker h4{margin:0 0 3px;font-size:11px;color:#E4E4E4}
   .san-picker p{margin:0 0 8px;font-size:9.5px;color:#6E6E6E}
@@ -1242,6 +1243,7 @@
             <button class="btn-ghost" id="sanSlotBtn" type="button"></button>
           </div>
           <div class="san-line" id="sanDeployed"></div>
+          <p class="san-lvnote" data-i18n="sanLvBonus">Lv.5 공격력 +3% · Lv.10 치명타 +2% · Lv.20 별조각 +5%</p>
           <div class="san-builds" id="sanBuilds"></div>
           <p class="san-tip" data-i18n="sanTapTip">성역을 탭하면 건물이 반응합니다</p>
           <div class="san-picker" id="sanPicker" hidden></div>
@@ -4979,6 +4981,9 @@
       saveGacha();
       syncWallet();
       if (!quiet) toast(fmt('sanOffline', { n: whole }));
+      // 자리를 비운 동안에도 편성 별은 조금씩 자란다
+      var xpEach = Math.round(whole * 6 * (1 + 0.15 * (san.buildings.altar || 0)));
+      if (xpEach > 0) san.deploy.forEach(function (id) { sanAddXp(id, xpEach); });
     }
     saveSan();
     return whole;
@@ -5359,11 +5364,17 @@
     for (var s = 0; s < sim.stars.length; s++) {
       var st = sim.stars[s];
       var col = sanStarColor(st.id);
+      var sr = Math.max(6, W * 0.024) * (1 + 0.06 * Math.sin(st.t * 2));
       g.save();
+      g.strokeStyle = 'rgba(255,255,255,.09)';
+      g.lineWidth = 1;
+      g.beginPath();
+      g.arc(st.x, st.y, sr * 2.3, 0, 6.2832);
+      g.stroke();
       g.shadowColor = col;
-      g.shadowBlur = 12;
+      g.shadowBlur = 14;
       g.fillStyle = col;
-      sanStarPath(g, st.x, st.y, Math.max(5, W * 0.019) * (1 + 0.06 * Math.sin(st.t * 2)));
+      sanStarPath(g, st.x, st.y, sr);
       g.fill();
       g.restore();
     }
