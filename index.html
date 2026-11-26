@@ -2981,7 +2981,7 @@
     if (!brk || !brkCanvas) return;
     var w = Math.round(brkCanvas.clientWidth || 0);
     if (!w) w = 320;
-    var h = Math.round(w * 1.32);
+    var h = Math.round(w * 1.14);
     var dpr = Math.min(2, window.devicePixelRatio || 1);
     brkCanvas.width = Math.round(w * dpr);
     brkCanvas.height = Math.round(h * dpr);
@@ -3028,7 +3028,7 @@
       speedMul: prevMul, laser: null, flash: 0, t: 0
     };
     brkResize();
-    for (var r = 0; r < 4; r++) brk.bricks = brk.bricks.concat(brkRow(r));
+    for (var r = 0; r < 5; r++) brk.bricks = brk.bricks.concat(brkRow(r));
     var ov = $('brkOver');
     if (ov) { ov.hidden = true; ov.innerHTML = ''; }
     brkSyncHud();
@@ -3326,7 +3326,7 @@
     if (cleared) {
       SFX.stageClear();
       brk.flash = 0.8;
-      for (var r = 1; r < 4; r++) brk.bricks = brk.bricks.concat(brkRow(r));
+      for (var r = 1; r < 5; r++) brk.bricks = brk.bricks.concat(brkRow(r));
     }
     if (brk.wave % 5 === 0) {
       var got = brkReward(brk.wave);
