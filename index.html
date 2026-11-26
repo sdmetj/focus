@@ -3125,7 +3125,7 @@
         if (!b.alive) break;
         brkStepBall(b, step, speed);
         if (b.y > brk.launchY + brk.ballR * 1.2 && b.vy > 0) { b.alive = false; break; }
-        if (b.life > 7 * BRK_FPS) { b.alive = false; break; }
+        if (b.life > 30 * BRK_FPS) { b.alive = false; break; } // 안전장치: 얕은 각도(±75°)로도 16초 안에 바닥에 떨어지므로 30초면 충분
       }
       if (!b.alive) brk.balls.splice(i, 1);
     }
