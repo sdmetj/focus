@@ -1226,7 +1226,7 @@
         <div class="san-wrap">
           <div class="san-top">
             <div class="san-name">✦ <span data-i18n="sanTitle">방치형 성역</span></div>
-            <div class="san-rate"><b id="sanRate">0.0</b><span>/h</span></div>
+            <div class="san-rate">✦ <span id="sanShardNum">0</span> · <b id="sanRate">0.0</b><span>/h</span></div>
           </div>
           <div class="san-stage" id="sanStage">
             <canvas id="sanCanvas" aria-label="방치형 성역"></canvas>
@@ -4833,7 +4833,7 @@
   var SAN_BASE_RATE = 2.2;            // 시간당 별조각 (초반 소량)
   var SAN_MAX_OFFLINE = 24 * 3600 * 1000;
   var SAN_MAX_LV = 40;
-  var SAN_SLOT_COST = { 3: 40, 4: 80, 5: 140, 6: 220, 7: 320, 8: 450, 9: 600 };
+  var SAN_SLOT_COST = { 3: 30, 4: 70, 5: 120, 6: 190, 7: 280, 8: 400, 9: 550 };
   var SAN_BUILD = {
     beacon: { icon: '✧', unlock: 30,  max: 10, cost: function (l) { return 28 + l * 22; } },
     altar:  { icon: '◈', unlock: 60,  max: 10, cost: function (l) { return 52 + l * 30; } },
@@ -4959,6 +4959,8 @@
     if (t2) t2.textContent = String(gacha.shards);
     var owned = $('gOwned');
     if (owned) owned.textContent = t('gOwned') + ' ' + gacha.owned.length + '/' + SKINS.length;
+    var shn = $('sanShardNum');
+    if (shn) shn.textContent = String(gacha.shards);
     updateBrandBadge();
   }
 
@@ -5468,6 +5470,8 @@
     if (!rateEl) return;
     var rate = sanRate();
     rateEl.textContent = rate.toFixed(1);
+    var shn = $('sanShardNum');
+    if (shn) shn.textContent = String(gacha.shards);
     $('sanRate2').textContent = rate.toFixed(1);
     $('sanSlots').textContent = san.slots + '/10';
     var sc = $('sanCanvas');
