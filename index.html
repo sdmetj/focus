@@ -2547,6 +2547,7 @@
     ko: {
       modeTask: '과업',
       modeFocus: '몰입',
+      modeLabel: 'FOCUS 형식',
       timerSetTitle: '몰입 시간',
       timerStart: '몰입 시작',
       minUnit: '분',
@@ -2578,6 +2579,7 @@
     ja: {
       modeTask: 'タスク',
       modeFocus: '没入',
+      modeLabel: 'FOCUSの形式',
       timerSetTitle: '没入時間',
       timerStart: '没入スタート',
       minUnit: '分',
@@ -7435,7 +7437,7 @@
     var timer = composeMode === 'timer';
     var presets = [15, 25, 45, 60];
     return '<form class="compose" id="composeForm" autocomplete="off">' +
-      '<div class="mode-switch" role="tablist" aria-label="' + esc(t('timerSetTitle')) + '">' +
+      '<div class="mode-switch" role="tablist" aria-label="' + esc(t('modeLabel')) + '">' +
         '<button type="button" class="mode-btn' + (timer ? '' : ' on') + '" data-mode="task" role="tab" aria-selected="' + (timer ? 'false' : 'true') + '">' + esc(t('modeTask')) + '</button>' +
         '<button type="button" class="mode-btn' + (timer ? ' on' : '') + '" data-mode="timer" role="tab" aria-selected="' + (timer ? 'true' : 'false') + '">✦ ' + esc(t('modeFocus')) + '</button>' +
       '</div>' +
