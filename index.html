@@ -237,7 +237,8 @@
   .today-count{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
 
   /* empty compose */
-  .compose{display:flex;gap:8px;align-items:stretch}
+  .compose{display:block}
+  .compose-row{display:flex;gap:8px;align-items:stretch}
   .compose input{
     flex:1 1 auto;min-width:0;
     background:var(--card);border:1px solid var(--line);border-radius:14px;
@@ -293,8 +294,56 @@
     color:#FCFCFC;word-break:keep-all;overflow-wrap:anywhere;
     text-shadow:0 1px 0 rgba(0,0,0,.35);
   }
-  .actions{display:flex;gap:8px;align-items:center}
+  .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .actions .btn-primary{flex:1 1 auto;min-height:50px}
+
+  /* 과업 / 몰입 선택 */
+  .mode-switch{display:flex;gap:6px;margin-bottom:9px}
+  .mode-btn{
+    flex:1 1 0;min-width:0;padding:9px 6px;border-radius:11px;
+    border:1px solid #242424;background:#111111;color:#8A8A8A;
+    font-size:12px;font-weight:650;letter-spacing:.02em;
+    transition:color .16s ease,border-color .16s ease,background .16s ease;
+  }
+  .mode-btn.on{color:#F4F4F4;border-color:#4C4C4C;background:#1B1B1B}
+  .mode-btn:active{transform:scale(.985)}
+
+  /* 몰입 타이머 */
+  .timer-set{margin-top:9px}
+  .timer-presets{display:flex;gap:6px;align-items:center}
+  .tp{
+    flex:0 0 auto;min-width:46px;padding:10px 0;border-radius:11px;
+    border:1px solid #262626;background:#121212;color:#9A9A9A;
+    font-size:13px;font-weight:650;font-variant-numeric:tabular-nums;
+    transition:background .14s ease,color .14s ease,border-color .14s ease;
+  }
+  .tp.on{color:#0A0A0A;background:#EDEDED;border-color:#EDEDED}
+  .tp:active{transform:scale(.97)}
+  .tp-custom{
+    flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:5px;
+    justify-content:flex-end;font-size:11px;color:#6E6E6E;
+  }
+  .tp-custom input{
+    flex:0 0 auto;
+    width:60px;background:#121212;border:1px solid #262626;border-radius:10px;
+    padding:9px 8px;color:#EDEDED;font-size:13px;text-align:center;
+    font-variant-numeric:tabular-nums;font-weight:600;
+  }
+  .tp-custom input:focus{outline:none;border-color:#5A5A5A}
+  .tag em{font-style:normal;letter-spacing:.12em;color:#8E8E8E}
+  .timer-wrap{margin:0 0 18px}
+  .timer-clock{
+    font-size:54px;line-height:1;font-weight:800;letter-spacing:-.035em;
+    font-variant-numeric:tabular-nums;color:#FAFAFA;
+    text-shadow:0 0 28px var(--star-glow, rgba(255,255,255,.18));
+  }
+  .timer-clock.paused{color:#8C8C8C;text-shadow:none}
+  .timer-clock.done{color:#FFFFFF;animation:timerPulse .95s ease}
+  @keyframes timerPulse{0%{transform:scale(1)}28%{transform:scale(1.07)}100%{transform:scale(1)}}
+  .timer-bar{margin-top:14px;height:4px;border-radius:999px;background:#1D1D1D;overflow:hidden}
+  .timer-bar i{display:block;height:100%;width:0;border-radius:999px;background:var(--star,#EFEFEF);transition:width .5s linear}
+  .timer-sub{margin-top:9px;font-size:11px;color:#6E6E6E;letter-spacing:.03em}
+  .timer-sub b{color:#9E9E9E;font-weight:600}
 
   /* goal edit */
   .goal-edit-input{
@@ -445,6 +494,7 @@
   .det-count.full{color:#FFFFFF}
   .det-list{list-style:none;margin:0 0 15px;padding:0;display:flex;flex-direction:column;gap:6px}
   .det-list:last-child{margin-bottom:2px}
+  .det-mode{font-style:normal;color:#6E6E6E;font-size:10.5px;letter-spacing:.02em}
   .det-item{
     display:flex;align-items:flex-start;gap:9px;
     background:#171717;border:1px solid #212121;border-radius:11px;
@@ -623,6 +673,14 @@
   .boss.locked{opacity:.42}
   .boss.cleared{border-color:#2C2C2C;background:#151515}
   .boss-idx{flex:0 0 auto;width:24px;font-size:9px;font-weight:800;letter-spacing:.06em;color:#696969;font-variant-numeric:tabular-nums}
+  .boss-ico{
+    flex:0 0 auto;width:27px;height:27px;border-radius:9px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;line-height:1;border:1px solid #2C2C2C;background:#101010;
+  }
+  .boss-tier{font-weight:700;letter-spacing:.04em}
+  .rpg-share{margin:7px 2px 0;font-size:9px;letter-spacing:.03em;color:#607089;text-align:center}
+  .bt-boss-ico{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:8px;border:1px solid #3B2727;background:#160F0F;font-size:12px;margin-right:7px;vertical-align:middle}
   .boss-main{flex:1 1 auto;min-width:0}
   .boss-name{font-size:12.5px;font-weight:600;color:#E9E9E9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .boss-sub{margin-top:3px;font-size:9px;color:#6A6A6A;font-variant-numeric:tabular-nums;letter-spacing:.02em}
@@ -635,8 +693,8 @@
   .bt-back{font-size:11px;color:#8A8A8A;padding:5px 2px 5px 0}
   .bt-back:active{color:#FFFFFF}
   .bt-stage{font-size:9px;font-weight:800;letter-spacing:.18em;color:#6A6A6A;font-variant-numeric:tabular-nums}
-  .bt-boss{position:relative;overflow:hidden;background:linear-gradient(158deg,#1F1515 0%,#120E0E 100%);border:1px solid #3B2727;border-radius:17px;padding:14px}
-  .bt-boss::after{content:"";position:absolute;top:-70px;right:-50px;width:160px;height:160px;background:radial-gradient(circle,rgba(240,140,140,.16),rgba(240,140,140,0) 70%);pointer-events:none}
+  .bt-boss{position:relative;overflow:hidden;background:linear-gradient(158deg,var(--bt1,#1F1515) 0%,#120E0E 100%);border:1px solid var(--btl,#3B2727);border-radius:17px;padding:14px}
+  .bt-boss::after{content:"";position:absolute;top:-70px;right:-50px;width:160px;height:160px;background:radial-gradient(circle,var(--bc,rgba(240,140,140,.16)),rgba(240,140,140,0) 70%);pointer-events:none}
   .bt-boss-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
   .bt-boss-name{font-size:15.5px;font-weight:700;color:#F7EDED;letter-spacing:-.01em}
   .bt-boss-tag{margin-top:4px;font-size:9px;letter-spacing:.1em;color:#8E7474}
@@ -648,6 +706,8 @@
   .bt-line{font-size:11.5px;line-height:1.5;color:#A8A8A8;word-break:keep-all;overflow-wrap:anywhere}
   .bt-line b{font-weight:700;color:#FFFFFF}
   .bt-line.boss b{color:#F4ACAC}
+  .bt-line.boss.sk b{color:#FFD3A0}
+  .bt-line.boss.sk{color:#C9A47E}
   .bt-line.crit b{color:#FFD166}
   .bt-line.sys{color:#707070;font-size:10.5px}
   .bt-me{background:#131313;border:1px solid #272727;border-radius:16px;padding:12px 14px}
@@ -1243,7 +1303,7 @@
           <div class="san-stats">
             <div><b id="sanSlots">3</b><span data-i18n="sanSlots">출전 슬롯</span></div>
             <div><b id="sanRate2">0.0</b><span data-i18n="sanRate">시간당 별조각</span></div>
-            <div><b id="sanLvSum">0</b><span data-i18n="sanDeployedLv">편성 레벨 합</span></div>
+            <div><b id="sanLvSum">0</b><span data-i18n="sanSharedLv">성역 레벨</span></div>
             <div><b id="sanKills">0</b><span data-i18n="sanKills">사냥한 적</span></div>
           </div>
           <div class="san-actions">
@@ -1266,6 +1326,7 @@
             <div class="rpg-lv"><span data-i18n="rpgLvLabel">성좌 레벨</span><b id="rpgLv">1</b></div>
             <div class="rpg-xp"><i id="rpgXpFill"></i></div>
             <div class="rpg-xp-text" id="rpgXpText"></div>
+            <div class="rpg-share" id="rpgShare" data-i18n="shareLevel">✦ 방치형 성역과 레벨 · 경험치를 함께 씁니다</div>
           </div>
         </div>
         <div class="rpg-skin">
@@ -1402,8 +1463,36 @@
   var SEEN_VERSION_KEY = 'focus.seenVersion';
 
   // 업데이트 안내 — 버전과 변경사항만 고치면 새 소식 팝업이 자동으로 뜬다
-  var APP_VERSION = '2.0.0';
+  var APP_VERSION = '2.1.0';
   var CHANGELOG = {
+    '2.1.0': {
+      ko: [
+        '새 형식 — 지금의 FOCUS를 「과업」과 「몰입」 중에 골라 시작할 수 있어요',
+        '몰입은 목표와 시간을 함께 정합니다 — 15 · 25 · 45 · 60분 프리셋 또는 직접 입력(1~180분)',
+        '메인 카드가 남은 시간을 MM:SS로 실시간 카운트다운하고, 진행 바가 함께 차오릅니다',
+        '타이머는 일시정지 · 재개 · 조기 완료가 되고, 00:00이 되면 종소리와 완료 연출 뒤 과업 완료와 똑같은 보상(별조각·뽑기권·기록)이 들어옵니다',
+        '새로고침하거나 앱을 껐다 켜도 남은 시간이 어긋나지 않도록 타임스탬프로 저장 — 자리를 비운 사이 끝났으면 돌아오자마자 완료 처리',
+        '방치형 성역과 성좌 토벌의 레벨 · 경험치를 하나로 합쳤어요 — 성역에서 자라면 토벌의 아군 스펙도 같이 오르고, 보스 토벌 보상도 성역으로 들어갑니다',
+        '기존 기록은 둘 중 높은 레벨로 자연스럽게 옮겨 손실 없이 이어집니다',
+        '성좌 보스 12종 → 24종 — 황도 · 심연 · 시간 · 별자리 4계열, 보스마다 고유 색 · 아이콘 · 필살 스킬 · 추천 레벨이 다릅니다',
+        '보스는 3턴마다 고유 스킬을 씁니다 — 강타 · 방어 무시 · 흡혈 · 2연격 · 폭발',
+        '뒤쪽 보스일수록 첫 처치 뽑기권 · 별조각 · 경험치 보상이 커집니다',
+        '업데이트 선물로 뽑기권 10장을 드렸어요'
+      ],
+      ja: [
+        '新しい形式 — 今のFOCUSを「タスク」と「没入」から選んで始められます',
+        '没入は目標と時間を一緒に決めます — 15・25・45・60分のプリセット、または直接入力（1〜180分）',
+        'メインカードが残り時間をMM:SSでリアルタイムにカウントダウンし、進行バーも一緒に伸びます',
+        'タイマーは一時停止・再開・早期完了ができ、00:00になると鐘の音と完了演出のあと、タスク完了と同じ報酬（かけら・ガチャ券・記録）が入ります',
+        '更新やアプリの再起動でも残り時間がずれないようタイムスタンプで保存 — 離席中に終わっていたら戻った直後に完了処理',
+        '放置聖域と星座討伐のレベル・経験値をひとつに統合 — 聖域で育つと討伐の味方も強くなり、ボス討伐の報酬も聖域に入ります',
+        '既存の記録は高いほうのレベルへ自然に引き継ぎ、損失はありません',
+        '星座ボス 12種 → 24種 — 黄道・深淵・時間・星座の4系統、ボスごとに固有の色・アイコン・必殺スキル・推奨レベル',
+        'ボスは3ターンごとに固有スキルを使います — 強打・防御無視・吸血・2連撃・爆発',
+        '後ろのボスほど初討伐のガチャ券・かけら・経験値が大きくなります',
+        'アップデート記念でガチャ券10枚をプレゼントしました'
+      ]
+    },
     '2.0.0': {
       ko: [
         '반가운 소식 — ✦ 별의 세계가 세 갈래로 열렸어요: 뽑기 · 도감 / RPG(방치형 성역 · 성좌 토벌) / 미니게임',
@@ -1842,23 +1931,110 @@
     }
   });
 
-  /* ✦ 성좌 토벌 보스 */
+  /* ✦ 성좌 토벌 보스 — 24종 (황도 · 심연 · 시간 · 별자리 4계열)
+     각 보스는 고유 색·아이콘·필살 패턴·추천 레벨을 가진다. 첫 12종은 v1.5.0 그대로. */
   var BOSSES = [
-    { ko: '잡념의 그림자', ja: '雑念の影', hp: 90,   atk: 8,  iko: '머릿속을 어지럽히는 잡념이 그림자가 되어 달려든다.', ija: '頭の中をかき乱す雑念が影となって襲いかかる。' },
-    { ko: '미룸의 거인', ja: '先延ばしの巨人', hp: 150,  atk: 10, iko: '“내일 하지 뭐.” 거인이 그 말로 발을 붙잡는다.', ija: '「明日やればいい。」巨人がその一言で足を止める。' },
-    { ko: '야근의 성좌', ja: '残業の星座', hp: 220,  atk: 12, iko: '하루 끝을 삼키는 별자리가 하늘을 덮는다.', ija: '一日の終わりを飲み込む星座が空を覆う。' },
-    { ko: '완벽주의의 수호자', ja: '完璧主義の守護者', hp: 300,  atk: 15, iko: '“그걸로 충분해?” 방패 뒤에서 물어 온다.', ija: '「それで十分か？」盾の後ろから問いかける。' },
-    { ko: '도파민의 마왕', ja: 'ドーパミンの魔王', hp: 390,  atk: 18, iko: '한 번 던지면 던지지 않고는 못 배기는 중독의 왕.', ija: '一度投げたら最後、投げずにはいられない中毒の王。' },
-    { ko: '무기력의 왕좌', ja: '無気力の王座', hp: 490,  atk: 21, iko: '아무것도 하지 않는 편안함의 압력.', ija: '何もしない安楽の圧力。' },
-    { ko: '후회의 예언자', ja: '後悔の預言者', hp: 600,  atk: 24, iko: '이미 지나간 일을 미래처럼 말한다.', ija: '過ぎたことを未来のように告げる。' },
-    { ko: '비교의 거울', ja: '比較の鏡', hp: 730,  atk: 28, iko: '나보다 나은 타인만 비춘다.', ija: '自分より優れた他人ばかりを映す。' },
-    { ko: '자책의 사냥꾼', ja: '自責の狩人', hp: 870,  atk: 32, iko: '한 번의 실수를 영원히 쫓는다.', ija: '一度の失敗を永遠に追い回す。' },
-    { ko: '불안의 성운', ja: '不安の星雲', hp: 1030, atk: 36, iko: '일어나지 않은 일들의 무게.', ija: '起こっていないことの重さ。' },
-    { ko: '게으름의 별', ja: '怠惰の星', hp: 1200, atk: 40, iko: '“조금만 더”가 별을 만들어 버렸다.', ija: '「もう少しだけ」が星になってしまった。' },
-    { ko: '성좌의 군주', ja: '星座の君主', hp: 1400, atk: 45, iko: '모든 집중을 먹은 스스로의 상처 — 마지막 상대.', ija: 'すべての集中を飲み込んだ自身の傷———最後の相手。' }
+    { ko: '잡념의 그림자', ja: '雑念の影', hp: 90, atk: 8, rec: 1, tier: 'abyss', col: '#7E8CA8', ico: '☾',
+      sk: { ko: '잔상 베기', ja: '残像斬り', kind: 'heavy', mult: 1.4 },
+      iko: '머릿속을 어지럽히는 잡념이 그림자가 되어 달려든다.', ija: '頭の中をかき乱す雑念が影となって襲いかかる。' },
+    { ko: '미룸의 거인', ja: '先延ばしの巨人', hp: 150, atk: 10, rec: 2, tier: 'abyss', col: '#8E9BA8', ico: '▲',
+      sk: { ko: '밀어붙이기', ja: '先送りの一撃', kind: 'heavy', mult: 1.45 },
+      iko: '“내일 하지 뭐.” 거인이 그 말로 발을 붙잡는다.', ija: '「明日やればいい。」巨人がその一言で足を止める。' },
+    { ko: '야근의 성좌', ja: '残業の星座', hp: 220, atk: 12, rec: 3, tier: 'time', col: '#A98E6F', ico: '⌛',
+      sk: { ko: '철야의 시간', ja: '徹夜の刻', kind: 'heavy', mult: 1.5 },
+      iko: '하루 끝을 삼키는 별자리가 하늘을 덮는다.', ija: '一日の終わりを飲み込む星座が空を覆う。' },
+    { ko: '완벽주의의 수호자', ja: '完璧主義の守護者', hp: 300, atk: 15, rec: 4, tier: 'zodiac', col: '#C3B38A', ico: '◇',
+      sk: { ko: '흠집 찾기', ja: '瑕探し', kind: 'break', mult: 1.3 },
+      iko: '“그걸로 충분해?” 방패 뒤에서 물어 온다.', ija: '「それで十分か？」盾の後ろから問いかける。' },
+    { ko: '도파민의 마왕', ja: 'ドーパミンの魔王', hp: 390, atk: 18, rec: 6, tier: 'abyss', col: '#C07AA8', ico: '♆',
+      sk: { ko: '무한 스크롤', ja: '無限スクロール', kind: 'drain', mult: 1.3 },
+      iko: '한 번 던지면 던지지 않고는 못 배기는 중독의 왕.', ija: '一度投げたら最後、投げずにはいられない中毒の王。' },
+    { ko: '무기력의 왕좌', ja: '無気力の王座', hp: 490, atk: 21, rec: 8, tier: 'abyss', col: '#7F7F94', ico: '▣',
+      sk: { ko: '무중력', ja: '無重力', kind: 'heavy', mult: 1.5 },
+      iko: '아무것도 하지 않는 편안함의 압력.', ija: '何もしない安楽の圧力。' },
+    { ko: '후회의 예언자', ja: '後悔の預言者', hp: 600, atk: 24, rec: 10, tier: 'time', col: '#6F7FA9', ico: '☄',
+      sk: { ko: '되감기', ja: '巻き戻し', kind: 'drain', mult: 1.35 },
+      iko: '이미 지나간 일을 미래처럼 말한다.', ija: '過ぎたことを未来のように告げる。' },
+    { ko: '비교의 거울', ja: '比較の鏡', hp: 730, atk: 28, rec: 13, tier: 'zodiac', col: '#B9C4CE', ico: '◉',
+      sk: { ko: '반사', ja: '反射', kind: 'break', mult: 1.35 },
+      iko: '나보다 나은 타인만 비춘다.', ija: '自分より優れた他人ばかりを映す。' },
+    { ko: '자책의 사냥꾼', ja: '自責の狩人', hp: 870, atk: 32, rec: 16, tier: 'abyss', col: '#9C6F7A', ico: '✧',
+      sk: { ko: '추적', ja: '追跡', kind: 'heavy', mult: 1.6 },
+      iko: '한 번의 실수를 영원히 쫓는다.', ija: '一度の失敗を永遠に追い回す。' },
+    { ko: '불안의 성운', ja: '不安の星雲', hp: 1030, atk: 36, rec: 20, tier: 'constel', col: '#7A86B8', ico: '☁',
+      sk: { ko: '불확실성', ja: '不確実性', kind: 'burst', mult: 1.8 },
+      iko: '일어나지 않은 일들의 무게.', ija: '起こっていないことの重さ。' },
+    { ko: '게으름의 별', ja: '怠惰の星', hp: 1200, atk: 40, rec: 23, tier: 'constel', col: '#6E93A8', ico: '★',
+      sk: { ko: '늘어짐', ja: 'たるみ', kind: 'heavy', mult: 1.55 },
+      iko: '“조금만 더”가 별을 만들어 버렸다.', ija: '「もう少しだけ」が星になってしまった。' },
+    { ko: '성좌의 군주', ja: '星座の君主', hp: 1400, atk: 45, rec: 27, tier: 'constel', col: '#C9B27A', ico: '✶',
+      sk: { ko: '군주의 왕관', ja: '君主の王冠', kind: 'burst', mult: 1.85 },
+      iko: '모든 집중을 먹은 스스로의 상처 — 마지막 상대.', ija: 'すべての集中を飲み込んだ自身の傷———最後の相手。' },
+
+    /* v2.1 — 황도 3 · 심연 3 · 시간 3 · 별자리 3 */
+    { ko: '황금 사자의 문지기', ja: '黄金獅子の門番', hp: 1750, atk: 47, rec: 32, tier: 'zodiac', col: '#E8C87A', ico: '☀',
+      sk: { ko: '황금 발톱', ja: '黄金の爪', kind: 'heavy', mult: 1.6 },
+      iko: '황도 한가운데, 빛나는 갈기 앞에서 문이 닫힌다.', ija: '黄道の真ん中、輝くたてがみの前で門が閉じる。' },
+    { ko: '쌍둥이 별의 시련', ja: '双子星の試練', hp: 1950, atk: 50, rec: 35, tier: 'zodiac', col: '#D9A05B', ico: '⚹',
+      sk: { ko: '쌍둥이 일격', ja: '双子の一撃', kind: 'double', mult: .8 },
+      iko: '둘이 함께 웃는다 — 같은 얼굴로 두 번 베어 온다.', ija: '二人で笑う———同じ顔で二度斬ってくる。' },
+    { ko: '천칭의 재판관', ja: '天秤の審判者', hp: 2150, atk: 53, rec: 38, tier: 'zodiac', col: '#C6B26B', ico: '⚖',
+      sk: { ko: '천칭의 심판', ja: '天秤の審判', kind: 'break', mult: 1.4 },
+      iko: '네 하루를 저울에 올리고, 모자란 쪽을 벌한다.', ija: '君の一日を秤に乗せ、足りない側を罰する。' },
+    { ko: '심연의 아가리', ja: '深淵の顎', hp: 2350, atk: 56, rec: 42, tier: 'abyss', col: '#8A63C8', ico: '◈',
+      sk: { ko: '심연 삼킴', ja: '深淵喰い', kind: 'drain', mult: 1.4 },
+      iko: '내려다보는 순간 이미 발목까지 잠겨 있다.', ija: '覗き込んだ瞬間、もう足首まで浸かっている。' },
+    { ko: '검은 조류', ja: '黒い潮流', hp: 2550, atk: 59, rec: 44, tier: 'abyss', col: '#6F4FB0', ico: '♇',
+      sk: { ko: '검은 파도', ja: '黒い波', kind: 'heavy', mult: 1.55 },
+      iko: '한 번 밀려오면 버티는 것으로는 끝나지 않는다.', ija: '一度押し寄せたら、耐えるだけでは終わらない。' },
+    { ko: '무저갱의 군주', ja: '無底の君主', hp: 2750, atk: 62, rec: 47, tier: 'abyss', col: '#5B3E9C', ico: '♛',
+      sk: { ko: '무저갱의 포효', ja: '無底の咆哮', kind: 'burst', mult: 1.85 },
+      iko: '바닥이 없는 곳에서 왕관만 빛난다.', ija: '底のない場所で、王冠だけが光る。' },
+    { ko: '모래의 수호자', ja: '砂の守護者', hp: 2950, atk: 65, rec: 50, tier: 'time', col: '#58C3B4', ico: '⧗',
+      sk: { ko: '모래 폭풍', ja: '砂嵐', kind: 'break', mult: 1.4 },
+      iko: '흘러간 시간이 모래가 되어 눈을 찌른다.', ija: '流れた時間が砂になって目を刺す。' },
+    { ko: '역행하는 시계', ja: '逆走する時計', hp: 3150, atk: 68, rec: 54, tier: 'time', col: '#4FB2C9', ico: '⏳',
+      sk: { ko: '시간 역행', ja: '時間逆行', kind: 'drain', mult: 1.45 },
+      iko: '바늘이 거꾸로 돌 때, 상처도 같이 되돌아간다.', ija: '針が逆に回る時、傷も一緒に戻っていく。' },
+    { ko: '영겁의 문', ja: '永劫の門', hp: 3300, atk: 71, rec: 57, tier: 'time', col: '#3FA9B8', ico: '⌘',
+      sk: { ko: '영겁의 침묵', ja: '永劫の沈黙', kind: 'heavy', mult: 1.7 },
+      iko: '문 앞에서는 모든 소리가 늦게 도착한다.', ija: '門の前では、すべての音が遅れて届く。' },
+    { ko: '북극성의 파수꾼', ja: '北極星の番人', hp: 3450, atk: 74, rec: 60, tier: 'constel', col: '#9FC4F0', ico: '✦',
+      sk: { ko: '극광', ja: '極光', kind: 'burst', mult: 1.9 },
+      iko: '움직이지 않는 별이 길을 막고 서 있다.', ija: '動かない星が道を塞いで立っている。' },
+    { ko: '은하의 심장', ja: '銀河の心臓', hp: 3550, atk: 77, rec: 62, tier: 'constel', col: '#7FA9E8', ico: '❂',
+      sk: { ko: '은하 붕괴', ja: '銀河崩壊', kind: 'heavy', mult: 1.8 },
+      iko: '수천 개의 별이 한 점으로 빨려 들어간다.', ija: '数千の星が一点に吸い込まれていく。' },
+    { ko: '성좌의 왕좌', ja: '星座の王座', hp: 3700, atk: 80, rec: 64, tier: 'constel', col: '#E6EAF2', ico: '⊹',
+      sk: { ko: '왕좌의 심판', ja: '王座の審判', kind: 'burst', mult: 2.0 },
+      iko: '모든 별이 네 마지막 한 칸을 내려다본다.', ija: 'すべての星が、君の最後の一マスを見下ろしている。' }
   ];
 
-  var BOSS_TAG = { ko: '별의 표적', ja: '星の標的' };
+  var BOSS_TIER = {
+    zodiac:  { ko: '황도',   ja: '黄道' },
+    abyss:   { ko: '심연',   ja: '深淵' },
+    time:    { ko: '시간',   ja: '時間' },
+    constel: { ko: '별자리', ja: '星座' }
+  };
+
+  function tierName(key) {
+    var o = BOSS_TIER[key];
+    return o ? (lang === 'ja' ? o.ja : o.ko) : '';
+  }
+
+  // '#RRGGBB' → 'rgba(r,g,b,a)' — 보스별 색을 테두리·글로우에 쓴다
+  function hexA(hex, a) {
+    var h = String(hex || '#FFFFFF').replace('#', '');
+    if (h.length === 3) h = h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
+    var n = parseInt(h, 16);
+    if (isNaN(n)) return 'rgba(255,255,255,' + a + ')';
+    return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+  }
+
+  // 첫 처치 뽑기권 · 재도전 별조각 — 뒤쪽 보스일수록 보상이 커진다
+  function bossReward(idx) {
+    return { ticket: idx >= 19 ? 2 : 1, shard: 1 + Math.floor(idx / 4) };
+  }
 
   var STR = {
     ko: {
@@ -2200,7 +2376,7 @@
       sanIntro: '편성한 별들이 성역을 스스로 누비며 사냥합니다',
       sanSlots: '출전 슬롯',
       sanRate: '시간당 별조각',
-      sanDeployedLv: '편성 레벨 합',
+      sanDeployedLv: '성역 레벨',
       sanDeployBtn: '편성',
       sanSlotBtn: '슬롯 +1 · {n}',
       sanSlotMax: '슬롯 최대',
@@ -2215,7 +2391,7 @@
       sanPickSub: '슬롯 {n}개 · 탭해서 편성 / 해제',
       sanTapTip: '별이 스스로 스킬을 씁니다 · 탭: 별 = 스킬 발동 · 건물 = 폭발/축복/사격/수확',
       sanSkinLv: 'Lv.{n}',
-      sanLvBonus: 'Lv.5 공격력 +3% · Lv.10 치명타 +2% · Lv.20 별조각 +5%',
+      sanLvBonus: '성역과 성좌 토벌은 같은 레벨을 씁니다 · Lv.5 공격력 +3% · Lv.10 치명타 +2% · Lv.20 별조각 +5%',
       sanKills: '사냥한 적',
       sanClose: '닫기',
       sanFull: '슬롯이 가득 찼어요',
@@ -2257,7 +2433,7 @@
       pnTitle: '업데이트 내역',
       pnClose: '닫기',
       pnLatest: '최신',
-      raidSynergy: '시너지 · 스킨 Lv.{n}'
+      raidSynergy: 'Lv.{n} 공유'
     },
     ja: {
       worldTitle: '星の世界',
@@ -2302,7 +2478,7 @@
       sanIntro: '編成した星たちが聖域を自ら駆け回り狩りをします',
       sanSlots: '出撃スロット',
       sanRate: '1時間あたりのかけら',
-      sanDeployedLv: '編成レベル合計',
+      sanDeployedLv: '聖域レベル',
       sanDeployBtn: '編成',
       sanSlotBtn: 'スロット+1 · {n}',
       sanSlotMax: 'スロット最大',
@@ -2317,7 +2493,7 @@
       sanPickSub: 'スロット{n}個 · タップで編成 / 解除',
       sanTapTip: '星が自らスキルを放ちます · タップ: 星＝スキル · 建物＝爆発/祝福/射撃/収穫',
       sanSkinLv: 'Lv.{n}',
-      sanLvBonus: 'Lv.5 攻撃力+3% · Lv.10 クリティカル+2% · Lv.20 かけら+5%',
+      sanLvBonus: '聖域と星座討伐は同じレベルを使います · Lv.5 攻撃力+3% · Lv.10 クリティカル+2% · Lv.20 かけら+5%',
       sanKills: '狩った敵',
       sanClose: '閉じる',
       sanFull: 'スロットがいっぱいです',
@@ -2359,11 +2535,80 @@
       pnTitle: 'アップデート履歴',
       pnClose: '閉じる',
       pnLatest: '最新',
-      raidSynergy: 'シナジー · スキンLv.{n}'
+      raidSynergy: 'Lv.{n} 共有'
     }
   };
   Object.keys(STR_V2).forEach(function (l) {
     Object.keys(STR_V2[l]).forEach(function (k) { STR[l][k] = STR_V2[l][k]; });
+  });
+
+  /* v2.1 — 몰입 타이머 · 성역↔성좌 공유 레벨 · 성좌 보스 확장 */
+  var STR_V3 = {
+    ko: {
+      modeTask: '과업',
+      modeFocus: '몰입',
+      timerSetTitle: '몰입 시간',
+      timerStart: '몰입 시작',
+      minUnit: '분',
+      timerPause: '일시정지',
+      timerResume: '재개',
+      timerPausedTag: '일시정지됨',
+      timerOf: '{n}분 몰입',
+      timerLeft: '남은 시간',
+      toastTimerStart: '몰입 시작 · {n}분',
+      toastTimerDone: '✦ 몰입 완료! {n}분을 채웠어요',
+      toastTimerPaused: '타이머를 멈췄어요',
+      toastTimerResumed: '타이머를 다시 돌렸어요',
+      toastTimerBad: '1~180 사이의 분을 정해 주세요',
+      calTimer: '몰입 {n}분',
+      shareLevel: '✦ 방치형 성역과 레벨 · 경험치를 함께 씁니다',
+      sanSharedLv: '성역 레벨',
+      sanLvNote: '성역과 성좌 토벌은 같은 레벨을 씁니다 · Lv.5 공격력 +3% · Lv.10 치명타 +2% · Lv.20 별조각 +5%',
+      bossRec: '추천 Lv.{n}',
+      tierZodiac: '황도',
+      tierAbyss: '심연',
+      tierTime: '시간',
+      tierConstel: '별자리',
+      bossSkillLabel: '고유 스킬',
+      logBossSkill: '{name}의 <b>{s}</b> — <b>{n}</b> 피해',
+      btRewardTicket2: '뽑기권 +{n}',
+      btRewardExp: '경험치 +{n}',
+      rpgRoster: '보스 {n}종'
+    },
+    ja: {
+      modeTask: 'タスク',
+      modeFocus: '没入',
+      timerSetTitle: '没入時間',
+      timerStart: '没入スタート',
+      minUnit: '分',
+      timerPause: '一時停止',
+      timerResume: '再開',
+      timerPausedTag: '一時停止中',
+      timerOf: '{n}分の没入',
+      timerLeft: '残り時間',
+      toastTimerStart: '没入スタート · {n}分',
+      toastTimerDone: '✦ 没入完了！{n}分をやり切りました',
+      toastTimerPaused: 'タイマーを止めました',
+      toastTimerResumed: 'タイマーを再開しました',
+      toastTimerBad: '1〜180分の間で指定してください',
+      calTimer: '没入 {n}分',
+      shareLevel: '✦ 放置聖域と同じレベル・経験値を共有します',
+      sanSharedLv: '聖域レベル',
+      sanLvNote: '聖域と星座討伐は同じレベルを使います · Lv.5 攻撃力 +3% · Lv.10 クリティカル +2% · Lv.20 かけら +5%',
+      bossRec: '推奨 Lv.{n}',
+      tierZodiac: '黄道',
+      tierAbyss: '深淵',
+      tierTime: '時間',
+      tierConstel: '星座',
+      bossSkillLabel: '固有スキル',
+      logBossSkill: '{name}の<b>{s}</b> — <b>{n}</b> ダメージ',
+      btRewardTicket2: 'ガチャ券 +{n}',
+      btRewardExp: '経験値 +{n}',
+      rpgRoster: 'ボス {n}種'
+    }
+  };
+  Object.keys(STR_V3).forEach(function (l) {
+    Object.keys(STR_V3[l]).forEach(function (k) { STR[l][k] = STR_V3[l][k]; });
   });
 
   function fmt(key, vars) {
@@ -2548,6 +2793,13 @@
       });
       tone({ f: 1568, dur: .5, type: 'sine', gain: .045, delay: .34 });
     },
+    // 몰입 타이머 종료 — 시계 종소리처럼 세 번
+    timerBell: function () {
+      [0, .28, .56].forEach(function (d) {
+        tone({ f: 1318, dur: .22, type: 'sine', gain: .075, delay: d });
+        tone({ f: 880, dur: .26, type: 'triangle', gain: .05, delay: d + .01 });
+      });
+    },
     spin: function () {
       for (var i = 0; i < 11; i++) {
         tone({ f: 420 + i * 30, dur: .04, type: 'square', gain: .032, delay: i * .082 });
@@ -2678,7 +2930,9 @@
       }).map(function (f) {
         return {
           text: f.text.trim(),
-          completedAt: typeof f.completedAt === 'number' ? f.completedAt : null
+          completedAt: typeof f.completedAt === 'number' ? f.completedAt : null,
+          mode: f.mode === 'timer' ? 'timer' : 'task',
+          minutes: f.mode === 'timer' && f.minutes > 0 ? Math.round(f.minutes) : 0
         };
       }) : [];
       var routinesDone = Array.isArray(e.routinesDone) ? e.routinesDone.filter(function (n) {
@@ -2714,6 +2968,31 @@
     };
   }
 
+  /* 하나의 슬롯 — 과업(텍스트) 또는 몰입(타이머) */
+  function normalizeGoal(g) {
+    if (!g) return null;
+    if (typeof g === 'string') return g.trim() ? { text: g.trim(), mode: 'task' } : null;
+    if (typeof g.text !== 'string' || !g.text.trim()) return null;
+    var out = { text: g.text.trim(), mode: 'task' };
+    if (g.mode === 'timer') {
+      var mins = Number(g.minutes);
+      if (!(mins > 0)) mins = 25;
+      mins = Math.max(1, Math.min(180, Math.round(mins)));
+      out.mode = 'timer';
+      out.minutes = mins;
+      out.startedAt = typeof g.startedAt === 'number' ? g.startedAt : Date.now();
+      out.paused = !!g.paused;
+      if (out.paused) {
+        var rem = Number(g.remainMs);
+        out.remainMs = isFinite(rem) ? Math.max(0, Math.min(mins * 60000, rem)) : mins * 60000;
+      } else {
+        var ends = Number(g.endsAt);
+        out.endsAt = (isFinite(ends) && ends > 0) ? ends : out.startedAt + mins * 60000;
+      }
+    }
+    return out;
+  }
+
   var state = load();
   var editMode = false;
   var draft = null;
@@ -2730,11 +3009,8 @@
     if (!saved || typeof saved !== 'object') return base;
 
     var s = base;
-    if (typeof saved.goal === 'string' && saved.goal.trim()) {
-      s.goal = { text: saved.goal.trim() };
-    } else if (saved.goal && typeof saved.goal.text === 'string' && saved.goal.text.trim()) {
-      s.goal = { text: saved.goal.text.trim() };
-    }
+    var g = normalizeGoal(saved.goal);
+    if (g) s.goal = g;
     if (typeof saved.goalStartedAt === 'number') s.goalStartedAt = saved.goalStartedAt;
     if (Array.isArray(saved.routines) && saved.routines.length) {
       var list = saved.routines.filter(function (r) {
@@ -2765,7 +3041,9 @@
       }).map(function (f) {
         return {
           text: f.text.trim(),
-          completedAt: typeof f.completedAt === 'number' ? f.completedAt : null
+          completedAt: typeof f.completedAt === 'number' ? f.completedAt : null,
+          mode: f.mode === 'timer' ? 'timer' : 'task',
+          minutes: f.mode === 'timer' && f.minutes > 0 ? Math.round(f.minutes) : 0
         };
       });
     }
@@ -2808,7 +3086,7 @@
   function todayEntry() {
     return {
       focusDone: state.focusDone.map(function (f) {
-        return { text: f.text, completedAt: f.completedAt };
+        return { text: f.text, completedAt: f.completedAt, mode: f.mode || 'task', minutes: f.minutes || 0 };
       }),
       routinesDone: state.routines.filter(function (r) { return r.done; }).map(function (r) { return r.text; }),
       routineTotal: state.routines.length
@@ -2853,6 +3131,115 @@
   }
 
   function toastKey(key) { toast(t(key)); }
+
+  /* ---------- 몰입 타이머 ---------- */
+
+  var composeMode = 'task';
+  var composeMinutes = 25;
+  var composeDraft = '';
+  var timerFinishing = false;
+  try {
+    if (localStorage.getItem('focus.composeMode') === 'timer') composeMode = 'timer';
+    var cm = parseInt(localStorage.getItem('focus.composeMinutes'), 10);
+    if (cm > 0 && cm <= 180) composeMinutes = cm;
+  } catch (e) {}
+
+  function saveComposePref() {
+    try {
+      localStorage.setItem('focus.composeMode', composeMode);
+      localStorage.setItem('focus.composeMinutes', String(composeMinutes));
+    } catch (e) {}
+  }
+
+  function timerTotal(g) { return Math.max(1, (g.minutes || 25)) * 60000; }
+
+  // 남은 시간은 항상 타임스탬프(endsAt) 기준 — 새로고침·백그라운드 복귀에도 어긋나지 않는다
+  function timerRemain(g) {
+    if (!g || g.mode !== 'timer') return 0;
+    if (g.paused) return Math.max(0, g.remainMs || 0);
+    return Math.max(0, (g.endsAt || 0) - Date.now());
+  }
+
+  function fmtMS(ms) {
+    var total = Math.max(0, Math.ceil(ms / 1000));
+    return pad2(Math.floor(total / 60)) + ':' + pad2(total % 60);
+  }
+
+  function timerPct(g) {
+    var total = timerTotal(g);
+    return Math.max(0, Math.min(100, (1 - timerRemain(g) / total) * 100));
+  }
+
+  function timerTopText(g) {
+    if (!g || g.mode !== 'timer') return '';
+    var base = fmt('timerOf', { n: g.minutes });
+    return g.paused ? base + ' · ' + t('timerPausedTag') : base;
+  }
+
+  function startTimerGoal(text, minutes) {
+    text = (text || '').trim();
+    if (!text) return false;
+    minutes = Math.max(1, Math.min(180, Math.round(minutes || 25)));
+    if (state.goal) state.queue.unshift(state.goal.text);
+    var now = Date.now();
+    state.goal = {
+      text: text, mode: 'timer', minutes: minutes,
+      startedAt: now, endsAt: now + minutes * 60000, paused: false
+    };
+    state.goalStartedAt = now;
+    save();
+    renderAll();
+    return true;
+  }
+
+  function toggleTimerPause() {
+    var g = state.goal;
+    if (!g || g.mode !== 'timer') return;
+    if (g.paused) {
+      g.paused = false;
+      g.endsAt = Date.now() + (g.remainMs || 0);
+      g.remainMs = 0;
+      toastKey('toastTimerResumed');
+    } else {
+      g.remainMs = Math.max(0, (g.endsAt || 0) - Date.now());
+      g.paused = true;
+      g.endsAt = null;
+      toastKey('toastTimerPaused');
+    }
+    save();
+    renderFocus();
+    SFX.check();
+  }
+
+  function tickFocus() {
+    var g = state.goal;
+    if (!g || g.mode !== 'timer' || timerFinishing) return;
+    var left = timerRemain(g);
+    var clock = $('timerBig');
+    if (clock) {
+      clock.textContent = fmtMS(left);
+      clock.classList.toggle('paused', !!g.paused);
+    }
+    var bar = $('timerBar');
+    if (bar) bar.style.width = timerPct(g) + '%';
+    var el = $('elapsed');
+    if (el) el.textContent = timerTopText(g);
+    if (!g.paused && left <= 0) finishTimer();
+  }
+
+  function finishTimer() {
+    if (timerFinishing || !state.goal || state.goal.mode !== 'timer') return;
+    timerFinishing = true;
+    var clock = $('timerBig');
+    if (clock) { clock.textContent = '00:00'; clock.classList.remove('paused'); clock.classList.add('done'); }
+    var bar = $('timerBar');
+    if (bar) bar.style.width = '100%';
+    var card = $('focusCard');
+    if (card) card.classList.add('timer-done');
+    SFX.timerBell();
+    if (navigator.vibrate) { try { navigator.vibrate([18, 70, 18, 70, 40]); } catch (e) {} }
+    setTimeout(function () { timerFinishing = false; completeGoal(); }, 1200);
+  }
 
   function elapsedText() {
     if (!state.goal || !state.goalStartedAt) return '';
@@ -3178,17 +3565,13 @@
     return n;
   }
 
+  // 성역과 성좌 토벌은 하나의 레벨을 쓴다 — 어느 쪽에서 자라도 모든 별이 함께 자란다
   function sanLevelOf(id) {
-    if (!san || !san.levels) return 0;
-    var e = san.levels[id];
-    return e ? (e.lv || 0) : 0;
+    return accountLevel();
   }
 
   function skinLevelSum() {
-    if (!san || !san.levels) return 0;
-    var n = 0;
-    Object.keys(san.levels).forEach(function (k) { n += (san.levels[k].lv || 0); });
-    return n;
+    return accountLevel();
   }
 
   // 도감 시너지 — 보유 수 · 등급 수집 · 스킨 레벨 합산이 장착과 무관하게 계정 전체에 붙는다
@@ -3607,6 +3990,21 @@
 
   function expToNext(lv) { return 80 + (lv - 1) * 40; }
 
+  // lv에 도달하는 데 필요한 누적 경험치
+  function expForLevel(lv) {
+    var n = 0;
+    for (var i = 1; i < lv; i++) n += expToNext(i);
+    return n;
+  }
+
+  var accountLvCache = { exp: -1, lv: 1 };
+  function accountLevel() {
+    if (accountLvCache.exp !== rpg.exp) {
+      accountLvCache = { exp: rpg.exp, lv: expInfo(rpg.exp).lv };
+    }
+    return accountLvCache.lv;
+  }
+
   function expInfo(exp) {
     var lv = 1, rest = Math.max(0, exp);
     while (rest >= expToNext(lv) && lv < 99) { rest -= expToNext(lv); lv += 1; }
@@ -3629,6 +4027,8 @@
     var after = expInfo(rpg.exp).lv;
     if (after > before) {
       setTimeout(function () { toast(fmt('toastLevelUp', { n: after })); }, quiet ? 1700 : 0);
+      // 성역 화면이 열려 있으면 즉시 새 레벨로 다시 그린다
+      if (gachaOpen && hubTab === 'rpg' && rpgSub === 'san') renderSanctuary();
     } else if (n > 0 && !quiet) {
       toast(fmt('toastExp', { n: n }));
     }
@@ -3743,11 +4143,13 @@
       var unlocked = i === 0 || isCleared || rpg.cleared.indexOf(i - 1) >= 0;
       var cls = 'boss' + (unlocked ? '' : ' locked') + (isCleared ? ' cleared' : '');
       var label = !unlocked ? t('rpgLocked') : (isCleared ? t('rpgCleared') : t('rpgGo'));
+      var sub = '<span class="boss-tier" style="color:' + b.col + '">' + esc(tierName(b.tier)) + '</span>' +
+        ' · HP ' + b.hp + ' · ATK ' + b.atk + ' · ' + esc(fmt('bossRec', { n: b.rec }));
       return '<button class="' + cls + '" type="button" data-boss="' + i + '"' + (unlocked ? '' : ' disabled') + '>' +
-        '<span class="boss-idx">' + pad2(i + 1) + '</span>' +
+        '<span class="boss-ico" style="color:' + b.col + ';border-color:' + hexA(b.col, .42) + ';background:' + hexA(b.col, .10) + '">' + b.ico + '</span>' +
         '<span class="boss-main">' +
           '<span class="boss-name">' + esc(lang === 'ja' ? b.ja : b.ko) + '</span>' +
-          '<span class="boss-sub">HP ' + b.hp + ' · ATK ' + b.atk + '</span>' +
+          '<span class="boss-sub">' + sub + '</span>' +
         '</span>' +
         '<span class="boss-go">' + esc(label) + '</span>' +
       '</button>';
@@ -3835,10 +4237,10 @@
         '<button class="bt-back" type="button" data-bt="back">' + esc(t('btBack')) + '</button>' +
         '<span class="bt-stage">' + esc(t('btStage')) + ' ' + pad2(bt.idx + 1) + '</span>' +
       '</div>' +
-      '<div class="bt-boss">' +
+      '<div class="bt-boss" style="--bc:' + hexA(b.col, .20) + ';--bt1:' + hexA(b.col, .13) + ';--btl:' + hexA(b.col, .45) + '">' +
         '<div class="bt-boss-top">' +
-          '<div><div class="bt-boss-name">' + esc(lang === 'ja' ? b.ja : b.ko) + '</div>' +
-          '<div class="bt-boss-tag">' + esc(BOSS_TAG[lang] || BOSS_TAG.ko) + ' · ' + esc(fmt('logTurn', { n: bt.turn })) + '</div></div>' +
+          '<div><div class="bt-boss-name"><span class="bt-boss-ico" style="color:' + b.col + ';border-color:' + hexA(b.col, .45) + '">' + b.ico + '</span>' + esc(lang === 'ja' ? b.ja : b.ko) + '</div>' +
+          '<div class="bt-boss-tag">' + esc(tierName(b.tier)) + ' · ' + esc(lang === 'ja' ? b.sk.ja : b.sk.ko) + ' · ' + esc(fmt('logTurn', { n: bt.turn })) + '</div></div>' +
           '<div class="bt-boss-atk">' + esc(fmt('btAtkLabel', { n: Math.round(b.atk * (bt.weaken > 0 ? 0.75 : 1)) })) + '</div>' +
         '</div>' +
         '<div class="bt-hp"><i style="width:' + bhpPct + '%"></i></div>' +
@@ -3926,17 +4328,40 @@
     var st = playerStats();
     var b = bt.boss;
     var atk = b.atk * (bt.weaken > 0 ? 0.75 : 1);
-    var raw = Math.round(atk * (0.85 + Math.random() * 0.3));
+    var sk = b.sk;
+    // 3턴마다 보스 고유 스킬 — 보스마다 딜·패턴이 다르다
+    var useSkill = !!(sk && bt.turn % 3 === 0);
+    var hits = 1, mult = 1, ignoreGuard = false;
+    if (useSkill) {
+      mult = sk.mult || 1.3;
+      ignoreGuard = sk.kind === 'break';
+      if (sk.kind === 'double') hits = 2;
+    }
     if (bt.shield) {
       bt.shield = false;
       btLog('sys', fmtHtml('logBlock', { name: (lang === 'ja' ? b.ja : b.ko) }));
     } else {
-      var dmg = raw;
-      if (bt.guard) dmg = Math.round(dmg * 0.35);
-      dmg = Math.round(dmg * (1 - st.dr));
-      dmg = Math.max(1, dmg);
-      bt.php = Math.max(0, bt.php - dmg);
-      btLog('boss', fmtHtml('logBoss', { name: (lang === 'ja' ? b.ja : b.ko), n: dmg }));
+      var total = 0;
+      for (var h = 0; h < hits; h++) {
+        var raw = Math.round(atk * (0.85 + Math.random() * 0.3) * mult);
+        if (bt.guard && !ignoreGuard) raw = Math.round(raw * 0.35);
+        raw = Math.round(raw * (1 - st.dr));
+        raw = Math.max(1, raw);
+        total += raw;
+        bt.php = Math.max(0, bt.php - raw);
+      }
+      if (useSkill) {
+        btLog('boss sk', fmtHtml('logBossSkill', {
+          name: (lang === 'ja' ? b.ja : b.ko), s: (lang === 'ja' ? sk.ja : sk.ko), n: total
+        }));
+        if (sk.kind === 'drain') {
+          var bossHeal = Math.round(total * 0.5);
+          bt.bhp = Math.min(bt.bhpMax, bt.bhp + bossHeal);
+          btLog('sys', fmtHtml('logHeal', { n: bossHeal }));
+        }
+      } else {
+        btLog('boss', fmtHtml('logBoss', { name: (lang === 'ja' ? b.ja : b.ko), n: total }));
+      }
       SFX.bossHit();
     }
     bt.guard = false;
@@ -3963,15 +4388,20 @@
     if (win) {
       var first = rpg.cleared.indexOf(bt.idx) < 0;
       if (first) { rpg.cleared.push(bt.idx); saveRpg(); }
-      var shards = (first ? 2 : 1) + Math.round(st.shard) + (bt.bonusShard ? 1 : 0);
+      var rw = bossReward(bt.idx);
+      var shards = (first ? rw.shard + 2 : rw.shard) + Math.round(st.shard) + (bt.bonusShard ? 1 : 0);
       gacha.shards += shards;
       saveGacha();
       bt.reward = [];
       if (first) {
-        grantTickets(1);
-        bt.reward.push(esc(t('btRewardTicket')));
+        grantTickets(rw.ticket);
+        bt.reward.push(esc(rw.ticket > 1 ? fmt('btRewardTicket2', { n: rw.ticket }) : t('btRewardTicket')));
       }
       bt.reward.push(esc(fmt('btRewardShard', { n: shards })));
+      // 토벌의 성장도 성역과 같은 공유 경험치로 들어간다
+      var winExp = 30 + bt.idx * 5;
+      addExp(winExp, true);
+      bt.reward.push(esc(fmt('btRewardExp', { n: winExp })));
       bt.first = first;
       if (navigator.vibrate) { try { navigator.vibrate([10, 30, 12]); } catch (e) {} }
     }
@@ -4944,21 +5374,35 @@
     if (!san.levels.mono) san.levels.mono = { lv: 1, xp: 0 };
   })();
 
+  // v2.1 — 성역(별 레벨)과 성좌 토벌(rpg.exp)을 하나의 성장으로 합친다.
+  // 기존 사용자는 두 기록 중 더 높은 쪽으로 옮기므로 손실이 없다.
+  (function migrateSharedLevel() {
+    var legacyMax = 0;
+    Object.keys(san.levels || {}).forEach(function (k) {
+      var e = san.levels[k];
+      if (e && typeof e.lv === 'number' && e.lv > legacyMax) legacyMax = Math.floor(e.lv);
+    });
+    legacyMax = Math.max(1, Math.min(99, legacyMax));
+    var needExp = expForLevel(legacyMax);
+    if (needExp > rpg.exp) { rpg.exp = needExp; saveRpg(); }
+    var lv = accountLevel();
+    Object.keys(san.levels || {}).forEach(function (k) {
+      var e = san.levels[k];
+      if (!e) return;
+      if (e.lv !== lv || e.xp) { e.lv = lv; e.xp = 0; }
+    });
+    saveSan();
+  })();
+
   function saveSan() {
     try { localStorage.setItem(SAN_KEY, JSON.stringify(san)); } catch (e) {}
   }
 
-  function sanLevelUpNeed(lv) { return 40 + lv * 30; }
-
+  // 방치형 성역에서 쌓이는 경험치는 성좌 토벌과 같은 공유 경험치(rpg.exp)로 들어간다.
+  // 별마다 레벨을 따로 굴리지 않으므로 어느 화면에서 봐도 레벨이 같다.
   function sanAddXp(id, n) {
-    if (!id || !n) return;
-    var e = san.levels[id];
-    if (!e) e = san.levels[id] = { lv: 1, xp: 0 };
-    e.xp += n;
-    while (e.lv < SAN_MAX_LV && e.xp >= sanLevelUpNeed(e.lv)) {
-      e.xp -= sanLevelUpNeed(e.lv);
-      e.lv += 1;
-    }
+    if (!n) return;
+    addExp(Math.max(1, Math.round(n * 0.5)), true);
   }
 
   function sanDeployLevelSum() {
@@ -5009,8 +5453,8 @@
       syncWallet();
       if (!quiet) toast(fmt('sanOffline', { n: whole }));
       // 자리를 비운 동안에도 편성 별은 조금씩 자란다
-      var xpEach = Math.round(whole * 6 * (1 + 0.15 * (san.buildings.altar || 0)));
-      if (xpEach > 0) san.deploy.forEach(function (id) { sanAddXp(id, xpEach); });
+      var xpEach = Math.round(whole * 6 * (1 + 0.15 * (san.buildings.altar || 0)) * san.deploy.length);
+      if (xpEach > 0) sanAddXp('', xpEach);
     }
     saveSan();
     return whole;
@@ -5295,7 +5739,7 @@
   function sanKill(e) {
     san.kills += 1;
     var xp = (1 + 0.15 * (san.buildings.altar || 0)) * san.deploy.length;
-    san.deploy.forEach(function (id, i) { sanAddXp(id, xp); });
+    sanAddXp('', xp);
     sanSim.parts.push({ x: e.x, y: e.y, vx: 0, vy: -6, life: .7, max: .7, r: 2, star: true });
     for (var i = 0; i < 4; i++) {
       var a = Math.random() * 6.2832, sp = 20 + Math.random() * 40;
@@ -5862,7 +6306,7 @@
     $('sanSlots').textContent = san.slots + '/10';
     var sc = $('sanCanvas');
     if (sc) sc.setAttribute('aria-label', t('sanTitle'));
-    $('sanLvSum').textContent = String(sanDeployLevelSum());
+    $('sanLvSum').textContent = 'Lv.' + accountLevel();
     $('sanKills').textContent = String(san.kills);
     var slotBtn = $('sanSlotBtn');
     if (san.slots >= 10) {
@@ -5983,10 +6427,11 @@
       SFX.laser();
       sanBadge('✦ ' + lv);
     } else if (key === 'altar') {
-      san.deploy.forEach(function (id) { sanAddXp(id, 18 * lv); });
+      var altarXp = 18 * lv;
+      sanAddXp('', altarXp * san.deploy.length);
       sim.parts.push({ x: sim.W / 2, y: sim.H * 0.5, vx: 0, vy: 0, life: 1, max: 1, r: 14, ring: true });
       SFX.skill();
-      toast(fmt('sanXpGain', { n: 18 * lv }));
+      toast(fmt('sanXpGain', { n: altarXp }));
     } else if (key === 'turret') {
       for (var e = 0; e < sim.enemies.length; e++) {
         sim.beams.push({ x1: sim.W - sim.pad - 10, y1: sim.pad + 12, x2: sim.enemies[e].x, y2: sim.enemies[e].y, life: .3, max: .3 });
@@ -6957,32 +7402,62 @@
 
   /* ---------- focus slot ---------- */
 
+  function focusCardHTML() {
+    var g = state.goal;
+    var isTimer = g.mode === 'timer';
+    var html = '<div class="focus-card' + (isTimer ? ' timer' : '') + '" id="focusCard">' +
+      '<div class="card-top">' +
+        '<span class="tag">' + STAR + 'FOCUS' + (isTimer ? '<em>· ' + esc(t('modeFocus')) + '</em>' : '') + '</span>' +
+        '<span class="elapsed" id="elapsed">' + esc(isTimer ? timerTopText(g) : elapsedText()) + '</span>' +
+      '</div>' +
+      '<p class="goal-text">' + esc(g.text) + '</p>';
+    if (isTimer) {
+      html += '<div class="timer-wrap">' +
+        '<div class="timer-clock' + (g.paused ? ' paused' : '') + '" id="timerBig">' + fmtMS(timerRemain(g)) + '</div>' +
+        '<div class="timer-bar"><i id="timerBar" style="width:' + timerPct(g).toFixed(1) + '%"></i></div>' +
+        '<div class="timer-sub">' + esc(t('timerLeft')) + ' · <b>' + esc(fmt('timerOf', { n: g.minutes })) + '</b></div>' +
+      '</div>';
+    }
+    html += '<div class="actions">' +
+      '<button class="btn-primary" type="button" data-act="complete">' + esc(t('complete')) + '</button>';
+    if (isTimer) {
+      html += '<button class="btn-ghost" type="button" data-act="toggle">' + esc(t(g.paused ? 'timerResume' : 'timerPause')) + '</button>';
+    }
+    html += '<button class="btn-ghost" type="button" data-act="edit">' + esc(t('edit')) + '</button>' +
+            '<button class="btn-ghost" type="button" data-act="clear">' + esc(t('clear')) + '</button>' +
+          '</div>' +
+        '</div>';
+    return html;
+  }
+
+  function composeHTML() {
+    var timer = composeMode === 'timer';
+    var presets = [15, 25, 45, 60];
+    return '<form class="compose" id="composeForm" autocomplete="off">' +
+      '<div class="mode-switch" role="tablist" aria-label="' + esc(t('timerSetTitle')) + '">' +
+        '<button type="button" class="mode-btn' + (timer ? '' : ' on') + '" data-mode="task" role="tab" aria-selected="' + (timer ? 'false' : 'true') + '">' + esc(t('modeTask')) + '</button>' +
+        '<button type="button" class="mode-btn' + (timer ? ' on' : '') + '" data-mode="timer" role="tab" aria-selected="' + (timer ? 'true' : 'false') + '">✦ ' + esc(t('modeFocus')) + '</button>' +
+      '</div>' +
+      '<div class="compose-row">' +
+        '<input id="goalInput" placeholder="' + esc(t('goalPh')) + '" maxlength="120" enterkeyhint="go" aria-label="' + esc(t('goalPh')) + '" value="' + esc(composeDraft) + '">' +
+        '<button class="btn-primary" type="submit">' + esc(t(timer ? 'timerStart' : 'start')) + '</button>' +
+      '</div>' +
+      (timer
+        ? '<div class="timer-set"><div class="timer-presets">' +
+            presets.map(function (m) {
+              return '<button type="button" class="tp' + (composeMinutes === m ? ' on' : '') + '" data-min="' + m + '">' + m + '</button>';
+            }).join('') +
+            '<label class="tp-custom"><input id="customMin" type="number" inputmode="numeric" min="1" max="180" step="1" value="' + composeMinutes + '" aria-label="' + esc(t('timerSetTitle')) + '"><span>' + esc(t('minUnit')) + '</span></label>' +
+          '</div></div>'
+        : '') +
+      '</form>';
+  }
+
   function renderFocus() {
     var region = $('focusRegion');
     var tc = $('todayCount');
     tc.textContent = state.todayCount > 0 ? t('todayDone') + ' ' + state.todayCount : '';
-
-    if (state.goal) {
-      region.innerHTML =
-        '<div class="focus-card" id="focusCard">' +
-          '<div class="card-top">' +
-            '<span class="tag">' + STAR + 'FOCUS</span>' +
-            '<span class="elapsed" id="elapsed">' + esc(elapsedText()) + '</span>' +
-          '</div>' +
-          '<p class="goal-text">' + esc(state.goal.text) + '</p>' +
-          '<div class="actions">' +
-            '<button class="btn-primary" type="button" data-act="complete">' + esc(t('complete')) + '</button>' +
-            '<button class="btn-ghost" type="button" data-act="edit">' + esc(t('edit')) + '</button>' +
-            '<button class="btn-ghost" type="button" data-act="clear">' + esc(t('clear')) + '</button>' +
-          '</div>' +
-        '</div>';
-    } else {
-      region.innerHTML =
-        '<form class="compose" id="composeForm" autocomplete="off">' +
-          '<input id="goalInput" placeholder="' + esc(t('goalPh')) + '" maxlength="120" enterkeyhint="go" aria-label="' + esc(t('goalPh')) + '">' +
-          '<button class="btn-primary" type="submit">' + esc(t('start')) + '</button>' +
-        '</form>';
-    }
+    region.innerHTML = state.goal ? focusCardHTML() : composeHTML();
   }
 
   function renderGoalEdit() {
@@ -7005,7 +7480,7 @@
     if (!text) return false;
     if (state.goal && state.goal.text === text) { toastKey('toastSame'); return true; }
     if (state.goal) state.queue.unshift(state.goal.text);
-    state.goal = { text: text };
+    state.goal = { text: text, mode: 'task' };
     state.goalStartedAt = Date.now();
     save();
     renderAll();
@@ -7015,11 +7490,14 @@
   function completeGoal() {
     if (!state.goal || completing) return;
     completing = true;
+    var g = state.goal;
     var card = $('focusCard');
     if (card) card.classList.add('leaving');
     setTimeout(function () {
-      var doneText = state.goal.text;
-      state.focusDone.push({ text: doneText, completedAt: Date.now() });
+      var doneText = g.text;
+      var doneMode = g.mode === 'timer' ? 'timer' : 'task';
+      var doneMin = doneMode === 'timer' ? (g.minutes || 0) : 0;
+      state.focusDone.push({ text: doneText, completedAt: Date.now(), mode: doneMode, minutes: doneMin });
       state.goal = null;
       state.goalStartedAt = null;
       state.todayCount = state.focusDone.length;
@@ -7030,7 +7508,11 @@
       addExp(20, true);
       var gotTicket = awardFocusTicket();
       SFX.focusDone();
-      toastKey(gotTicket ? 'toastFocusTicket' : 'toastFocusTicketMax');
+      if (doneMode === 'timer') toast(fmt('toastTimerDone', { n: doneMin }));
+      else toastKey(gotTicket ? 'toastFocusTicket' : 'toastFocusTicketMax');
+      if (doneMode === 'timer' && gotTicket) {
+        setTimeout(function () { toastKey('toastFocusTicket'); }, 1900);
+      }
       if (navigator.vibrate) { try { navigator.vibrate(18); } catch (e) {} }
     }, 230);
   }
@@ -7162,7 +7644,7 @@
       focusList.forEach(function (f) {
         var tm = timeHM(f.completedAt);
         html += '<li class="det-item"><span class="tick">✓</span>' +
-          '<span class="det-text">' + esc(f.text) + '</span>' +
+          '<span class="det-text">' + esc(f.text) + (f.mode === 'timer' && f.minutes ? ' <i class="det-mode">· ' + esc(fmt('calTimer', { n: f.minutes })) + '</i>' : '') + '</span>' +
           (tm ? '<span class="det-time">' + tm + '</span>' : '') +
         '</li>';
       });
@@ -7472,29 +7954,82 @@
     e.preventDefault();
     if (e.target.id === 'composeForm') {
       var input = $('goalInput');
-      if (setGoal(input ? input.value : '')) {
+      var text = input ? input.value : composeDraft;
+      if (!text || !text.trim()) {
+        if (input) input.focus();
+        toastKey('toastNeedOne');
+        return;
+      }
+      if (composeMode === 'timer') {
+        var minInput = $('customMin');
+        var mins = minInput ? parseInt(minInput.value, 10) : parseInt(composeMinutes, 10);
+        if (!(mins >= 1 && mins <= 180)) { toastKey('toastTimerBad'); return; }
+        composeMinutes = mins;
+        saveComposePref();
+        composeDraft = '';
+        if (startTimerGoal(text, mins)) {
+          toast(fmt('toastTimerStart', { n: mins }));
+          if (navigator.vibrate) { try { navigator.vibrate(12); } catch (err) {} }
+          tickFocus();
+        }
+      } else if (setGoal(text)) {
+        composeDraft = '';
         toastKey('toastStart');
         if (navigator.vibrate) { try { navigator.vibrate(12); } catch (err) {} }
-      } else if (input) {
-        input.focus();
+      } else {
+        if (input) input.focus();
         toastKey('toastNeedOne');
       }
     } else if (e.target.id === 'goalEditForm') {
       var v = $('goalEditInput');
-      var text = v ? v.value.trim() : '';
-      if (!text) { renderFocus(); return; }
-      state.goal = { text: text };
+      var text2 = v ? v.value.trim() : '';
+      if (!text2) { renderFocus(); return; }
+      if (state.goal) state.goal.text = text2;
+      else state.goal = { text: text2, mode: 'task' };
       save();
       renderAll();
       toastKey('toastEdited');
     }
   });
 
+  // 편집 중인 목표·몰입 분 입력을 기억해 다시 그려도 날아가지 않게
+  $('focusRegion').addEventListener('input', function (e) {
+    if (e.target.id === 'goalInput') {
+      composeDraft = e.target.value;
+    } else if (e.target.id === 'customMin') {
+      var v = parseInt(e.target.value, 10);
+      if (v > 0 && v <= 180) { composeMinutes = v; saveComposePref(); }
+      var presets = $('focusRegion').querySelectorAll('.tp');
+      for (var i = 0; i < presets.length; i++) {
+        presets[i].classList.toggle('on', parseInt(presets[i].getAttribute('data-min'), 10) === composeMinutes);
+      }
+    }
+  });
+
   $('focusRegion').addEventListener('click', function (e) {
+    var modeBtn = e.target.closest('[data-mode]');
+    if (modeBtn) {
+      composeMode = modeBtn.getAttribute('data-mode') === 'timer' ? 'timer' : 'task';
+      saveComposePref();
+      renderFocus();
+      var gi = $('goalInput');
+      if (gi && composeDraft) { gi.value = composeDraft; }
+      return;
+    }
+    var pre = e.target.closest('[data-min]');
+    if (pre) {
+      composeMinutes = parseInt(pre.getAttribute('data-min'), 10) || 25;
+      saveComposePref();
+      renderFocus();
+      var gi2 = $('goalInput');
+      if (gi2 && composeDraft) { gi2.value = composeDraft; }
+      return;
+    }
     var btn = e.target.closest('[data-act]');
     if (!btn) return;
     var act = btn.getAttribute('data-act');
     if (act === 'complete') completeGoal();
+    else if (act === 'toggle') toggleTimerPause();
     else if (act === 'edit') renderGoalEdit();
     else if (act === 'cancelEdit') renderFocus();
     else if (act === 'clear') {
@@ -7624,15 +8159,19 @@
     }
   }
   document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) checkRollover();
+    if (!document.hidden) {
+      checkRollover();
+      if (state.goal && state.goal.mode === 'timer') tickFocus();
+    }
   });
   setInterval(checkRollover, 30000);
 
-  // 경과 시간 갱신
+  // 경과 시간 · 몰입 타이머 (남은 시간은 타임스탬프 기준으로 다시 계산)
   setInterval(function () {
+    if (state.goal && state.goal.mode === 'timer') { tickFocus(); return; }
     var el = $('elapsed');
     if (el) el.textContent = elapsedText();
-  }, 20000);
+  }, 500);
 
   injectSkinCSS();
   applyStaticI18n();
@@ -7648,6 +8187,11 @@
   bindMiniGames();
   var bootGain = sanAccrue(Date.now(), true);
   if (bootGain >= 1) setTimeout(function () { toast(fmt('sanOffline', { n: bootGain })); }, 1500);
+
+  // 자리를 비운 사이 타이머가 00:00을 지났으면 돌아오자마자 완료 처리
+  if (state.goal && state.goal.mode === 'timer' && !state.goal.paused && timerRemain(state.goal) <= 0) {
+    setTimeout(finishTimer, 500);
+  }
   $('soundBtn').addEventListener('click', function () { unlockSound(); toggleSound(); });
   $('gachaMute').addEventListener('click', function () { unlockSound(); toggleSound(); });
   ['pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
