@@ -7283,7 +7283,8 @@
   /* ---------- ✦ 업데이트 내역 (누적) ---------- */
 
   var patchOpen = false;
-  var PATCH_ORDER = ['2.0.0', '1.6.0', '1.5.0', '1.4.0'];
+  // 새 버전은 CHANGELOG 맨 앞에 추가하면 내역에도 그대로 올라간다
+  var PATCH_ORDER = Object.keys(CHANGELOG);
 
   function renderPatch() {
     var host = $('pnBody');
